@@ -45,6 +45,24 @@ public:
 
 	void SetCamPosition(float x, float y) { cam_x = x; cam_y = y; }
 
+	/*
+		Algorithm SweptAABB handling collision
+	*/
+	static void SweptAABB(
+		float moveLeft,			
+		float moveTop,			
+		float moveRight,		
+		float moveBottom,		
+		float dx,			
+		float dy,			
+		float staticLeft,			
+		float staticTop,
+		float staticRight,
+		float staticBottom,
+		float &t,
+		float &nx,	
+		float &ny);
+
 	static Game * GetInstance();
 
 	~Game();
