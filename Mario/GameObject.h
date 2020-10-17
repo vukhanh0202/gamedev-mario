@@ -4,15 +4,34 @@
 #include <d3dx9.h>
 #include <vector>
 
-#include "Collision.h"
 #include "Animation.h"
+
+#define ID_TEX_BBOX -100		// special texture to draw object bounding box
 
 using namespace std;
 
+class GameObject;
 typedef GameObject * LPGameObject;
+
+
+struct CollisionEvent;
+typedef CollisionEvent * LPCollisionEvent;
+struct CollisionEvent
+{
+	LPGameObject obj;
+	float t, nx, ny;
+	CollisionEvent(float t, float nx, float ny, LPGameObject obj = NULL) { this->t = t; this->nx = nx; this->ny = ny; this->obj = obj; }
+
+	static bool compare(const LPCollisionEvent &a, LPCollisionEvent &b)
+	{
+		return a->t < b->t;
+	}
+};
+
+
 class GameObject
 {
-//public:
+public:
 	float x;
 	float y;
 
@@ -64,7 +83,8 @@ public:
 
 	void RenderBoundingBox();
 	virtual void GetBoundingBox(float &left, float &top, float &right, float &bottom) = 0;
-	virtual void Update(DWORD dt, vector<LPGameObject> *coObjects = NULL);
+	//virtual void Update(DWORD dt, vector<LPGameObject> *coObjects = NULL);
+	virtual void Update(DWORD dt);
 	virtual void Render() = 0;
 	virtual void SetState(int state) { this->state = state; }
 

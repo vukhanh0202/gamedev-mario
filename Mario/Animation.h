@@ -4,6 +4,7 @@
 /*
 	Definition Animation Frame
 */
+class AnimationFrame;
 typedef AnimationFrame *LPAnimationFrame;
 class AnimationFrame
 {
@@ -19,6 +20,7 @@ public:
 /*
 	Definition Animation include Animation Frame
 */
+class Animation;
 typedef Animation *LPAnimation;
 class Animation
 {

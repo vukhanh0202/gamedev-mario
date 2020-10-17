@@ -5,7 +5,8 @@
 
 using namespace std;
 
-typedef Sprite * LPSprite;
+class Sprite;
+typedef Sprite *LPSprite;
 
 class Sprite
 {
