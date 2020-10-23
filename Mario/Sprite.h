@@ -39,6 +39,7 @@ public:
 	LPSprite &operator[](int id) { return listSprites[id]; }
 
 	static Sprites * GetInstance();
+	void Clear();
 };
 
 

@@ -20,7 +20,17 @@ struct CollisionEvent
 {
 	LPGameObject obj;
 	float t, nx, ny;
-	CollisionEvent(float t, float nx, float ny, LPGameObject obj = NULL) { this->t = t; this->nx = nx; this->ny = ny; this->obj = obj; }
+
+	float dx, dy;		// *RELATIVE* movement distance between this object and obj
+	CollisionEvent(float t, float nx, float ny, float dx = 0, float dy = 0, LPGameObject obj = NULL)
+	{
+		this->t = t;
+		this->nx = nx;
+		this->ny = ny;
+		this->dx = dx;
+		this->dy = dy;
+		this->obj = obj;
+	}
 
 	static bool compare(const LPCollisionEvent &a, LPCollisionEvent &b)
 	{
@@ -47,7 +57,7 @@ public:
 
 	DWORD dt;
 
-	vector<LPAnimation> animations;
+	LPAnimation_Set animation_set;
 
 public:
 
@@ -73,18 +83,21 @@ public:
 	/*
 		Filter handling collision is prioritized
 	*/
-	void FilterCollision(vector<LPCollisionEvent> &coEvents, vector<LPCollisionEvent> &coEventsResult,
-		float &min_tx, float &min_ty, float &nx, float &ny);
+	void FilterCollision(
+		vector<LPCollisionEvent> &coEvents,
+		vector<LPCollisionEvent> &coEventsResult,
+		float &min_tx,
+		float &min_ty,
+		float &nx,
+		float &ny,
+		float &rdx,
+		float &rdy);
 
-	/*
-		Add animation for GameOject(1 GameOject can have some animations)
-	*/
-	void AddAnimation(int animationId);
+	void SetAnimationSet(LPAnimation_Set ani_set) { animation_set = ani_set; }
 
 	void RenderBoundingBox();
 	virtual void GetBoundingBox(float &left, float &top, float &right, float &bottom) = 0;
-	//virtual void Update(DWORD dt, vector<LPGameObject> *coObjects = NULL);
-	virtual void Update(DWORD dt);
+	virtual void Update(DWORD dt, vector<LPGameObject> *coObjects = NULL);
 	virtual void Render() = 0;
 	virtual void SetState(int state) { this->state = state; }
 

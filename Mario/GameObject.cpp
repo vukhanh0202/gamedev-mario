@@ -1,7 +1,7 @@
 #include <algorithm>
 
 #include "GameObject.h"
-#include "Debug.h"
+#include "Utils.h"
 #include "Animation.h"
 #include "Game.h"
 #include "Texture.h"
@@ -28,20 +28,11 @@ GameObject::~GameObject()
 /*
 	Update distance object
 */
-//void GameObject::Update(DWORD dt, vector<LPGameObject> *coObjects)
-void GameObject::Update(DWORD dt)
+void GameObject::Update(DWORD dt, vector<LPGameObject> *coObjects)
 {
-	/*this->dt = dt;
+	this->dt = dt;
 	dx = vx * dt;
-	dy = vy * dt;*/
-	x += vx * dt;
-	y += vy * dt;
-}
-
-void GameObject::AddAnimation(int aniId)
-{
-	LPAnimation ani = Animations::GetInstance()->Get(aniId);
-	animations.push_back(ani);
+	dy = vy * dt;
 }
 
 /*
@@ -63,19 +54,20 @@ LPCollisionEvent GameObject::SweptAABBEx(LPGameObject coO)
 	float sdx = svx * dt;
 	float sdy = svy * dt;
 
-	float dx = this->dx - sdx;
-	float dy = this->dy - sdy;
+	// (rdx, rdy) is RELATIVE movement distance/velocity 
+	float rdx = this->dx - sdx;
+	float rdy = this->dy - sdy;
 
 	GetBoundingBox(ml, mt, mr, mb);
 
 	Game::SweptAABB(
 		ml, mt, mr, mb,
-		dx, dy,
+		rdx, rdy,
 		sl, st, sr, sb,
 		t, nx, ny
 	);
 
-	CollisionEvent * e = new CollisionEvent(t, nx, ny, coO);
+	CollisionEvent * e = new CollisionEvent(t, nx, ny, rdx, rdy, coO);
 	return e;
 }
 void GameObject::RenderBoundingBox()
@@ -123,7 +115,7 @@ void GameObject::FilterCollision(
 	vector<LPCollisionEvent> &coEvents,
 	vector<LPCollisionEvent> &coEventsResult,
 	float &min_tx, float &min_ty,
-	float &nx, float &ny)
+	float &nx, float &ny, float &rdx, float &rdy)
 {
 	min_tx = 1.0f;
 	min_ty = 1.0f;
@@ -140,11 +132,11 @@ void GameObject::FilterCollision(
 		LPCollisionEvent c = coEvents[i];
 
 		if (c->t < min_tx && c->nx != 0) {
-			min_tx = c->t; nx = c->nx; min_ix = i;
+			min_tx = c->t; nx = c->nx; min_ix = i; rdx = c->dx;
 		}
 
 		if (c->t < min_ty  && c->ny != 0) {
-			min_ty = c->t; ny = c->ny; min_iy = i;
+			min_ty = c->t; ny = c->ny; min_iy = i; rdy = c->dy;
 		}
 	}
 

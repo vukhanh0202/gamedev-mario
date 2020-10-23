@@ -2,7 +2,7 @@
 #include <d3d9.h>
 #include <d3dx9.h>
 
-#include "Debug.h"
+#include "Utils.h"
 #include "Texture.h"
 #include "Game.h"
 
@@ -69,4 +69,16 @@ LPDIRECT3DTEXTURE9 Textures::Get(unsigned int i)
 	return listTextures[i];
 }
 
+/*
+	Clear all loaded textures
+*/
+void Textures::Clear()
+{
+	for (auto x : listTextures)
+	{
+		LPDIRECT3DTEXTURE9 tex = x.second;
+		if (tex != NULL) tex->Release();
+	}
 
+	listTextures.clear();
+}

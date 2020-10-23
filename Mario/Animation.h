@@ -34,7 +34,7 @@ public:
 	/*
 		Constructor
 	*/
-	Animation(int defaultTime) { this->defaultTime = defaultTime; lastFrameTime = -1; currentFrame = -1; }
+	Animation(int defaultTime = 100) { this->defaultTime = defaultTime; lastFrameTime = -1; currentFrame = -1; }
 	void Add(int spriteId, DWORD time = 0);
 	void Render(float x, float y, int alpha = 255);
 };
@@ -52,5 +52,28 @@ public:
 	void Add(int id, LPAnimation ani);
 	LPAnimation Get(int id);
 
+	void Clear();
+		
 	static Animations * GetInstance();
+};
+
+typedef vector<LPAnimation> AnimationSet;
+
+typedef AnimationSet* LPAnimation_Set;
+
+/*
+	Manage animation set database
+*/
+class AnimationSets
+{
+	static AnimationSets * __instance;
+
+	unordered_map<int, LPAnimation_Set> animation_sets;
+
+public:
+	AnimationSets();
+	void Add(int id, LPAnimation_Set ani);
+	LPAnimation_Set Get(unsigned int id);
+
+	static AnimationSets * GetInstance();
 };

@@ -21,6 +21,7 @@ class Goomba : public GameObject
 
 
 public:
+	Goomba();
 	virtual void SetState(int state);
 };
 

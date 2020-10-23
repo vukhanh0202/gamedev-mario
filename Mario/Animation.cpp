@@ -1,6 +1,8 @@
 #include "Animation.h"
+#include "Utils.h"
 
 
+AnimationSets * AnimationSets::__instance = NULL;
 /*
 	Add frame to Animation;
 	1 Animation include some Frame
@@ -74,4 +76,41 @@ LPAnimation Animations::Get(int id)
 void Animations::Add(int id, LPAnimation ani)
 {
 	listAnimations[id] = ani;
+}
+
+
+AnimationSets::AnimationSets()
+{
+
+}
+
+AnimationSets *AnimationSets::GetInstance()
+{
+	if (__instance == NULL) __instance = new AnimationSets();
+	return __instance;
+}
+
+LPAnimation_Set AnimationSets::Get(unsigned int id)
+{
+	LPAnimation_Set ani_set = animation_sets[id];
+	if (ani_set == NULL)
+		DebugOut(L"[ERROR] Failed to find animation set id: %d\n", id);
+
+	return ani_set;
+}
+
+void AnimationSets::Add(int id, LPAnimation_Set ani_set)
+{
+	animation_sets[id] = ani_set;
+}
+
+void Animations::Clear()
+{
+	for (auto x : listAnimations)
+	{
+		LPAnimation ani = x.second;
+		delete ani;
+	}
+
+	listAnimations.clear();
 }

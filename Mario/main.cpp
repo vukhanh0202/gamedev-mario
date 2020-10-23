@@ -2,12 +2,15 @@
 #include <d3d9.h>
 #include <d3dx9.h>
 
-#include "debug.h"
+#include "Utils.h"
 #include "Game.h"
 #include "GameObject.h"
 #include "Texture.h"
 
 #include "Mario.h"
+#include "Goomba.h"
+#include "Brick.h"
+#include "KeyEvent.h"
 
 
 #define WINDOW_CLASS_NAME L"Mario Game"
@@ -17,7 +20,7 @@
 #define SCREEN_WIDTH 320
 #define SCREEN_HEIGHT 240
 
-#define MAX_FRAME_RATE 90
+#define MAX_FRAME_RATE 120
 
 #define ID_TEX_MARIO 0
 #define ID_TEX_ENEMY 10
@@ -25,54 +28,51 @@
 
 
 Game *game;
-Mario *mario;
 
-class CSampleKeyHander : public KeyEventHandler
-{
-	virtual void KeyState(BYTE *states);
-	virtual void OnKeyDown(int KeyCode);
-	virtual void OnKeyUp(int KeyCode);
-};
-
-CSampleKeyHander * keyHandler;
-
-void CSampleKeyHander::OnKeyDown(int KeyCode)
-{
-	DebugOut(L"[INFO] KeyDown: %d\n", KeyCode);
-	switch (KeyCode)
-	{
-	case DIK_SPACE:
-		mario->SetState(MARIO_STATE_JUMP);
-		break;
-	}
-}
-
-void CSampleKeyHander::OnKeyUp(int KeyCode)
-{
-	DebugOut(L"[INFO] KeyUp: %d\n", KeyCode);
-}
-
-void CSampleKeyHander::KeyState(BYTE *states)
-{
-	if (game->IsKeyDown(DIK_RIGHT)) {
-		if (game->IsKeyDown(DIK_LSHIFT)) {
-			mario->SetState(MARIO_STATE_WALKING_RIGHT_FLASH);
-		}
-		else {
-			mario->SetState(MARIO_STATE_WALKING_RIGHT);
-		}
-	}
-	else if (game->IsKeyDown(DIK_LEFT)) {
-		if (game->IsKeyDown(DIK_LSHIFT)) {
-			mario->SetState(MARIO_STATE_WALKING_LEFT_FLASH);
-		}
-		else {
-			mario->SetState(MARIO_STATE_WALKING_LEFT);
-		}
-	}
-	else mario->SetState(MARIO_STATE_IDLE);
-}
-
+//vector<LPGameObject> objects;
+//
+//class CSampleKeyHander : public KeyEventHandler
+//{
+//	virtual void KeyState(BYTE *states);
+//	virtual void OnKeyDown(int KeyCode);
+//	virtual void OnKeyUp(int KeyCode);
+//};
+//
+//CSampleKeyHander * keyHandler;
+//
+//void CSampleKeyHander::OnKeyDown(int KeyCode)
+//{
+//	DebugOut(L"[INFO] KeyDown: %d\n", KeyCode);
+//	switch (KeyCode)
+//	{
+//	case DIK_SPACE:
+//		mario->SetState(MARIO_STATE_JUMP);
+//		break;
+//	case DIK_A: // reset
+//		mario->SetState(MARIO_STATE_IDLE);
+//		mario->SetLevel(MARIO_LEVEL_BIG);
+//		mario->SetPosition(50.0f, 0.0f);
+//		mario->SetSpeed(0, 0);
+//		break;
+//	}
+//}
+//
+//void CSampleKeyHander::OnKeyUp(int KeyCode)
+//{
+//	DebugOut(L"[INFO] KeyUp: %d\n", KeyCode);
+//}
+//
+//void CSampleKeyHander::KeyState(BYTE *states)
+//{
+//	// disable control key when Mario die 
+//	if (mario->GetState() == MARIO_STATE_DIE) return;
+//	if (game->IsKeyDown(DIK_RIGHT))
+//		mario->SetState(MARIO_STATE_WALKING_RIGHT);
+//	else if (game->IsKeyDown(DIK_LEFT))
+//		mario->SetState(MARIO_STATE_WALKING_LEFT);
+//	else
+//		mario->SetState(MARIO_STATE_IDLE);
+//}
 
 LRESULT CALLBACK WinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
@@ -86,64 +86,6 @@ LRESULT CALLBACK WinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
 	return 0;
 }
-/*
-	Load all game resources
-	In this example: load textures, sprites, animations and mario object
-*/
-void LoadResources()
-{
-	Textures * textures = Textures::GetInstance();
-
-	textures->Add(ID_TEX_MARIO, L"textures\\mario.png", D3DCOLOR_XRGB(255, 255, 255));
-
-	Sprites * sprites = Sprites::GetInstance();
-	Animations * animations = Animations::GetInstance();
-
-	LPDIRECT3DTEXTURE9 texMario = textures->Get(ID_TEX_MARIO);
-
-
-	sprites->Add(10001, 246, 154, 260, 181, texMario);
-
-	sprites->Add(10002, 275, 154, 290, 181, texMario);
-	sprites->Add(10003, 304, 154, 321, 181, texMario);
-
-	sprites->Add(10011, 186, 154, 200, 181, texMario);
-
-	sprites->Add(10012, 155, 154, 170, 181, texMario);
-	sprites->Add(10013, 125, 154, 140, 181, texMario);
-
-
-	LPAnimation ani;
-
-	ani = new Animation(100);
-	ani->Add(10001);
-	animations->Add(400, ani);
-
-	ani = new Animation(100);
-	ani->Add(10011);
-	animations->Add(401, ani);
-
-
-	ani = new Animation(100);
-	ani->Add(10001);
-	ani->Add(10002);
-	ani->Add(10003);
-	animations->Add(500, ani);
-
-	ani = new Animation(100);
-	ani->Add(10011);
-	ani->Add(10012);
-	ani->Add(10013);
-	animations->Add(501, ani);
-
-	mario = new Mario();
-	mario->AddAnimation(400);		// idle right
-	mario->AddAnimation(401);		// idle left
-	mario->AddAnimation(500);		// walk right
-	mario->AddAnimation(501);		// walk left
-
-	mario->SetPosition(0.0f, 100.0f);
-}
 
 /*
 	Update world status for this frame
@@ -151,7 +93,7 @@ void LoadResources()
 */
 void Update(DWORD dt)
 {
-	mario->Update(dt);
+	Game::GetInstance()->GetCurrentScene()->Update(dt);
 }
 
 /*
@@ -170,7 +112,7 @@ void Render()
 
 		spriteHandler->Begin(D3DXSPRITE_ALPHABLEND);
 
-		mario->Render();
+		Game::GetInstance()->GetCurrentScene()->Render();
 
 		spriteHandler->End();
 		d3ddv->EndScene();
@@ -272,12 +214,12 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 	game = Game::GetInstance();
 	game->Init(hWnd);
+	game->InitKeyboard();
 
-	keyHandler = new CSampleKeyHander();
-	game->InitKeyboard(keyHandler);
+	game->Load(L"mario-sample.txt");
 
+	SetWindowPos(hWnd, 0, 0, 0, SCREEN_WIDTH * 2, SCREEN_HEIGHT * 2, SWP_NOMOVE | SWP_NOOWNERZORDER | SWP_NOZORDER);
 
-	LoadResources();
 	Run();
 
 	return 0;

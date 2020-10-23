@@ -1,0 +1,24 @@
+﻿  Game.cpp
+  c:\program files (x86)\microsoft directx sdk (june 2010)\include\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
+d:\uit\kì 1 2021 (kì 5)\nhập môn game\mario\mario\mario\game.h(9): warning C4005: 'DIRECTINPUT_VERSION': macro redefinition
+  c:\program files (x86)\microsoft directx sdk (june 2010)\include\dinput.h(42): note: see previous definition of 'DIRECTINPUT_VERSION'
+d:\uit\kì 1 2021 (kì 5)\nhập môn game\mario\mario\mario\game.cpp(206): warning C4305: '=': truncation from '__int64' to 'float'
+d:\uit\kì 1 2021 (kì 5)\nhập môn game\mario\mario\mario\game.cpp(207): warning C4305: '=': truncation from '__int64' to 'float'
+d:\uit\kì 1 2021 (kì 5)\nhập môn game\mario\mario\mario\game.cpp(217): warning C4305: '=': truncation from '__int64' to 'float'
+d:\uit\kì 1 2021 (kì 5)\nhập môn game\mario\mario\mario\game.cpp(218): warning C4305: '=': truncation from '__int64' to 'float'
+  main.cpp
+  c:\program files (x86)\microsoft directx sdk (june 2010)\include\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
+d:\uit\kì 1 2021 (kì 5)\nhập môn game\mario\mario\mario\game.h(9): warning C4005: 'DIRECTINPUT_VERSION': macro redefinition
+  c:\program files (x86)\microsoft directx sdk (june 2010)\include\dinput.h(42): note: see previous definition of 'DIRECTINPUT_VERSION'
+d:\uit\kì 1 2021 (kì 5)\nhập môn game\mario\mario\mario\main.cpp(255): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+  Generating Code...
+Game.obj : error LNK2019: unresolved external symbol Direct3DCreate9 referenced in function "public: void __cdecl Game::Init(struct HWND__ *)" (?Init@Game@@QEAAXPEAUHWND__@@@Z)
+Game.obj : error LNK2019: unresolved external symbol D3DXCreateSprite referenced in function "public: void __cdecl Game::Init(struct HWND__ *)" (?Init@Game@@QEAAXPEAUHWND__@@@Z)
+Texture.obj : error LNK2019: unresolved external symbol D3DXGetImageInfoFromFileW referenced in function "public: void __cdecl Textures::Add(int,wchar_t const *,unsigned long)" (?Add@Textures@@QEAAXHPEB_WK@Z)
+Texture.obj : error LNK2019: unresolved external symbol D3DXCreateTextureFromFileExW referenced in function "public: void __cdecl Textures::Add(int,wchar_t const *,unsigned long)" (?Add@Textures@@QEAAXHPEB_WK@Z)
+C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Lib\x86\d3dx9.lib : warning LNK4272: library machine type 'x86' conflicts with target machine type 'x64'
+C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Lib\x86\d3d9.lib : warning LNK4272: library machine type 'x86' conflicts with target machine type 'x64'
+C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Lib\x86\dxguid.lib : warning LNK4272: library machine type 'x86' conflicts with target machine type 'x64'
+C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Lib\x86\dxerr.lib : warning LNK4272: library machine type 'x86' conflicts with target machine type 'x64'
+C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Lib\x86\dinput8.lib : warning LNK4272: library machine type 'x86' conflicts with target machine type 'x64'
+D:\UIT\Kì 1 2021 (Kì 5)\Nhập môn Game\Mario\Mario\x64\Debug\Mario.exe : fatal error LNK1120: 4 unresolved externals
