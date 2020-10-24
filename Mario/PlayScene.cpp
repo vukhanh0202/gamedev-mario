@@ -10,6 +10,7 @@
 #include "Game.h"
 #include "Goomba.h"
 #include "Brick.h"
+#include "Background.h"
 
 using namespace std;
 
@@ -26,10 +27,12 @@ PlayScene::PlayScene(int id, LPCWSTR filePath) :
 #define SCENE_SECTION_ANIMATION_SETS	5
 #define SCENE_SECTION_OBJECTS	6
 
+#define OBJECT_TYPE_BACKGROUND	-1
 #define OBJECT_TYPE_MARIO	0
 #define OBJECT_TYPE_BRICK	1
 #define OBJECT_TYPE_GOOMBA	2
 #define OBJECT_TYPE_KOOPAS	3
+#define OBJECT_TYPE_BRICK_GLOSSY	4
 
 #define OBJECT_TYPE_PORTAL	50
 
@@ -152,6 +155,7 @@ void PlayScene::_ParseSection_OBJECTS(string line)
 		break;
 	case OBJECT_TYPE_GOOMBA: obj = new Goomba(); break;
 	case OBJECT_TYPE_BRICK: obj = new Brick(); break;
+	case OBJECT_TYPE_BACKGROUND: obj = new BackGround(); break;
 	//case OBJECT_TYPE_KOOPAS: obj = new CKoopas(); break;
 	/*case OBJECT_TYPE_PORTAL:
 	{
@@ -255,7 +259,7 @@ void PlayScene::Update(DWORD dt)
 
 
 	// Keep mario not overcome screen
-	if (player->x < 0) player->x = 0;
+	if (player->x < 5) player->x = 5;
 
 	// Mario in a head map
 	if (player->x < (game->GetScreenWidth() / 2)) {
