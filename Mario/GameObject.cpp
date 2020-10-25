@@ -15,7 +15,8 @@ GameObject::GameObject()
 	x = y = 0;
 	vx = vy = 0;
 	nx = 1;
-	
+
+
 }
 /*
 	Destructor

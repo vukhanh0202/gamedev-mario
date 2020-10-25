@@ -55,6 +55,7 @@ public:
 
 	int state;
 
+
 	DWORD dt;
 
 	LPAnimation_Set animation_set;
@@ -67,7 +68,6 @@ public:
 	void GetSpeed(float &vx, float &vy) { vx = this->vx; vy = this->vy; }
 
 	int GetState() { return this->state; }
-
 
 	/*
 		Algorithm SweptAABB handling collision

@@ -259,18 +259,20 @@ void PlayScene::Update(DWORD dt)
 
 
 	// Keep mario not overcome screen
-	if (player->x < 5) player->x = 5;
-	else if (player->x > 2858) {
-		player->x = 2858;
+	if (player->x < 5) {
+		player->x = 5;
 	}
+	else if (player->x > 2862) {
+		player->x = 2862;
+	}// Overcome end map
 
-	// Mario in a head map
+	// Mario in head map
 	if (player->x < (game->GetScreenWidth() / 2)) {
 		cx = 0;
 	}
-	else if (player->x > 2873 - (game->GetScreenWidth() / 2)) {
-		cx = 2873 - (game->GetScreenWidth());
-	}
+	else if (player->x > 2880 - (game->GetScreenWidth())) {
+		cx = 2880 - (game->GetScreenWidth());
+	}// Mario in tail map
 
 	/*if (player->y > (game->GetScreenHeight() / 2)) {
 		cy = 0;
@@ -308,8 +310,17 @@ void PlaySceneKeyHandler::OnKeyDown(int KeyCode)
 	switch (KeyCode)
 	{
 	case DIK_SPACE:
-		mario->SetState(MARIO_STATE_JUMP);
-		break;
+	{
+		DWORD t = GetTickCount() - mario->getLastJumpTime();
+		// 0.5s sleep when mario jump
+		if (t > 500 && mario->getIsCollision() == true)
+		{
+			mario->SetState(MARIO_STATE_JUMP);
+			mario->setLastJumpTime(GetTickCount());
+			mario->setIsCollision(false);
+		}
+	}
+	break;
 	case DIK_A:
 		mario->Reset();
 		break;

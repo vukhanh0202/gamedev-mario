@@ -11,6 +11,8 @@ Mario::Mario(float x, float y) : GameObject()
 	start_y = y;
 	this->x = x;
 	this->y = y;
+
+	lastJumpTime = 0;
 }
 
 void Mario::Update(DWORD dt, vector<LPGameObject> *coObjects)
@@ -45,12 +47,15 @@ void Mario::Update(DWORD dt, vector<LPGameObject> *coObjects)
 	}
 	else
 	{
+		isCollision = true;
 		float min_tx, min_ty, nx = 0, ny;
 		float rdx = 0;
 		float rdy = 0;
 
 		// TODO: This is a very ugly designed function!!!!
 		FilterCollision(coEvents, coEventsResult, min_tx, min_ty, nx, ny, rdx, rdy);
+		/*if (coEventsResult.size() > 0) isCollision = true;
+		else isCollision = false;*/
 
 		// how to push back Mario if collides with a moving objects, what if Mario is pushed this way into another object?
 		//if (rdx != 0 && rdx!=dx)
@@ -183,7 +188,6 @@ void Mario::SetState(int state)
 		nx = -1;
 		break;
 	case MARIO_STATE_JUMP:
-		// TODO: need to check if Mario is *current* on a platform before allowing to jump again
 		vy = -MARIO_JUMP_SPEED_Y;
 		break;
 	case MARIO_STATE_IDLE:

@@ -47,12 +47,19 @@ class Mario : public GameObject
 	float start_x;			// initial position of Mario at scene
 	float start_y;
 
+	DWORD lastJumpTime;
+	boolean isCollision; // Check object is collision?
+
 public:
 	/*Mario() : GameObject()
 	{
 		level = MARIO_LEVEL_BIG;
 		untouchable = 0;
 	}*/
+	DWORD getLastJumpTime() { return lastJumpTime; }
+	boolean getIsCollision() { return isCollision; }
+	void setIsCollision(boolean flag) { isCollision = flag; }
+	void setLastJumpTime(DWORD lastJumpTime) { this->lastJumpTime = lastJumpTime; }
 	Mario(float x = 0.0f, float y = 0.0f);
 
 	virtual void Update(DWORD dt, vector<LPGameObject> *colliable_objects = NULL);
