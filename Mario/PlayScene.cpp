@@ -120,7 +120,7 @@ void PlayScene::_ParseSection_ANIMATION_SETS(string line)
 	AnimationSets::GetInstance()->Add(ani_set_id, s);
 }
 /*
-	Parse a line in section [OBJECTS] 
+	Parse a line in section [OBJECTS]
 */
 void PlayScene::_ParseSection_OBJECTS(string line)
 {
@@ -156,15 +156,15 @@ void PlayScene::_ParseSection_OBJECTS(string line)
 	case OBJECT_TYPE_GOOMBA: obj = new Goomba(); break;
 	case OBJECT_TYPE_BRICK: obj = new Brick(); break;
 	case OBJECT_TYPE_BACKGROUND: obj = new BackGround(); break;
-	//case OBJECT_TYPE_KOOPAS: obj = new CKoopas(); break;
-	/*case OBJECT_TYPE_PORTAL:
-	{
-		float r = atof(tokens[4].c_str());
-		float b = atof(tokens[5].c_str());
-		int scene_id = atoi(tokens[6].c_str());
-		obj = new CPortal(x, y, r, b, scene_id);
-	}*/
-	break;
+		//case OBJECT_TYPE_KOOPAS: obj = new CKoopas(); break;
+		/*case OBJECT_TYPE_PORTAL:
+		{
+			float r = atof(tokens[4].c_str());
+			float b = atof(tokens[5].c_str());
+			int scene_id = atoi(tokens[6].c_str());
+			obj = new CPortal(x, y, r, b, scene_id);
+		}*/
+		break;
 	default:
 		DebugOut(L"[ERR] Invalid object type: %d\n", object_type);
 		return;
@@ -260,11 +260,18 @@ void PlayScene::Update(DWORD dt)
 
 	// Keep mario not overcome screen
 	if (player->x < 5) player->x = 5;
+	else if (player->x > 2858) {
+		player->x = 2858;
+	}
 
 	// Mario in a head map
 	if (player->x < (game->GetScreenWidth() / 2)) {
 		cx = 0;
 	}
+	else if (player->x > 2873 - (game->GetScreenWidth() / 2)) {
+		cx = 2873 - (game->GetScreenWidth());
+	}
+
 	/*if (player->y > (game->GetScreenHeight() / 2)) {
 		cy = 0;
 	}*/

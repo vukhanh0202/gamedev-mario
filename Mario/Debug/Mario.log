@@ -1,5 +1,12 @@
-﻿  main.cpp
+﻿  PlayScene.cpp
   c:\program files (x86)\microsoft directx sdk (june 2010)\include\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
 d:\uit\kì 1 2021 (kì 5)\nhập môn game\mario\mario\mario\game.h(11): warning C4005: 'DIRECTINPUT_VERSION': macro redefinition
   c:\program files (x86)\microsoft directx sdk (june 2010)\include\dinput.h(42): note: see previous definition of 'DIRECTINPUT_VERSION'
+d:\uit\kì 1 2021 (kì 5)\nhập môn game\mario\mario\mario\playscene.cpp(90): warning C4018: '<': signed/unsigned mismatch
+d:\uit\kì 1 2021 (kì 5)\nhập môn game\mario\mario\mario\playscene.cpp(112): warning C4018: '<': signed/unsigned mismatch
+d:\uit\kì 1 2021 (kì 5)\nhập môn game\mario\mario\mario\playscene.cpp(134): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+d:\uit\kì 1 2021 (kì 5)\nhập môn game\mario\mario\mario\playscene.cpp(135): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+d:\uit\kì 1 2021 (kì 5)\nhập môn game\mario\mario\mario\playscene.cpp(272): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+d:\uit\kì 1 2021 (kì 5)\nhập môn game\mario\mario\mario\playscene.cpp(284): warning C4018: '<': signed/unsigned mismatch
+d:\uit\kì 1 2021 (kì 5)\nhập môn game\mario\mario\mario\playscene.cpp(293): warning C4018: '<': signed/unsigned mismatch
   Mario.vcxproj -> D:\UIT\Kì 1 2021 (Kì 5)\Nhập môn Game\Mario\Mario\Debug\Mario.exe
