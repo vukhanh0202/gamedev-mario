@@ -11,6 +11,7 @@ d:\uit\kì 1 2021 (kì 5)\nhập môn game\mario\mario\mario\game.cpp(292): warn
 d:\uit\kì 1 2021 (kì 5)\nhập môn game\mario\mario\mario\game.h(11): warning C4005: 'DIRECTINPUT_VERSION': macro redefinition
   c:\program files (x86)\microsoft directx sdk (june 2010)\include\dinput.h(42): note: see previous definition of 'DIRECTINPUT_VERSION'
   Mario.cpp
+d:\uit\kì 1 2021 (kì 5)\nhập môn game\mario\mario\mario\mario.cpp(260): warning C4805: '==': unsafe mix of type 'boolean' and type 'bool' in operation
   PlayScene.cpp
   c:\program files (x86)\microsoft directx sdk (june 2010)\include\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
 d:\uit\kì 1 2021 (kì 5)\nhập môn game\mario\mario\mario\game.h(11): warning C4005: 'DIRECTINPUT_VERSION': macro redefinition
@@ -22,7 +23,6 @@ d:\uit\kì 1 2021 (kì 5)\nhập môn game\mario\mario\mario\playscene.cpp(135):
 d:\uit\kì 1 2021 (kì 5)\nhập môn game\mario\mario\mario\playscene.cpp(274): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
 d:\uit\kì 1 2021 (kì 5)\nhập môn game\mario\mario\mario\playscene.cpp(286): warning C4018: '<': signed/unsigned mismatch
 d:\uit\kì 1 2021 (kì 5)\nhập môn game\mario\mario\mario\playscene.cpp(295): warning C4018: '<': signed/unsigned mismatch
-d:\uit\kì 1 2021 (kì 5)\nhập môn game\mario\mario\mario\playscene.cpp(316): warning C4805: '==': unsafe mix of type 'boolean' and type 'bool' in operation
   Sprite.cpp
   c:\program files (x86)\microsoft directx sdk (june 2010)\include\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
 d:\uit\kì 1 2021 (kì 5)\nhập môn game\mario\mario\mario\game.h(11): warning C4005: 'DIRECTINPUT_VERSION': macro redefinition

@@ -3,7 +3,7 @@
 
 Mario::Mario(float x, float y) : GameObject()
 {
-	level = MARIO_LEVEL_BIG;
+	level = MARIO_LEVEL_SUPER_BIG;
 	untouchable = 0;
 	SetState(MARIO_STATE_IDLE);
 
@@ -13,6 +13,7 @@ Mario::Mario(float x, float y) : GameObject()
 	this->y = y;
 
 	lastJumpTime = 0;
+	ny = -1;
 }
 
 void Mario::Update(DWORD dt, vector<LPGameObject> *coObjects)
@@ -54,8 +55,6 @@ void Mario::Update(DWORD dt, vector<LPGameObject> *coObjects)
 
 		// TODO: This is a very ugly designed function!!!!
 		FilterCollision(coEvents, coEventsResult, min_tx, min_ty, nx, ny, rdx, rdy);
-		/*if (coEventsResult.size() > 0) isCollision = true;
-		else isCollision = false;*/
 
 		// how to push back Mario if collides with a moving objects, what if Mario is pushed this way into another object?
 		//if (rdx != 0 && rdx!=dx)
@@ -94,7 +93,8 @@ void Mario::Update(DWORD dt, vector<LPGameObject> *coObjects)
 						{
 							if (level > MARIO_LEVEL_SMALL)
 							{
-								level = MARIO_LEVEL_SMALL;
+								//level = MARIO_LEVEL_SMALL;
+								level--;
 								StartUntouchable();
 							}
 							else
@@ -118,18 +118,33 @@ void Mario::Render()
 		ani = MARIO_ANI_DIE;
 	}
 	else {
-		if (level == MARIO_LEVEL_BIG) 
+		if (level == MARIO_LEVEL_BIG)
 		{
-			if (vx == 0) 
+			if (vx == 0)
 			{
-				if (nx > 0)
-				{ 
-					ani = MARIO_ANI_BIG_IDLE_RIGHT;
-				}
-				else
+				if (ny > 0) // sit
 				{
-					ani = MARIO_ANI_BIG_IDLE_LEFT;
+					if (nx > 0)
+					{
+						ani = MARIO_ANI_BIG_SITTING_RIGHT;
+					}
+					else
+					{
+						ani = MARIO_ANI_BIG_SITTING_LEFT;
+					}
 				}
+				else // not sit
+				{
+					if (nx > 0)
+					{
+						ani = MARIO_ANI_BIG_IDLE_RIGHT;
+					}
+					else
+					{
+						ani = MARIO_ANI_BIG_IDLE_LEFT;
+					}
+				}
+
 			}
 			else if (vx > 0)
 			{
@@ -162,6 +177,42 @@ void Mario::Render()
 				ani = MARIO_ANI_SMALL_WALKING_LEFT;
 			}
 		}
+		else if (level == MARIO_LEVEL_SUPER_BIG)
+		{
+			if (vx == 0)
+			{
+				if (ny > 0) // sit
+				{
+					if (nx > 0)
+					{
+						ani = MARIO_ANI_SUPER_BIG_SITTING_RIGHT;
+					}
+					else
+					{
+						ani = MARIO_ANI_SUPER_BIG_SITTING_LEFT;
+					}
+				}
+				else // not sit
+				{
+					if (nx > 0)
+					{
+						ani = MARIO_ANI_SUPER_BIG_IDLE_RIGHT;
+					}
+					else
+					{
+						ani = MARIO_ANI_SUPER_BIG_IDLE_LEFT;
+					}
+				}
+			}
+			else if (vx > 0)
+			{
+				ani = MARIO_ANI_SUPER_BIG_WALKING_RIGHT;
+			}
+			else
+			{
+				ani = MARIO_ANI_SUPER_BIG_WALKING_LEFT;
+			}
+		}
 	}
 
 	int alpha = 255;
@@ -182,16 +233,57 @@ void Mario::SetState(int state)
 	case MARIO_STATE_WALKING_RIGHT:
 		vx = MARIO_WALKING_SPEED;
 		nx = 1;
+		if (ny == 1)
+		{
+			float l, t, r, b;
+			GetBoundingBox(l, t, r, b);
+			this->y -= (b - t);
+		}
+		ny = -1;// Not sit
 		break;
 	case MARIO_STATE_WALKING_LEFT:
 		vx = -MARIO_WALKING_SPEED;
 		nx = -1;
+		if (ny == 1)
+		{
+			float l, t, r, b;
+			GetBoundingBox(l, t, r, b);
+			this->y -= (b - t);
+		}
+		ny = -1;
 		break;
 	case MARIO_STATE_JUMP:
-		vy = -MARIO_JUMP_SPEED_Y;
+	
+		if (ny == -1) {
+			DWORD t = GetTickCount() - lastJumpTime;
+			// 0.5s sleep when mario jump
+			if (t > 500 && isCollision == true)
+			{
+
+				lastJumpTime = GetTickCount();
+				isCollision = false;
+				vy = -MARIO_JUMP_SPEED_Y;
+				ny = -1;
+			}
+		}
 		break;
 	case MARIO_STATE_IDLE:
 		vx = 0;
+		if (ny == 1)
+		{
+			float l, t, r, b;
+			GetBoundingBox(l, t, r, b);
+			this->y -= (b - t);
+		}
+		ny = -1;
+		break;
+	case MARIO_STATE_SITTING_RIGHT:
+		vx = 0;
+		ny = 1;
+		break;
+	case MARIO_STATE_SITTING_LEFT:
+		vx = 0;
+		ny = 1;
 		break;
 	case MARIO_STATE_DIE:
 		vy = -MARIO_DIE_DEFLECT_SPEED;
@@ -206,13 +298,32 @@ void Mario::GetBoundingBox(float &left, float &top, float &right, float &bottom)
 
 	if (level == MARIO_LEVEL_BIG)
 	{
+		if (ny > 0)
+		{
+			bottom = y + MARIO_BIG_BBOX_HEIGHT_SITTING;
+		}
+		else
+		{
+			bottom = y + MARIO_BIG_BBOX_HEIGHT;
+		}
 		right = x + MARIO_BIG_BBOX_WIDTH;
-		bottom = y + MARIO_BIG_BBOX_HEIGHT;
 	}
-	else
+	else if (level == MARIO_LEVEL_SMALL)
 	{
 		right = x + MARIO_SMALL_BBOX_WIDTH;
 		bottom = y + MARIO_SMALL_BBOX_HEIGHT;
+	}
+	else if (level == MARIO_LEVEL_SUPER_BIG)
+	{
+		if (ny > 0)
+		{
+			bottom = y + MARIO_SUPER_BIG_BBOX_HEIGHT_SITTING;
+		}
+		else
+		{
+			bottom = y + MARIO_SUPER_BIG_BBOX_HEIGHT;
+		}
+		right = x + MARIO_SUPER_BIG_BBOX_WIDTH;
 	}
 }
 
@@ -222,7 +333,7 @@ void Mario::GetBoundingBox(float &left, float &top, float &right, float &bottom)
 void Mario::Reset()
 {
 	SetState(MARIO_STATE_IDLE);
-	SetLevel(MARIO_LEVEL_BIG);
+	SetLevel(MARIO_LEVEL_SUPER_BIG);
 	SetPosition(start_x, start_y);
 	SetSpeed(0, 0);
 }

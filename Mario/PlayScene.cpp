@@ -311,18 +311,34 @@ void PlaySceneKeyHandler::OnKeyDown(int KeyCode)
 	{
 	case DIK_SPACE:
 	{
-		DWORD t = GetTickCount() - mario->getLastJumpTime();
-		// 0.5s sleep when mario jump
-		if (t > 500 && mario->getIsCollision() == true)
-		{
-			mario->SetState(MARIO_STATE_JUMP);
-			mario->setLastJumpTime(GetTickCount());
-			mario->setIsCollision(false);
-		}
+		
+		mario->SetState(MARIO_STATE_JUMP);
 	}
 	break;
 	case DIK_A:
 		mario->Reset();
+		break;
+		/*case DIK_DOWN:
+			if (mario->nx < 0)
+			{
+				mario->SetState(MARIO_STATE_SITTING_LEFT);
+			}
+			else
+			{
+				mario->SetState(MARIO_STATE_SITTING_RIGHT);
+			}
+			break;*/
+	}
+}
+void PlaySceneKeyHandler::OnKeyUp(int KeyCode)
+{
+	//DebugOut(L"[INFO] KeyDown: %d\n", KeyCode);
+
+	Mario *mario = ((PlayScene*)scence)->GetPlayer();
+	switch (KeyCode)
+	{
+	case DIK_DOWN:
+		mario->SetState(MARIO_STATE_IDLE);
 		break;
 	}
 }
@@ -338,6 +354,17 @@ void PlaySceneKeyHandler::KeyState(BYTE *states)
 		mario->SetState(MARIO_STATE_WALKING_RIGHT);
 	else if (game->IsKeyDown(DIK_LEFT))
 		mario->SetState(MARIO_STATE_WALKING_LEFT);
+	else if (game->IsKeyDown(DIK_DOWN))
+	{
+		if (mario->nx < 0)
+		{
+			mario->SetState(MARIO_STATE_SITTING_LEFT);
+		}
+		else
+		{
+			mario->SetState(MARIO_STATE_SITTING_RIGHT);
+		}
+	}
 	else
 		mario->SetState(MARIO_STATE_IDLE);
 }
