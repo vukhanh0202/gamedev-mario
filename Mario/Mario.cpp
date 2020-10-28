@@ -1,5 +1,8 @@
 #include "Mario.h"
 #include "Goomba.h"
+#include "Brick.h"
+#include "Box.h"
+#include "Koopa.h"
 
 Mario::Mario(float x, float y) : GameObject()
 {
@@ -101,6 +104,43 @@ void Mario::Update(DWORD dt, vector<LPGameObject> *coObjects)
 								SetState(MARIO_STATE_DIE);
 						}
 					}
+				}
+			}
+			else if (dynamic_cast<Koopa *>(e->obj)) // if e->obj is Koopa 
+			{
+				Koopa *koopa = dynamic_cast<Koopa *>(e->obj);
+
+				// jump on top >> kill Koopa
+				if (e->ny < 0)
+				{
+					if (koopa->GetState() != KOOPA_STATE_DIE)
+					{
+						koopa->SetState(KOOPA_STATE_DIE);
+						vy = -MARIO_JUMP_DEFLECT_SPEED;
+					}
+				}
+				else if (e->nx != 0)
+				{
+					if (koopa->GetState() == KOOPA_STATE_DIE)
+					{
+						koopa->SetState(KOOPA_STATE_THROWING);
+					}
+					/*Mario dead*/
+
+					//if (untouchable == 0)
+					//{
+					//	if (goomba->GetState() != GOOMBA_STATE_DIE)
+					//	{
+					//		if (level > MARIO_LEVEL_SMALL)
+					//		{
+					//			//level = MARIO_LEVEL_SMALL;
+					//			level--;
+					//			StartUntouchable();
+					//		}
+					//		else
+					//			SetState(MARIO_STATE_DIE);
+					//	}
+					//}
 				}
 			}
 		}

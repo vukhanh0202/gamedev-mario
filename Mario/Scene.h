@@ -22,11 +22,11 @@ typedef Scene * LPScene;
 class SceneKeyHandler : public KeyEventHandler
 {
 protected:
-	Scene * scence;
+	Scene * scene;
 
 public:
 	virtual void KeyState(BYTE *states) = 0;
 	virtual void OnKeyDown(int KeyCode) = 0;
 	virtual void OnKeyUp(int KeyCode) = 0;
-	SceneKeyHandler(Scene *s) :KeyEventHandler() { scence = s; }
+	SceneKeyHandler(Scene *s) :KeyEventHandler() { scene = s; }
 };

@@ -11,6 +11,12 @@
 #include "Goomba.h"
 #include "Brick.h"
 #include "Background.h"
+#include "Box.h"
+#include "Koopa.h"
+#include "Ground.h"
+
+#define VALUE_MAXIMUM 99999999
+#define VALUE_MINIMUM -99999999
 
 using namespace std;
 
@@ -18,6 +24,7 @@ PlayScene::PlayScene(int id, LPCWSTR filePath) :
 	Scene(id, filePath)
 {
 	key_handler = new PlaySceneKeyHandler(this);
+	mergeObject = false;
 }
 
 #define SCENE_SECTION_UNKNOWN -1
@@ -27,12 +34,14 @@ PlayScene::PlayScene(int id, LPCWSTR filePath) :
 #define SCENE_SECTION_ANIMATION_SETS	5
 #define SCENE_SECTION_OBJECTS	6
 
+#define OBJECT_TYPE_MARIO	-2
 #define OBJECT_TYPE_BACKGROUND	-1
-#define OBJECT_TYPE_MARIO	0
+#define OBJECT_TYPE_GROUND	0
 #define OBJECT_TYPE_BRICK	1
 #define OBJECT_TYPE_GOOMBA	2
-#define OBJECT_TYPE_KOOPAS	3
+#define OBJECT_TYPE_KOOPA	3
 #define OBJECT_TYPE_BRICK_GLOSSY	4
+#define OBJECT_TYPE_BOX		5
 
 #define OBJECT_TYPE_PORTAL	50
 
@@ -126,57 +135,156 @@ void PlayScene::_ParseSection_OBJECTS(string line)
 {
 	vector<string> tokens = split(line);
 
-	//DebugOut(L"--> %s\n",ToWSTR(line).c_str());
-
-	if (tokens.size() < 3) return; // skip invalid lines - an object set must have at least id, x, y
-
-	int object_type = atoi(tokens[0].c_str());
-	float x = atof(tokens[1].c_str());
-	float y = atof(tokens[2].c_str());
-
-	int ani_set_id = atoi(tokens[3].c_str());
-
-	AnimationSets * animation_sets = AnimationSets::GetInstance();
-
-	GameObject *obj = NULL;
-
-	switch (object_type)
+	// Check start merge
+	if (line[0] == '!')
 	{
-	case OBJECT_TYPE_MARIO:
-		if (player != NULL)
+		// false -> true and true -> false
+		if (mergeObject == false)
 		{
-			DebugOut(L"[ERROR] MARIO object was created before!\n");
-			return;
+			mergeObject = true;				//Start merge
+			GameObject *obj = new Boxs();
+			objects.push_back(obj);
 		}
-		obj = new Mario(x, y);
-		player = (Mario*)obj;
+		else {
+			mergeObject = false;			// End merge
+			for (size_t i = 0; i < objects.size(); i++)
+			{
+				if (dynamic_cast<Boxs *>(objects[i]))
+				{
+					Boxs *boxs = dynamic_cast<Boxs *>(objects[i]);
+					if (boxs->getMergeComplete() == false)
+					{
+						boxs->setMergeComplete(true);
+						vector<Box*> listBox = boxs->getListBox();
+						float xBoxs = VALUE_MINIMUM, yBoxs = VALUE_MAXIMUM;
+						listBox[0]->GetPosition(xBoxs, yBoxs);
+						boxs->SetPosition(xBoxs, yBoxs);
+						boxs->setWidth(BOX_BBOX_WIDTH);
+						boxs->setHeight(BOX_BBOX_HEIGHT);
 
-		DebugOut(L"[INFO] Player object created!\n");
-		break;
-	case OBJECT_TYPE_GOOMBA: obj = new Goomba(); break;
-	case OBJECT_TYPE_BRICK: obj = new Brick(); break;
-	case OBJECT_TYPE_BACKGROUND: obj = new BackGround(); break;
-		//case OBJECT_TYPE_KOOPAS: obj = new CKoopas(); break;
-		/*case OBJECT_TYPE_PORTAL:
-		{
-			float r = atof(tokens[4].c_str());
-			float b = atof(tokens[5].c_str());
-			int scene_id = atoi(tokens[6].c_str());
-			obj = new CPortal(x, y, r, b, scene_id);
-		}*/
-		break;
-	default:
-		DebugOut(L"[ERR] Invalid object type: %d\n", object_type);
-		return;
+
+						for (size_t i = 1; i < listBox.size(); i++)
+						{
+							float xItem, yItem;
+							listBox[i]->GetPosition(xItem, yItem);
+
+							// Set width
+							if (xItem >= xBoxs)
+							{
+								boxs->setWidth(xItem - xBoxs + BOX_BBOX_WIDTH);
+							}
+							else
+							{
+								float width = boxs->getWidth();
+								boxs->setWidth(xBoxs - xItem + width);
+								xBoxs = xItem;
+							}
+
+							// Set height
+							if (yItem < yBoxs)
+							{
+								float height = boxs->getHeight();
+								boxs->setHeight(yBoxs - yItem +height);
+								yBoxs = yItem;
+							}
+							else
+							{
+								boxs->setHeight(yItem - yBoxs + BOX_BBOX_HEIGHT);
+							}
+						}
+
+						boxs->SetPosition(xBoxs, yBoxs);
+						//objects.push_back(boxs);
+					}
+				}
+
+			}
+		}
 	}
 
-	// General object setup
-	obj->SetPosition(x, y);
+	// MERGE BOX
+	if (mergeObject == true)
+	{
+		if (tokens.size() < 3) return; // skip invalid lines - an object set must have at least id, x, y
 
-	LPAnimation_Set ani_set = animation_sets->Get(ani_set_id);
+		int object_type = atoi(tokens[0].c_str());
+		float x = atof(tokens[1].c_str());
+		float y = atof(tokens[2].c_str());
 
-	obj->SetAnimationSet(ani_set);
-	objects.push_back(obj);
+		int ani_set_id = atoi(tokens[3].c_str());
+
+		AnimationSets * animation_sets = AnimationSets::GetInstance();
+
+		Box *obj = new Box();
+
+		// General object setup
+		obj->SetPosition(x, y);
+
+		LPAnimation_Set ani_set = animation_sets->Get(ani_set_id);
+
+		obj->SetAnimationSet(ani_set);
+
+		for (size_t i = 0; i < objects.size(); i++)
+		{
+			if (dynamic_cast<Boxs *>(objects[i]))
+			{
+				Boxs *boxs = dynamic_cast<Boxs *>(objects[i]);
+				if (boxs->getMergeComplete() == false)
+				{
+					boxs->PushBox(obj);
+				}
+			}
+		}
+	}
+	else
+	{
+		// DO NORMALLY
+
+		if (tokens.size() < 3) return; // skip invalid lines - an object set must have at least id, x, y
+
+		int object_type = atoi(tokens[0].c_str());
+		float x = atof(tokens[1].c_str());
+		float y = atof(tokens[2].c_str());
+
+		int ani_set_id = atoi(tokens[3].c_str());
+
+		AnimationSets * animation_sets = AnimationSets::GetInstance();
+
+		GameObject *obj = NULL;
+
+		switch (object_type)
+		{
+		case OBJECT_TYPE_MARIO:
+			if (player != NULL)
+			{
+				DebugOut(L"[ERROR] MARIO object was created before!\n");
+				return;
+			}
+			obj = new Mario(x, y);
+			player = (Mario*)obj;
+
+			DebugOut(L"[INFO] Player object created!\n");
+			break;
+		case OBJECT_TYPE_GOOMBA: obj = new BackGround(); break;
+		case OBJECT_TYPE_BRICK: obj = new Brick(); break;
+		case OBJECT_TYPE_GROUND: obj = new Ground(); break;
+		case OBJECT_TYPE_BACKGROUND: obj = new BackGround(); break;
+			//case OBJECT_TYPE_BOX: obj = new Box(); break;
+		case OBJECT_TYPE_KOOPA: obj = new Koopa(); break;
+		default:
+			DebugOut(L"[ERR] Invalid object type: %d\n", object_type);
+			return;
+		}
+
+		// General object setup
+		obj->SetPosition(x, y);
+
+		LPAnimation_Set ani_set = animation_sets->Get(ani_set_id);
+
+		obj->SetAnimationSet(ani_set);
+		objects.push_back(obj);
+	}
+
 }
 void PlayScene::Load()
 {
@@ -232,11 +340,11 @@ void PlayScene::Load()
 
 void PlayScene::Update(DWORD dt)
 {
-	// We know that Mario is the first object in the list hence we won't add him into the colliable object list
+	// We know that Mario is the last object in the list hence we won't add him into the colliable object list
 	// TO-DO: This is a "dirty" way, need a more organized way 
 
 	vector<LPGameObject> coObjects;
-	for (size_t i = 1; i < objects.size(); i++)
+	for (size_t i = 0; i < objects.size() - 1; i++)
 	{
 		coObjects.push_back(objects[i]);
 	}
@@ -306,35 +414,25 @@ void PlaySceneKeyHandler::OnKeyDown(int KeyCode)
 {
 	//DebugOut(L"[INFO] KeyDown: %d\n", KeyCode);
 
-	Mario *mario = ((PlayScene*)scence)->GetPlayer();
+	Mario *mario = ((PlayScene*)scene)->GetPlayer();
 	switch (KeyCode)
 	{
 	case DIK_SPACE:
 	{
-		
+
 		mario->SetState(MARIO_STATE_JUMP);
 	}
 	break;
 	case DIK_A:
 		mario->Reset();
 		break;
-		/*case DIK_DOWN:
-			if (mario->nx < 0)
-			{
-				mario->SetState(MARIO_STATE_SITTING_LEFT);
-			}
-			else
-			{
-				mario->SetState(MARIO_STATE_SITTING_RIGHT);
-			}
-			break;*/
 	}
 }
 void PlaySceneKeyHandler::OnKeyUp(int KeyCode)
 {
 	//DebugOut(L"[INFO] KeyDown: %d\n", KeyCode);
 
-	Mario *mario = ((PlayScene*)scence)->GetPlayer();
+	Mario *mario = ((PlayScene*)scene)->GetPlayer();
 	switch (KeyCode)
 	{
 	case DIK_DOWN:
@@ -346,7 +444,7 @@ void PlaySceneKeyHandler::OnKeyUp(int KeyCode)
 void PlaySceneKeyHandler::KeyState(BYTE *states)
 {
 	Game *game = Game::GetInstance();
-	Mario *mario = ((PlayScene*)scence)->GetPlayer();
+	Mario *mario = ((PlayScene*)scene)->GetPlayer();
 
 	// disable control key when Mario die 
 	if (mario->GetState() == MARIO_STATE_DIE) return;

@@ -8,6 +8,8 @@ class PlayScene : public Scene
 protected:
 	Mario *player;					// A play scene has to have player, right? 
 
+	boolean mergeObject;			// merge object (present is only box) ? merge status : do normally
+
 	vector<LPGameObject> objects;
 
 	void _ParseSection_TEXTURES(string line);
