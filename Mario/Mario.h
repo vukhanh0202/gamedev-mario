@@ -16,6 +16,11 @@
 #define MARIO_STATE_SITTING_LEFT	500
 #define MARIO_STATE_DIE				600
 
+//#define MARIO_STATE_HOLD			700
+//#define MARIO_STATE_UNHOLD			800
+#define MARIO_STATE_HIT				900
+
+
 #define MARIO_ANI_BIG_IDLE_RIGHT		0
 #define MARIO_ANI_BIG_IDLE_LEFT			1
 #define MARIO_ANI_SMALL_IDLE_RIGHT		2
@@ -37,8 +42,29 @@
 
 #define MARIO_ANI_DIE		16
 
-#define	MARIO_LEVEL_SMALL	1
-#define	MARIO_LEVEL_BIG		2
+#define MARIO_ANI_SMALL_HOLD_RIGHT			17
+#define MARIO_ANI_SMALL_HOLD_LEFT			18
+#define MARIO_ANI_BIG_HOLD_RIGHT			19
+#define MARIO_ANI_BIG_HOLD_LEFT				20
+#define MARIO_ANI_SUPER_BIG_HOLD_RIGHT		21
+#define MARIO_ANI_SUPER_BIG_HOLD_LEFT		22
+
+#define MARIO_ANI_SMALL_HIT_RIGHT			23
+#define MARIO_ANI_SMALL_HIT_LEFT			24
+#define MARIO_ANI_BIG_HIT_RIGHT				25
+#define MARIO_ANI_BIG_HIT_LEFT				26
+#define MARIO_ANI_SUPER_BIG_HIT_RIGHT		27
+#define MARIO_ANI_SUPER_BIG_HIT_LEFT		28
+
+#define MARIO_ANI_SMALL_HOLD_IDLE_RIGHT			29
+#define MARIO_ANI_SMALL_HOLD_IDLE_LEFT			30
+#define MARIO_ANI_BIG_HOLD_IDLE_RIGHT			31
+#define MARIO_ANI_BIG_HOLD_IDLE_LEFT			32
+#define MARIO_ANI_SUPER_BIG_IDLE_HOLD_RIGHT		33
+#define MARIO_ANI_SUPER_BIG_IDLE_HOLD_LEFT		34
+
+#define	MARIO_LEVEL_SMALL			1
+#define	MARIO_LEVEL_BIG				2
 #define	MARIO_LEVEL_SUPER_BIG		3
 
 #define MARIO_BIG_BBOX_WIDTH			15
@@ -61,6 +87,8 @@ class Mario : public GameObject
 	int level;
 	int untouchable;
 	int ny; // Determine sit or not
+	boolean hold;
+	boolean hit;
 	DWORD untouchable_start;
 
 	float start_x;			// initial position of Mario at scene
@@ -82,10 +110,13 @@ public:
 	virtual void Update(DWORD dt, vector<LPGameObject> *colliable_objects = NULL);
 	void Render();
 	void SetState(int state);
+	void SetHolding(boolean holding) { this->hold = holding; };
 	void SetLevel(int l) { level = l; }
 	void StartUntouchable() { untouchable = 1; untouchable_start = GetTickCount(); }
 
 	void Reset();
+	void UpLevel();
+	void DownLevel();
 
 	virtual void GetBoundingBox(float &left, float &top, float &right, float &bottom);
 };

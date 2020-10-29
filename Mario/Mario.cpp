@@ -17,6 +17,8 @@ Mario::Mario(float x, float y) : GameObject()
 
 	lastJumpTime = 0;
 	ny = -1;
+	hold = false;
+	hit = false;
 }
 
 void Mario::Update(DWORD dt, vector<LPGameObject> *coObjects)
@@ -119,29 +121,142 @@ void Mario::Update(DWORD dt, vector<LPGameObject> *coObjects)
 						vy = -MARIO_JUMP_DEFLECT_SPEED;
 					}
 				}
-				else if (e->nx != 0)
+				else if (e->nx > 0) // collision right to left
+				{
+					// Koopa die
+					if (koopa->GetState() == KOOPA_STATE_DIE)
+					{
+						// Hold koopa
+						if (this->hold == hold)
+						{
+							if (this->level == MARIO_LEVEL_SUPER_BIG)
+							{
+								koopa->SetPosition(x - KOOPA_BBOX_WIDTH + 2, y + MARIO_SUPER_BIG_BBOX_HEIGHT / 4);
+							}
+							else if (this->level == MARIO_LEVEL_BIG)
+							{
+								koopa->SetPosition(x - KOOPA_BBOX_WIDTH + 2, y + MARIO_BIG_BBOX_HEIGHT / 4);
+							}
+							else if (this->level == MARIO_LEVEL_SMALL)
+							{
+								koopa->SetPosition(x - KOOPA_BBOX_WIDTH + 2, y - 2);
+							}
+							koopa->SetState(KOOPA_STATE_HOLDING);
+						}
+						else
+						{
+							// Hit Koopa
+							this->SetState(MARIO_STATE_HIT);
+							koopa->SetState(KOOPA_STATE_THROWING_LEFT);
+						}
+					}
+					else if (koopa->GetState() == KOOPA_STATE_HOLDING)
+					{
+						if (this->hold == true)
+						{
+							vx = -MARIO_WALKING_SPEED;
+							x += dx;
+							if (this->level == MARIO_LEVEL_SUPER_BIG)
+							{
+								koopa->SetPosition(x - KOOPA_BBOX_WIDTH_HOLD - 1, y + MARIO_SUPER_BIG_BBOX_HEIGHT / 4);
+							}
+							else if (this->level == MARIO_LEVEL_BIG)
+							{
+								koopa->SetPosition(x - KOOPA_BBOX_WIDTH_HOLD - 1, y + MARIO_BIG_BBOX_HEIGHT / 4);
+							}
+							else if (this->level == MARIO_LEVEL_SMALL)
+							{
+								koopa->SetPosition(x - KOOPA_BBOX_WIDTH_HOLD - 1, y - 2);
+							}
+						}
+						else
+						{
+							koopa->SetState(KOOPA_STATE_THROWING_LEFT);
+						}
+						
+					}
+					else
+					{
+						// koopa live
+						if (untouchable == 0)
+						{
+							if (level > MARIO_LEVEL_SMALL)
+							{
+								level--;
+								StartUntouchable();
+							}
+							else
+								SetState(MARIO_STATE_DIE);
+						}
+					}
+				} // end collision right->left
+				else if (e->nx < 0) // collision left->right
 				{
 					if (koopa->GetState() == KOOPA_STATE_DIE)
 					{
-						koopa->SetState(KOOPA_STATE_THROWING);
-					}
-					/*Mario dead*/
+						// Hold koopa
+						if (this->hold == true)
+						{
+							if (this->level == MARIO_LEVEL_SUPER_BIG)
+							{
+								koopa->SetPosition(x + MARIO_SUPER_BIG_BBOX_WIDTH, y + MARIO_SUPER_BIG_BBOX_HEIGHT / 4);
+							}
+							else if (this->level == MARIO_LEVEL_BIG)
+							{
+								koopa->SetPosition(x + MARIO_BIG_BBOX_WIDTH, y + MARIO_BIG_BBOX_HEIGHT / 4);
+							}
+							else if (this->level == MARIO_LEVEL_SMALL)
+							{
+								koopa->SetPosition(x + MARIO_SMALL_BBOX_WIDTH, y - 2);
+							}
+							koopa->SetState(KOOPA_STATE_HOLDING);
+						}
+						else
+						{
+							this->SetState(MARIO_STATE_HIT);
+							koopa->SetState(KOOPA_STATE_THROWING_RIGHT);
+						}
 
-					//if (untouchable == 0)
-					//{
-					//	if (goomba->GetState() != GOOMBA_STATE_DIE)
-					//	{
-					//		if (level > MARIO_LEVEL_SMALL)
-					//		{
-					//			//level = MARIO_LEVEL_SMALL;
-					//			level--;
-					//			StartUntouchable();
-					//		}
-					//		else
-					//			SetState(MARIO_STATE_DIE);
-					//	}
-					//}
-				}
+					}
+					else if (koopa->GetState() == KOOPA_STATE_HOLDING)
+					{
+						if (this->hold == true)
+						{
+							vx = MARIO_WALKING_SPEED;
+							x += dx;
+							if (this->level == MARIO_LEVEL_SUPER_BIG)
+							{
+								koopa->SetPosition(x + MARIO_SUPER_BIG_BBOX_WIDTH - 2, y + MARIO_SUPER_BIG_BBOX_HEIGHT / 4);
+							}
+							else if (this->level == MARIO_LEVEL_BIG)
+							{
+								koopa->SetPosition(x + MARIO_BIG_BBOX_WIDTH - 2, y + MARIO_BIG_BBOX_HEIGHT / 4);
+							}
+							else if (this->level == MARIO_LEVEL_SMALL)
+							{
+								koopa->SetPosition(x + MARIO_SMALL_BBOX_WIDTH - 2, y - 2);
+							}
+						}
+						else
+						{
+							koopa->SetState(KOOPA_STATE_THROWING_RIGHT);
+						}
+						
+					}
+					else
+					{
+						if (untouchable == 0)
+						{
+							if (level > MARIO_LEVEL_SMALL)
+							{
+								level--;
+								StartUntouchable();
+							}
+							else
+								SetState(MARIO_STATE_DIE);
+						}
+					}
+				}// Colision left to right
 			}
 		}
 	}
@@ -160,98 +275,208 @@ void Mario::Render()
 	else {
 		if (level == MARIO_LEVEL_BIG)
 		{
-			if (vx == 0)
+			if (hold == true)
 			{
-				if (ny > 0) // sit
+				if (vx == 0)
 				{
 					if (nx > 0)
 					{
-						ani = MARIO_ANI_BIG_SITTING_RIGHT;
+						ani = MARIO_ANI_BIG_HOLD_IDLE_RIGHT;
 					}
 					else
 					{
-						ani = MARIO_ANI_BIG_SITTING_LEFT;
+						ani = MARIO_ANI_BIG_HOLD_IDLE_LEFT;
 					}
 				}
-				else // not sit
+				else if (vx > 0)
 				{
-					if (nx > 0)
-					{
-						ani = MARIO_ANI_BIG_IDLE_RIGHT;
-					}
-					else
-					{
-						ani = MARIO_ANI_BIG_IDLE_LEFT;
-					}
-				}
-
-			}
-			else if (vx > 0)
-			{
-				ani = MARIO_ANI_BIG_WALKING_RIGHT;
-			}
-			else
-			{
-				ani = MARIO_ANI_BIG_WALKING_LEFT;
-			}
-		}
-		else if (level == MARIO_LEVEL_SMALL)
-		{
-			if (vx == 0)
-			{
-				if (nx > 0)
-				{
-					ani = MARIO_ANI_SMALL_IDLE_RIGHT;
+					ani = MARIO_ANI_BIG_HOLD_RIGHT;
 				}
 				else
 				{
-					ani = MARIO_ANI_SMALL_IDLE_LEFT;
+					ani = MARIO_ANI_BIG_HOLD_LEFT;
 				}
 			}
-			else if (vx > 0)
+			else if (hit == true)
 			{
-				ani = MARIO_ANI_SMALL_WALKING_RIGHT;
+				if (nx > 0)
+				{
+					ani = MARIO_ANI_BIG_HIT_RIGHT;
+				}
+				else
+				{
+					ani = MARIO_ANI_BIG_HIT_LEFT;
+				}
 			}
 			else
 			{
-				ani = MARIO_ANI_SMALL_WALKING_LEFT;
+				if (vx == 0)
+				{
+					if (ny > 0) // sit
+					{
+						if (nx > 0)
+						{
+							ani = MARIO_ANI_BIG_SITTING_RIGHT;
+						}
+						else
+						{
+							ani = MARIO_ANI_BIG_SITTING_LEFT;
+						}
+					}
+					else // not sit
+					{
+						if (nx > 0)
+						{
+							ani = MARIO_ANI_BIG_IDLE_RIGHT;
+						}
+						else
+						{
+							ani = MARIO_ANI_BIG_IDLE_LEFT;
+						}
+					}
+
+				}
+				else if (vx > 0)
+				{
+					ani = MARIO_ANI_BIG_WALKING_RIGHT;
+				}
+				else
+				{
+					ani = MARIO_ANI_BIG_WALKING_LEFT;
+				}
 			}
+
+		}
+		else if (level == MARIO_LEVEL_SMALL)
+		{
+			if (hold == true)
+			{
+				if (vx == 0)
+				{
+					if (nx > 0)
+					{
+						ani = MARIO_ANI_SMALL_HOLD_IDLE_RIGHT;
+					}
+					else
+					{
+						ani = MARIO_ANI_SMALL_HOLD_IDLE_LEFT;
+					}
+				}
+				else if (vx > 0)
+				{
+					ani = MARIO_ANI_SMALL_HOLD_RIGHT;
+				}
+				else
+				{
+					ani = MARIO_ANI_SMALL_HOLD_LEFT;
+				}
+			}
+			else if (hit == true)
+			{
+				if (nx > 0)
+				{
+					ani = MARIO_ANI_SMALL_HIT_RIGHT;
+				}
+				else
+				{
+					ani = MARIO_ANI_SMALL_HIT_LEFT;
+				}
+			}
+			else
+			{
+				if (vx == 0)
+				{
+					if (nx > 0)
+					{
+						ani = MARIO_ANI_SMALL_IDLE_RIGHT;
+					}
+					else
+					{
+						ani = MARIO_ANI_SMALL_IDLE_LEFT;
+					}
+				}
+				else if (vx > 0)
+				{
+					ani = MARIO_ANI_SMALL_WALKING_RIGHT;
+				}
+				else
+				{
+					ani = MARIO_ANI_SMALL_WALKING_LEFT;
+				}
+			}
+
 		}
 		else if (level == MARIO_LEVEL_SUPER_BIG)
 		{
-			if (vx == 0)
+			if (hold == true)
 			{
-				if (ny > 0) // sit
+				if (vx == 0)
 				{
 					if (nx > 0)
 					{
-						ani = MARIO_ANI_SUPER_BIG_SITTING_RIGHT;
+						ani = MARIO_ANI_SUPER_BIG_IDLE_HOLD_RIGHT;
 					}
 					else
 					{
-						ani = MARIO_ANI_SUPER_BIG_SITTING_LEFT;
+						ani = MARIO_ANI_SUPER_BIG_IDLE_HOLD_LEFT;
 					}
 				}
-				else // not sit
+				else if (vx > 0)
 				{
-					if (nx > 0)
-					{
-						ani = MARIO_ANI_SUPER_BIG_IDLE_RIGHT;
-					}
-					else
-					{
-						ani = MARIO_ANI_SUPER_BIG_IDLE_LEFT;
-					}
+					ani = MARIO_ANI_SUPER_BIG_HOLD_RIGHT;
+				}
+				else
+				{
+					ani = MARIO_ANI_SUPER_BIG_HOLD_LEFT;
 				}
 			}
-			else if (vx > 0)
+			else if (hit == true)
 			{
-				ani = MARIO_ANI_SUPER_BIG_WALKING_RIGHT;
+				if (nx > 0)
+				{
+					ani = MARIO_ANI_SUPER_BIG_HIT_RIGHT;
+				}
+				else
+				{
+					ani = MARIO_ANI_SUPER_BIG_HIT_LEFT;
+				}
 			}
-			else
-			{
-				ani = MARIO_ANI_SUPER_BIG_WALKING_LEFT;
+			else {
+				if (vx == 0)
+				{
+					if (ny > 0) // sit
+					{
+						if (nx > 0)
+						{
+							ani = MARIO_ANI_SUPER_BIG_SITTING_RIGHT;
+						}
+						else
+						{
+							ani = MARIO_ANI_SUPER_BIG_SITTING_LEFT;
+						}
+					}
+					else // not sit
+					{
+						if (nx > 0)
+						{
+							ani = MARIO_ANI_SUPER_BIG_IDLE_RIGHT;
+						}
+						else
+						{
+							ani = MARIO_ANI_SUPER_BIG_IDLE_LEFT;
+						}
+					}
+				}
+				else if (vx > 0)
+				{
+					ani = MARIO_ANI_SUPER_BIG_WALKING_RIGHT;
+				}
+				else
+				{
+					ani = MARIO_ANI_SUPER_BIG_WALKING_LEFT;
+				}
 			}
+
 		}
 	}
 
@@ -280,6 +505,7 @@ void Mario::SetState(int state)
 			this->y -= (b - t);
 		}
 		ny = -1;// Not sit
+		hit = false; // cancel state hit
 		break;
 	case MARIO_STATE_WALKING_LEFT:
 		vx = -MARIO_WALKING_SPEED;
@@ -291,9 +517,9 @@ void Mario::SetState(int state)
 			this->y -= (b - t);
 		}
 		ny = -1;
+		hit = false; // cancel state hit
 		break;
 	case MARIO_STATE_JUMP:
-	
 		if (ny == -1) {
 			DWORD t = GetTickCount() - lastJumpTime;
 			// 0.5s sleep when mario jump
@@ -316,6 +542,8 @@ void Mario::SetState(int state)
 			this->y -= (b - t);
 		}
 		ny = -1;
+		//hold = false;
+		//hit = false; // cancel state hit
 		break;
 	case MARIO_STATE_SITTING_RIGHT:
 		vx = 0;
@@ -328,6 +556,21 @@ void Mario::SetState(int state)
 	case MARIO_STATE_DIE:
 		vy = -MARIO_DIE_DEFLECT_SPEED;
 		break;
+	/*case MARIO_STATE_HOLD:
+		hold = true;
+		hit = false;
+		ny = -1;
+		break;
+	case MARIO_STATE_UNHOLD:
+		hold = false;
+		ny = -1;
+		break;*/
+	case MARIO_STATE_HIT:
+		hold = false;
+		hit = true;
+		vx = 0;
+		ny = -1;
+		break;
 	}
 }
 
@@ -338,7 +581,7 @@ void Mario::GetBoundingBox(float &left, float &top, float &right, float &bottom)
 
 	if (level == MARIO_LEVEL_BIG)
 	{
-		if (ny > 0)
+		if (ny > 0 && hit == false && hold == false)
 		{
 			bottom = y + MARIO_BIG_BBOX_HEIGHT_SITTING;
 		}
@@ -355,7 +598,7 @@ void Mario::GetBoundingBox(float &left, float &top, float &right, float &bottom)
 	}
 	else if (level == MARIO_LEVEL_SUPER_BIG)
 	{
-		if (ny > 0)
+		if (ny > 0 && hit == false && hold == false)
 		{
 			bottom = y + MARIO_SUPER_BIG_BBOX_HEIGHT_SITTING;
 		}
@@ -364,6 +607,11 @@ void Mario::GetBoundingBox(float &left, float &top, float &right, float &bottom)
 			bottom = y + MARIO_SUPER_BIG_BBOX_HEIGHT;
 		}
 		right = x + MARIO_SUPER_BIG_BBOX_WIDTH;
+	}
+
+	if (hold == true)
+	{
+		right -= 3;
 	}
 }
 
@@ -376,6 +624,23 @@ void Mario::Reset()
 	SetLevel(MARIO_LEVEL_SUPER_BIG);
 	SetPosition(start_x, start_y);
 	SetSpeed(0, 0);
+}
+
+void Mario::UpLevel()
+{
+	if (level != MARIO_LEVEL_SUPER_BIG) {
+		int l = ++level;
+		SetPosition(x, y - MARIO_SUPER_BIG_BBOX_HEIGHT);
+		SetLevel(l);
+	}
+}
+
+void Mario::DownLevel()
+{
+	if (level != MARIO_LEVEL_SMALL) {
+		int l = --level;
+		SetLevel(l);
+	}
 }
 
 

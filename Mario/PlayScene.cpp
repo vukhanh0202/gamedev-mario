@@ -15,8 +15,6 @@
 #include "Koopa.h"
 #include "Ground.h"
 
-#define VALUE_MAXIMUM 99999999
-#define VALUE_MINIMUM -99999999
 
 using namespace std;
 
@@ -156,7 +154,7 @@ void PlayScene::_ParseSection_OBJECTS(string line)
 					{
 						boxs->setMergeComplete(true);
 						vector<Box*> listBox = boxs->getListBox();
-						float xBoxs = VALUE_MINIMUM, yBoxs = VALUE_MAXIMUM;
+						float xBoxs, yBoxs;
 						listBox[0]->GetPosition(xBoxs, yBoxs);
 						boxs->SetPosition(xBoxs, yBoxs);
 						boxs->setWidth(BOX_BBOX_WIDTH);
@@ -426,6 +424,18 @@ void PlaySceneKeyHandler::OnKeyDown(int KeyCode)
 	case DIK_A:
 		mario->Reset();
 		break;
+	case DIK_Z:
+		mario->UpLevel();
+		break;
+	case DIK_X:
+		mario->DownLevel();
+		break;
+	case DIK_W:
+		mario->SetState(MARIO_STATE_HIT);
+		break;
+	/*case DIK_Q:
+		mario->SetState(MARIO_STATE_HOLD);
+		break;*/
 	}
 }
 void PlaySceneKeyHandler::OnKeyUp(int KeyCode)
@@ -433,10 +443,14 @@ void PlaySceneKeyHandler::OnKeyUp(int KeyCode)
 	//DebugOut(L"[INFO] KeyDown: %d\n", KeyCode);
 
 	Mario *mario = ((PlayScene*)scene)->GetPlayer();
+
 	switch (KeyCode)
 	{
 	case DIK_DOWN:
 		mario->SetState(MARIO_STATE_IDLE);
+		break;
+	case DIK_Q:
+		mario->SetHolding(false);
 		break;
 	}
 }
@@ -448,6 +462,11 @@ void PlaySceneKeyHandler::KeyState(BYTE *states)
 
 	// disable control key when Mario die 
 	if (mario->GetState() == MARIO_STATE_DIE) return;
+
+	if (game->IsKeyDown(DIK_Q))
+	{
+		mario->SetHolding(true);
+	}
 	if (game->IsKeyDown(DIK_RIGHT))
 		mario->SetState(MARIO_STATE_WALKING_RIGHT);
 	else if (game->IsKeyDown(DIK_LEFT))
@@ -464,6 +483,8 @@ void PlaySceneKeyHandler::KeyState(BYTE *states)
 		}
 	}
 	else
+	{
 		mario->SetState(MARIO_STATE_IDLE);
+	}
 }
 
