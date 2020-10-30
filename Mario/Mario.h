@@ -2,6 +2,7 @@
 #include "GameObject.h"
 
 #define MARIO_WALKING_SPEED		0.1f 
+#define MARIO_WALKING_SPEED_FAST		0.2f 
 
 #define MARIO_JUMP_SPEED_Y		0.5f
 #define MARIO_JUMP_DEFLECT_SPEED 0.2f
@@ -87,8 +88,9 @@ class Mario : public GameObject
 	int level;
 	int untouchable;
 	int ny; // Determine sit or not
-	boolean hold;
+	boolean hold; // Hold koopa
 	boolean hit;
+	boolean fast; // fast speed
 	DWORD untouchable_start;
 
 	float start_x;			// initial position of Mario at scene
@@ -111,6 +113,7 @@ public:
 	void Render();
 	void SetState(int state);
 	void SetHolding(boolean holding) { this->hold = holding; };
+	void SetFastSpeed(boolean fast) { this->fast = fast; };
 	void SetLevel(int l) { level = l; }
 	void StartUntouchable() { untouchable = 1; untouchable_start = GetTickCount(); }
 

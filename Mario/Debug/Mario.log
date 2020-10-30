@@ -1,7 +1,15 @@
-﻿  Koopa.cpp
-  c:\program files (x86)\microsoft directx sdk (june 2010)\include\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
-d:\uit\kì 1 2021 (kì 5)\nhập môn game\mario\mario\mario\game.h(11): warning C4005: 'DIRECTINPUT_VERSION': macro redefinition
-  c:\program files (x86)\microsoft directx sdk (june 2010)\include\dinput.h(42): note: see previous definition of 'DIRECTINPUT_VERSION'
-d:\uit\kì 1 2021 (kì 5)\nhập môn game\mario\mario\mario\koopa.cpp(171): warning C4552: '>': result of expression not used
-d:\uit\kì 1 2021 (kì 5)\nhập môn game\mario\mario\mario\koopa.cpp(219): warning C4805: '==': unsafe mix of type 'boolean' and type 'bool' in operation
+﻿  Mario.cpp
+d:\uit\kì 1 2021 (kì 5)\nhập môn game\mario\mario\mario\mario.cpp(155): warning C4805: '==': unsafe mix of type 'boolean' and type 'bool' in operation
+d:\uit\kì 1 2021 (kì 5)\nhập môn game\mario\mario\mario\mario.cpp(198): warning C4805: '==': unsafe mix of type 'boolean' and type 'bool' in operation
+d:\uit\kì 1 2021 (kì 5)\nhập môn game\mario\mario\mario\mario.cpp(223): warning C4805: '==': unsafe mix of type 'boolean' and type 'bool' in operation
+d:\uit\kì 1 2021 (kì 5)\nhập môn game\mario\mario\mario\mario.cpp(277): warning C4805: '==': unsafe mix of type 'boolean' and type 'bool' in operation
+d:\uit\kì 1 2021 (kì 5)\nhập môn game\mario\mario\mario\mario.cpp(299): warning C4805: '==': unsafe mix of type 'boolean' and type 'bool' in operation
+d:\uit\kì 1 2021 (kì 5)\nhập môn game\mario\mario\mario\mario.cpp(351): warning C4805: '==': unsafe mix of type 'boolean' and type 'bool' in operation
+d:\uit\kì 1 2021 (kì 5)\nhập môn game\mario\mario\mario\mario.cpp(373): warning C4805: '==': unsafe mix of type 'boolean' and type 'bool' in operation
+d:\uit\kì 1 2021 (kì 5)\nhập môn game\mario\mario\mario\mario.cpp(410): warning C4805: '==': unsafe mix of type 'boolean' and type 'bool' in operation
+d:\uit\kì 1 2021 (kì 5)\nhập môn game\mario\mario\mario\mario.cpp(432): warning C4805: '==': unsafe mix of type 'boolean' and type 'bool' in operation
+d:\uit\kì 1 2021 (kì 5)\nhập môn game\mario\mario\mario\mario.cpp(498): warning C4805: '==': unsafe mix of type 'boolean' and type 'bool' in operation
+d:\uit\kì 1 2021 (kì 5)\nhập môn game\mario\mario\mario\mario.cpp(511): warning C4805: '==': unsafe mix of type 'boolean' and type 'bool' in operation
+d:\uit\kì 1 2021 (kì 5)\nhập môn game\mario\mario\mario\mario.cpp(527): warning C4805: '==': unsafe mix of type 'boolean' and type 'bool' in operation
+d:\uit\kì 1 2021 (kì 5)\nhập môn game\mario\mario\mario\mario.cpp(604): warning C4805: '==': unsafe mix of type 'boolean' and type 'bool' in operation
   Mario.vcxproj -> D:\UIT\Kì 1 2021 (Kì 5)\Nhập môn Game\Mario\Mario\Debug\Mario.exe

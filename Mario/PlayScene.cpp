@@ -417,11 +417,10 @@ void PlaySceneKeyHandler::OnKeyDown(int KeyCode)
 	{
 	case DIK_SPACE:
 	{
-
 		mario->SetState(MARIO_STATE_JUMP);
 	}
 	break;
-	case DIK_A:
+	case DIK_P:
 		mario->Reset();
 		break;
 	case DIK_Z:
@@ -452,6 +451,9 @@ void PlaySceneKeyHandler::OnKeyUp(int KeyCode)
 	case DIK_Q:
 		mario->SetHolding(false);
 		break;
+	case DIK_A:
+		mario->SetFastSpeed(false);
+		break;
 	}
 }
 
@@ -466,6 +468,10 @@ void PlaySceneKeyHandler::KeyState(BYTE *states)
 	if (game->IsKeyDown(DIK_Q))
 	{
 		mario->SetHolding(true);
+	}
+	if (game->IsKeyDown(DIK_A))
+	{
+		mario->SetFastSpeed(true);
 	}
 	if (game->IsKeyDown(DIK_RIGHT))
 		mario->SetState(MARIO_STATE_WALKING_RIGHT);

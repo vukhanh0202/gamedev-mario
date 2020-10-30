@@ -207,7 +207,7 @@ void Mario::Update(DWORD dt, vector<LPGameObject> *coObjects)
 							}
 							else if (this->level == MARIO_LEVEL_SMALL)
 							{
-								koopa->SetPosition(x + MARIO_SMALL_BBOX_WIDTH -1, y - 2);
+								koopa->SetPosition(x + MARIO_SMALL_BBOX_WIDTH - 1, y - 2);
 							}
 							koopa->SetState(KOOPA_STATE_HOLDING);
 						}
@@ -226,11 +226,11 @@ void Mario::Update(DWORD dt, vector<LPGameObject> *coObjects)
 							x += dx;
 							if (this->level == MARIO_LEVEL_SUPER_BIG)
 							{
-								koopa->SetPosition(x + MARIO_SUPER_BIG_BBOX_WIDTH, y + MARIO_SUPER_BIG_BBOX_HEIGHT / 4);
+								koopa->SetPosition(x + MARIO_SUPER_BIG_BBOX_WIDTH -2, y + MARIO_SUPER_BIG_BBOX_HEIGHT / 4);
 							}
 							else if (this->level == MARIO_LEVEL_BIG)
 							{
-								koopa->SetPosition(x + MARIO_BIG_BBOX_WIDTH -1, y + MARIO_BIG_BBOX_HEIGHT / 4);
+								koopa->SetPosition(x + MARIO_BIG_BBOX_WIDTH - 1, y + MARIO_BIG_BBOX_HEIGHT / 4);
 							}
 							else if (this->level == MARIO_LEVEL_SMALL)
 							{
@@ -495,7 +495,8 @@ void Mario::SetState(int state)
 	switch (state)
 	{
 	case MARIO_STATE_WALKING_RIGHT:
-		vx = MARIO_WALKING_SPEED;
+		if (fast == true) vx = MARIO_WALKING_SPEED_FAST;
+		else vx = MARIO_WALKING_SPEED;
 		nx = 1;
 		if (ny == 1)
 		{
@@ -507,7 +508,8 @@ void Mario::SetState(int state)
 		hit = false; // cancel state hit
 		break;
 	case MARIO_STATE_WALKING_LEFT:
-		vx = -MARIO_WALKING_SPEED;
+		if (fast == true) vx = -MARIO_WALKING_SPEED_FAST;
+		else vx = -MARIO_WALKING_SPEED;
 		nx = -1;
 		if (ny == 1)
 		{
@@ -555,15 +557,6 @@ void Mario::SetState(int state)
 	case MARIO_STATE_DIE:
 		vy = -MARIO_DIE_DEFLECT_SPEED;
 		break;
-		/*case MARIO_STATE_HOLD:
-			hold = true;
-			hit = false;
-			ny = -1;
-			break;
-		case MARIO_STATE_UNHOLD:
-			hold = false;
-			ny = -1;
-			break;*/
 	case MARIO_STATE_HIT:
 		hold = false;
 		hit = true;
