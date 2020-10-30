@@ -119,5 +119,7 @@ public:
 	void DownLevel();
 
 	virtual void GetBoundingBox(float &left, float &top, float &right, float &bottom);
+	boolean GetHolding() { return this->hold; }
+	int GetLevel() { return this->level; }
 };
 

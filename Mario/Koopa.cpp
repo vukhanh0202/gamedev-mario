@@ -3,12 +3,14 @@
 #include "Brick.h"
 #include "Box.h"
 #include "Mario.h"
+#include "PlayScene.h"
+#include "Game.h"
 
 
 
 void Koopa::GetBoundingBox(float &left, float &top, float &right, float &bottom)
 {
-	left = x;
+	left = x + 3;
 	top = y;
 	if (state == KOOPA_STATE_HOLDING)
 	{
@@ -17,7 +19,6 @@ void Koopa::GetBoundingBox(float &left, float &top, float &right, float &bottom)
 	else
 	{
 		right = x + KOOPA_BBOX_WIDTH;
-
 	}
 
 	if (state == KOOPA_STATE_WALKING)
@@ -50,6 +51,75 @@ void Koopa::Update(DWORD dt, vector<LPGameObject> *coObjects)
 	{
 
 	}*/
+	if (state == KOOPA_STATE_HOLDING)
+	{
+		LPScene scene = Game::GetInstance()->GetCurrentScene();
+		Mario *mario = ((PlayScene*)scene)->GetPlayer();
+		if (mario->GetHolding() == false)
+		{
+			if (mario->GetDirection() > 0)
+			{
+				SetState(KOOPA_STATE_THROWING_RIGHT);
+			}
+			else if (mario->GetDirection() < 0) {
+				SetState(KOOPA_STATE_THROWING_LEFT);
+			}
+		}
+		else
+		{
+			float xMario, yMario;
+			float vxMario, vyMario;
+			mario->GetPosition(xMario, yMario);
+			mario->GetSpeed(vxMario, vyMario);
+			// Koopa right mario && mario direction left
+			if (yMario - this->y < 0 || vyMario > 0)
+			{
+				if (mario->GetLevel() == MARIO_LEVEL_SUPER_BIG)
+				{
+					SetPosition(this->x, yMario + MARIO_SUPER_BIG_BBOX_HEIGHT / 4);
+				}
+				else if (mario->GetLevel() == MARIO_LEVEL_BIG)
+				{
+					SetPosition(this->x, yMario + MARIO_BIG_BBOX_HEIGHT / 4);
+				}
+				else if (mario->GetLevel() == MARIO_LEVEL_SMALL)
+				{
+					SetPosition(this->x, yMario - 2);
+				}
+			}
+			if (mario->GetDirection() < 0 && xMario < this->x)
+			{
+				if (mario->GetLevel() == MARIO_LEVEL_SUPER_BIG)
+				{
+					SetPosition(xMario - KOOPA_BBOX_WIDTH_HOLD - 1, yMario + MARIO_SUPER_BIG_BBOX_HEIGHT / 4);
+				}
+				else if (mario->GetLevel() == MARIO_LEVEL_BIG)
+				{
+					SetPosition(xMario - KOOPA_BBOX_WIDTH_HOLD - 1, yMario + MARIO_BIG_BBOX_HEIGHT / 4);
+				}
+				else if (mario->GetLevel() == MARIO_LEVEL_SMALL)
+				{
+					SetPosition(xMario - KOOPA_BBOX_WIDTH_HOLD - 1, yMario - 2);
+				}
+			}
+			else if (mario->GetDirection() > 0 && xMario > this->x)// Koopa left mario && mario direction right
+			{
+				if (mario->GetLevel() == MARIO_LEVEL_SUPER_BIG)
+				{
+					SetPosition(xMario + MARIO_SUPER_BIG_BBOX_WIDTH + 2, yMario + MARIO_SUPER_BIG_BBOX_HEIGHT / 4);
+				}
+				else if (mario->GetLevel() == MARIO_LEVEL_BIG)
+				{
+					SetPosition(xMario + MARIO_BIG_BBOX_WIDTH - 1, yMario + MARIO_BIG_BBOX_HEIGHT / 4);
+				}
+				else if (mario->GetLevel() == MARIO_LEVEL_SMALL)
+				{
+					SetPosition(xMario + MARIO_SMALL_BBOX_WIDTH - 1, yMario - 2);
+				}
+			}
+		}
+	}
+
 	CalcPotentialCollisions(coObjects, coEvents);
 
 	// No collision occured, proceed normally
@@ -86,20 +156,25 @@ void Koopa::Update(DWORD dt, vector<LPGameObject> *coObjects)
 
 			if (dynamic_cast<Boxs *>(e->obj)) // if e->obj is Koopa 
 			{
-				Boxs *boxs = dynamic_cast<Boxs *>(e->obj);
-				float xBox, yBox;
-				boxs->GetPosition(xBox, yBox);
-				if (x >= boxs->getWidth() + xBox - BOX_BBOX_WIDTH * 1.5 || x <= xBox + BOX_BBOX_WIDTH / 2)
+				if (state == KOOPA_STATE_WALKING)
 				{
-					vx = -vx;
+					Boxs *boxs = dynamic_cast<Boxs *>(e->obj);
+					float xBox, yBox;
+					boxs->GetPosition(xBox, yBox);
+
+					if (x >= boxs->getWidth() + xBox - BOX_BBOX_WIDTH * 1.5 || x <= xBox + BOX_BBOX_WIDTH / 2)
+					{
+						vx = -vx;
+					}
+					if (x > boxs->getWidth() + xBox - BOX_BBOX_WIDTH * 1.5)
+					{
+						x > boxs->getWidth() + xBox - BOX_BBOX_WIDTH * 1.5;
+					}
+					else if (x < xBox + BOX_BBOX_WIDTH / 2) {
+						x = xBox + BOX_BBOX_WIDTH / 2;
+					}
 				}
-				if (x > boxs->getWidth() + xBox - BOX_BBOX_WIDTH * 1.5)
-				{
-					x > boxs->getWidth() + xBox - BOX_BBOX_WIDTH * 1.5;
-				}
-				else if (x < xBox + BOX_BBOX_WIDTH / 2) {
-					x = xBox + BOX_BBOX_WIDTH / 2;
-				}
+				
 			}
 
 			if (nx != 0)

@@ -173,7 +173,7 @@ void Mario::Update(DWORD dt, vector<LPGameObject> *coObjects)
 						{
 							koopa->SetState(KOOPA_STATE_THROWING_LEFT);
 						}
-						
+
 					}
 					else
 					{
@@ -199,15 +199,15 @@ void Mario::Update(DWORD dt, vector<LPGameObject> *coObjects)
 						{
 							if (this->level == MARIO_LEVEL_SUPER_BIG)
 							{
-								koopa->SetPosition(x + MARIO_SUPER_BIG_BBOX_WIDTH, y + MARIO_SUPER_BIG_BBOX_HEIGHT / 4);
+								koopa->SetPosition(x + MARIO_SUPER_BIG_BBOX_WIDTH + 2, y + MARIO_SUPER_BIG_BBOX_HEIGHT / 4);
 							}
 							else if (this->level == MARIO_LEVEL_BIG)
 							{
-								koopa->SetPosition(x + MARIO_BIG_BBOX_WIDTH, y + MARIO_BIG_BBOX_HEIGHT / 4);
+								koopa->SetPosition(x + MARIO_BIG_BBOX_WIDTH - 1, y + MARIO_BIG_BBOX_HEIGHT / 4);
 							}
 							else if (this->level == MARIO_LEVEL_SMALL)
 							{
-								koopa->SetPosition(x + MARIO_SMALL_BBOX_WIDTH, y - 2);
+								koopa->SetPosition(x + MARIO_SMALL_BBOX_WIDTH -1, y - 2);
 							}
 							koopa->SetState(KOOPA_STATE_HOLDING);
 						}
@@ -226,22 +226,21 @@ void Mario::Update(DWORD dt, vector<LPGameObject> *coObjects)
 							x += dx;
 							if (this->level == MARIO_LEVEL_SUPER_BIG)
 							{
-								koopa->SetPosition(x + MARIO_SUPER_BIG_BBOX_WIDTH - 2, y + MARIO_SUPER_BIG_BBOX_HEIGHT / 4);
+								koopa->SetPosition(x + MARIO_SUPER_BIG_BBOX_WIDTH, y + MARIO_SUPER_BIG_BBOX_HEIGHT / 4);
 							}
 							else if (this->level == MARIO_LEVEL_BIG)
 							{
-								koopa->SetPosition(x + MARIO_BIG_BBOX_WIDTH - 2, y + MARIO_BIG_BBOX_HEIGHT / 4);
+								koopa->SetPosition(x + MARIO_BIG_BBOX_WIDTH -1, y + MARIO_BIG_BBOX_HEIGHT / 4);
 							}
 							else if (this->level == MARIO_LEVEL_SMALL)
 							{
-								koopa->SetPosition(x + MARIO_SMALL_BBOX_WIDTH - 2, y - 2);
+								koopa->SetPosition(x + MARIO_SMALL_BBOX_WIDTH - 1, y - 2);
 							}
 						}
 						else
 						{
 							koopa->SetState(KOOPA_STATE_THROWING_RIGHT);
 						}
-						
 					}
 					else
 					{
@@ -556,15 +555,15 @@ void Mario::SetState(int state)
 	case MARIO_STATE_DIE:
 		vy = -MARIO_DIE_DEFLECT_SPEED;
 		break;
-	/*case MARIO_STATE_HOLD:
-		hold = true;
-		hit = false;
-		ny = -1;
-		break;
-	case MARIO_STATE_UNHOLD:
-		hold = false;
-		ny = -1;
-		break;*/
+		/*case MARIO_STATE_HOLD:
+			hold = true;
+			hit = false;
+			ny = -1;
+			break;
+		case MARIO_STATE_UNHOLD:
+			hold = false;
+			ny = -1;
+			break;*/
 	case MARIO_STATE_HIT:
 		hold = false;
 		hit = true;
@@ -611,7 +610,7 @@ void Mario::GetBoundingBox(float &left, float &top, float &right, float &bottom)
 
 	if (hold == true)
 	{
-		right -= 3;
+		//right -= 3;
 	}
 }
 

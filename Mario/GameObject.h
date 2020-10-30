@@ -100,7 +100,7 @@ public:
 	virtual void Update(DWORD dt, vector<LPGameObject> *coObjects = NULL);
 	virtual void Render() = 0;
 	virtual void SetState(int state) { this->state = state; }
-
+	virtual int GetDirection() { return nx; }
 	GameObject();
 	~GameObject();
 };
