@@ -28,7 +28,6 @@ public:
 	virtual void Unload();
 
 	Mario * GetPlayer() { return player; }
-
 };
 
 class PlaySceneKeyHandler : public SceneKeyHandler

@@ -14,6 +14,7 @@
 #include "Box.h"
 #include "Koopa.h"
 #include "Ground.h"
+#include "FireMario.h"
 
 
 using namespace std;
@@ -38,7 +39,7 @@ PlayScene::PlayScene(int id, LPCWSTR filePath) :
 #define OBJECT_TYPE_BRICK	1
 #define OBJECT_TYPE_GOOMBA	2
 #define OBJECT_TYPE_KOOPA	3
-#define OBJECT_TYPE_BRICK_GLOSSY	4
+#define OBJECT_TYPE_FIRE_MARIO	4
 #define OBJECT_TYPE_BOX		5
 
 #define OBJECT_TYPE_PORTAL	50
@@ -182,7 +183,7 @@ void PlayScene::_ParseSection_OBJECTS(string line)
 							if (yItem < yBoxs)
 							{
 								float height = boxs->getHeight();
-								boxs->setHeight(yBoxs - yItem +height);
+								boxs->setHeight(yBoxs - yItem + height);
 								yBoxs = yItem;
 							}
 							else
@@ -249,6 +250,7 @@ void PlayScene::_ParseSection_OBJECTS(string line)
 		AnimationSets * animation_sets = AnimationSets::GetInstance();
 
 		GameObject *obj = NULL;
+		FireMario *bullet = NULL;
 
 		switch (object_type)
 		{
@@ -256,10 +258,13 @@ void PlayScene::_ParseSection_OBJECTS(string line)
 			if (player != NULL)
 			{
 				DebugOut(L"[ERROR] MARIO object was created before!\n");
-				return;
+				obj = player;
+				//return;
 			}
-			obj = new Mario(x, y);
-			player = (Mario*)obj;
+			else {
+				obj = new Mario(x, y);
+				player = (Mario*)obj;
+			}
 
 			DebugOut(L"[INFO] Player object created!\n");
 			break;
@@ -267,22 +272,33 @@ void PlayScene::_ParseSection_OBJECTS(string line)
 		case OBJECT_TYPE_BRICK: obj = new Brick(); break;
 		case OBJECT_TYPE_GROUND: obj = new Ground(); break;
 		case OBJECT_TYPE_BACKGROUND: obj = new BackGround(); break;
-			//case OBJECT_TYPE_BOX: obj = new Box(); break;
+		case OBJECT_TYPE_FIRE_MARIO:
+			obj = new FireMario(); 
+			bullet = (FireMario*)obj;
+			if (player != NULL)
+			{
+				player->SetBullet(bullet);
+			}
+			else {
+				player = new Mario(50, 50);
+				player->SetBullet(bullet);
+			}
+			break;
 		case OBJECT_TYPE_KOOPA: obj = new Koopa(); break;
 		default:
 			DebugOut(L"[ERR] Invalid object type: %d\n", object_type);
 			return;
 		}
-
+		
 		// General object setup
 		obj->SetPosition(x, y);
+
 
 		LPAnimation_Set ani_set = animation_sets->Get(ani_set_id);
 
 		obj->SetAnimationSet(ani_set);
 		objects.push_back(obj);
 	}
-
 }
 void PlayScene::Load()
 {
@@ -333,6 +349,7 @@ void PlayScene::Load()
 
 	Textures::GetInstance()->Add(ID_TEX_BBOX, L"textures\\bbox.png", D3DCOLOR_XRGB(255, 255, 255));
 
+
 	DebugOut(L"[INFO] Done loading scene resources %s\n", sceneFilePath);
 }
 
@@ -351,6 +368,7 @@ void PlayScene::Update(DWORD dt)
 	{
 		objects[i]->Update(dt, &coObjects);
 	}
+
 
 	// skip the rest if scene was already unloaded (Mario::Update might trigger PlayScene::Unload)
 	if (player == NULL) return;
@@ -432,9 +450,12 @@ void PlaySceneKeyHandler::OnKeyDown(int KeyCode)
 	case DIK_W:
 		mario->SetState(MARIO_STATE_HIT);
 		break;
-	/*case DIK_Q:
-		mario->SetState(MARIO_STATE_HOLD);
-		break;*/
+	case DIK_S:
+		mario->SetShot(true);
+		break;
+		/*case DIK_Q:
+			mario->SetState(MARIO_STATE_HOLD);
+			break;*/
 	}
 }
 void PlaySceneKeyHandler::OnKeyUp(int KeyCode)

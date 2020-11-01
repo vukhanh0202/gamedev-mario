@@ -3,6 +3,8 @@
 #include "Brick.h"
 #include "Box.h"
 #include "Koopa.h"
+#include "PlayScene.h"
+#include "Game.h"
 
 Mario::Mario(float x, float y) : GameObject()
 {
@@ -19,6 +21,8 @@ Mario::Mario(float x, float y) : GameObject()
 	ny = -1;
 	hold = false;
 	hit = false;
+	shot = false;
+	bullet = NULL;
 }
 
 void Mario::Update(DWORD dt, vector<LPGameObject> *coObjects)
@@ -45,6 +49,25 @@ void Mario::Update(DWORD dt, vector<LPGameObject> *coObjects)
 		untouchable = 0;
 	}
 
+	if (shot == true && level == MARIO_LEVEL_SUPER_BIG)
+	{
+		if (nx > 0)
+		{
+			bullet->SetState(FIRE_MARIO_STATE_RIGHT);
+			//bullet->SetStartLoop(false);
+			bullet->SetPosition(x + MARIO_BIG_BBOX_WIDTH * 1.1f, y + MARIO_BIG_BBOX_HEIGHT * 0.2);
+		}
+		else {
+			bullet->SetState(FIRE_MARIO_STATE_LEFT);
+			//bullet->SetStartLoop(false);
+			bullet->SetPosition(x - MARIO_BIG_BBOX_WIDTH * 0.1f, y + MARIO_BIG_BBOX_HEIGHT * 0.2);
+		}
+		shot = false;
+	}
+	else {
+		shot = false;
+	}
+
 	// No collision occured, proceed normally
 	if (coEvents.size() == 0)
 	{
@@ -53,6 +76,7 @@ void Mario::Update(DWORD dt, vector<LPGameObject> *coObjects)
 	}
 	else
 	{
+
 		isCollision = true;
 		float min_tx, min_ty, nx = 0, ny;
 		float rdx = 0;
@@ -68,6 +92,7 @@ void Mario::Update(DWORD dt, vector<LPGameObject> *coObjects)
 		// block every object first!
 		x += min_tx * dx + nx * 0.4f;
 		y += min_ty * dy + ny * 0.4f;
+
 
 		if (nx != 0) vx = 0;
 		if (ny != 0) vy = 0;
@@ -131,15 +156,15 @@ void Mario::Update(DWORD dt, vector<LPGameObject> *coObjects)
 						{
 							if (this->level == MARIO_LEVEL_SUPER_BIG)
 							{
-								koopa->SetPosition(x - KOOPA_BBOX_WIDTH + 2, y + MARIO_SUPER_BIG_BBOX_HEIGHT / 4);
+								koopa->SetPosition(x - KOOPA_BBOX_WIDTH - 2, y + MARIO_SUPER_BIG_BBOX_HEIGHT / 4);
 							}
 							else if (this->level == MARIO_LEVEL_BIG)
 							{
-								koopa->SetPosition(x - KOOPA_BBOX_WIDTH + 2, y + MARIO_BIG_BBOX_HEIGHT / 4);
+								koopa->SetPosition(x - KOOPA_BBOX_WIDTH - 2, y + MARIO_BIG_BBOX_HEIGHT / 4);
 							}
 							else if (this->level == MARIO_LEVEL_SMALL)
 							{
-								koopa->SetPosition(x - KOOPA_BBOX_WIDTH + 2, y - 2);
+								koopa->SetPosition(x - KOOPA_BBOX_WIDTH - 2, y - 2);
 							}
 							koopa->SetState(KOOPA_STATE_HOLDING);
 						}
@@ -158,15 +183,15 @@ void Mario::Update(DWORD dt, vector<LPGameObject> *coObjects)
 							x += dx;
 							if (this->level == MARIO_LEVEL_SUPER_BIG)
 							{
-								koopa->SetPosition(x - KOOPA_BBOX_WIDTH_HOLD - 1, y + MARIO_SUPER_BIG_BBOX_HEIGHT / 4);
+								koopa->SetPosition(x - KOOPA_BBOX_WIDTH - 2, y + MARIO_SUPER_BIG_BBOX_HEIGHT / 4);
 							}
 							else if (this->level == MARIO_LEVEL_BIG)
 							{
-								koopa->SetPosition(x - KOOPA_BBOX_WIDTH_HOLD - 1, y + MARIO_BIG_BBOX_HEIGHT / 4);
+								koopa->SetPosition(x - KOOPA_BBOX_WIDTH - 2, y + MARIO_BIG_BBOX_HEIGHT / 4);
 							}
 							else if (this->level == MARIO_LEVEL_SMALL)
 							{
-								koopa->SetPosition(x - KOOPA_BBOX_WIDTH_HOLD - 1, y - 2);
+								koopa->SetPosition(x - KOOPA_BBOX_WIDTH - 2, y - 2);
 							}
 						}
 						else
@@ -189,7 +214,7 @@ void Mario::Update(DWORD dt, vector<LPGameObject> *coObjects)
 								SetState(MARIO_STATE_DIE);
 						}
 					}
-				} // end collision right->left
+				}
 				else if (e->nx < 0) // collision left->right
 				{
 					if (koopa->GetState() == KOOPA_STATE_DIE)
@@ -199,15 +224,15 @@ void Mario::Update(DWORD dt, vector<LPGameObject> *coObjects)
 						{
 							if (this->level == MARIO_LEVEL_SUPER_BIG)
 							{
-								koopa->SetPosition(x + MARIO_SUPER_BIG_BBOX_WIDTH + 2, y + MARIO_SUPER_BIG_BBOX_HEIGHT / 4);
+								koopa->SetPosition(x + MARIO_SUPER_BIG_BBOX_WIDTH + 1, y + MARIO_SUPER_BIG_BBOX_HEIGHT / 4);
 							}
 							else if (this->level == MARIO_LEVEL_BIG)
 							{
-								koopa->SetPosition(x + MARIO_BIG_BBOX_WIDTH - 1, y + MARIO_BIG_BBOX_HEIGHT / 4);
+								koopa->SetPosition(x + MARIO_BIG_BBOX_WIDTH + 1, y + MARIO_BIG_BBOX_HEIGHT / 4);
 							}
 							else if (this->level == MARIO_LEVEL_SMALL)
 							{
-								koopa->SetPosition(x + MARIO_SMALL_BBOX_WIDTH - 1, y - 2);
+								koopa->SetPosition(x + MARIO_SMALL_BBOX_WIDTH + 1.9f, y - 2);
 							}
 							koopa->SetState(KOOPA_STATE_HOLDING);
 						}
@@ -226,15 +251,15 @@ void Mario::Update(DWORD dt, vector<LPGameObject> *coObjects)
 							x += dx;
 							if (this->level == MARIO_LEVEL_SUPER_BIG)
 							{
-								koopa->SetPosition(x + MARIO_SUPER_BIG_BBOX_WIDTH -2, y + MARIO_SUPER_BIG_BBOX_HEIGHT / 4);
+								koopa->SetPosition(x + MARIO_SUPER_BIG_BBOX_WIDTH + 1, y + MARIO_SUPER_BIG_BBOX_HEIGHT / 4);
 							}
 							else if (this->level == MARIO_LEVEL_BIG)
 							{
-								koopa->SetPosition(x + MARIO_BIG_BBOX_WIDTH - 1, y + MARIO_BIG_BBOX_HEIGHT / 4);
+								koopa->SetPosition(x + MARIO_BIG_BBOX_WIDTH + 1, y + MARIO_BIG_BBOX_HEIGHT / 4);
 							}
 							else if (this->level == MARIO_LEVEL_SMALL)
 							{
-								koopa->SetPosition(x + MARIO_SMALL_BBOX_WIDTH - 1, y - 2);
+								koopa->SetPosition(x + MARIO_SMALL_BBOX_WIDTH + 1.9f, y - 2);
 							}
 						}
 						else
@@ -256,6 +281,7 @@ void Mario::Update(DWORD dt, vector<LPGameObject> *coObjects)
 						}
 					}
 				}// Colision left to right
+
 			}
 		}
 	}
@@ -484,8 +510,6 @@ void Mario::Render()
 
 	animation_set->at(ani)->Render(x, y, alpha);
 
-	// To see BoundingBox
-	//RenderBoundingBox();
 }
 
 void Mario::SetState(int state)
@@ -565,12 +589,10 @@ void Mario::SetState(int state)
 		break;
 	}
 }
-
 void Mario::GetBoundingBox(float &left, float &top, float &right, float &bottom)
 {
 	left = x;
 	top = y;
-
 	if (level == MARIO_LEVEL_BIG)
 	{
 		if (ny > 0 && hit == false && hold == false)
@@ -601,10 +623,6 @@ void Mario::GetBoundingBox(float &left, float &top, float &right, float &bottom)
 		right = x + MARIO_SUPER_BIG_BBOX_WIDTH;
 	}
 
-	if (hold == true)
-	{
-		//right -= 3;
-	}
 }
 
 /*

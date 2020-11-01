@@ -222,6 +222,18 @@
 150032	256	202	272	218	60
 150033	273	202	289	218	60
 150034	290	202	306	218	60
+
+#Mario Fire
+#Fire right
+160001	238	552	250	564	0
+160002	256	552	268	564	0
+160003	256	572	268	584	0
+160004	238	572	250	584	0
+#Fire left
+160011	196	552	208	564	0
+160012	178	552	190	564	0
+160013	178	572	190	584	0
+160014	196	572	208	584	0
 						
 # ani_id	sprite1_id	time1	sprite2_id	time2	...
 [ANIMATIONS]
@@ -422,6 +434,11 @@
 #throw
 1504	150031	100	150032	100	150033	100	150034	100
 
+#Mario Fire
+# Fire right
+1601	160001	100	160002	100	160003	100	160004	100
+# Fire left
+1602	160011	100	160012	100	160013	100	160014	100
 
 #
 # id	ani1	ani2	ani3
@@ -528,9 +545,12 @@
 # Green
 151	1501	1502	1503	1504
 
+#Mario Fire
+161	1601	1602
+
 [OBJECTS]
 # type	x	y	ani_set_id	extra_settings per object type
-# type: 0 = Ground , 1 = Brick, 2 = Goomba, 3 = Koopa, 5 = Box 
+# type: 0 = Ground , 1 = Brick, 2 = Goomba, 3 = Koopa,4= Mario Fire, 5 = Box 
 # type: -1 = Background, -2 = Mario
 
 # Background
@@ -1338,11 +1358,13 @@
 #2	500	171	3
 # Koopas Green
 3	530	128	151
+#1	580	128	6
 3	1342	65	151
 #3	1310	97	151
 #3	1285	129	151
 
-
+# Mario fire
+4	50	50	161
 # MARIO
 -2	520.0	0	1
 # --- SCENE PORTAL ----

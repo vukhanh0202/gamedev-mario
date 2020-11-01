@@ -20,10 +20,10 @@ void Box::GetBoundingBox(float &l, float &t, float &r, float &b)
 		r = x + BOX_BBOX_WIDTH;
 		b = y + BOX_BBOX_HEIGHT;
 	}*/
-	l = x;
-	t = y;
-	r = x + BOX_BBOX_WIDTH;
-	b = y + BOX_BBOX_HEIGHT;
+	l = 0;
+	t = 0;
+	r = 0 + BOX_BBOX_WIDTH;
+	b = 0 + BOX_BBOX_HEIGHT;
 }
 void Box::Update(DWORD dt, vector<LPGameObject> *coObjects)
 {
