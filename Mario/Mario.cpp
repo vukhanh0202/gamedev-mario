@@ -34,7 +34,7 @@ void Mario::Update(DWORD dt, vector<LPGameObject> *coObjects)
 	GameObject::Update(dt);
 
 
-	if (level == MARIO_LEVEL_SUPER_BIG)
+	if (level == MARIO_LEVEL_SUPER_BIG && hold == false)
 	{
 		// Top high => Mario fall
 		if (this->y < MARIO_LIMIT_FLY)
