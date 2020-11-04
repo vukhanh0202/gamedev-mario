@@ -273,7 +273,7 @@ void PlayScene::_ParseSection_OBJECTS(string line)
 		case OBJECT_TYPE_GROUND: obj = new Ground(); break;
 		case OBJECT_TYPE_BACKGROUND: obj = new BackGround(); break;
 		case OBJECT_TYPE_FIRE_MARIO:
-			obj = new FireMario(); 
+			obj = new FireMario();
 			bullet = (FireMario*)obj;
 			if (player != NULL)
 			{
@@ -289,7 +289,7 @@ void PlayScene::_ParseSection_OBJECTS(string line)
 			DebugOut(L"[ERR] Invalid object type: %d\n", object_type);
 			return;
 		}
-		
+
 		// General object setup
 		obj->SetPosition(x, y);
 
@@ -398,11 +398,13 @@ void PlayScene::Update(DWORD dt)
 		cx = 2880 - (game->GetScreenWidth());
 	}// Mario in tail map
 
-	/*if (player->y > (game->GetScreenHeight() / 2)) {
-		cy = 0;
-	}*/
+	if (player->y <= MARIO_LIMIT_FLY + game->GetScreenHeight() / 2.2f)
+        cy = MARIO_LIMIT_FLY;
 
-	Game::GetInstance()->SetCamPosition(cx, 0.0f /*cy*/);
+	
+	if ((player->y < game->GetScreenHeight() / 4 && player->GetFly() == true) || (player->y <= game->GetScreenHeight() / 4 && player->GetFall() == true))
+		Game::GetInstance()->SetCamPosition(cx, cy /*cy*/);
+	else Game::GetInstance()->SetCamPosition(cx, 0.0f /*cy*/);
 }
 
 void PlayScene::Render()
@@ -435,7 +437,12 @@ void PlaySceneKeyHandler::OnKeyDown(int KeyCode)
 	{
 	case DIK_SPACE:
 	{
-		mario->SetState(MARIO_STATE_JUMP);
+		if (mario->GetFly() != true && mario->GetFall() != true)
+			mario->SetState(MARIO_STATE_JUMP);
+		else if (mario->GetFall() == true)
+		{
+			mario->SetRestrain(true);
+		}
 	}
 	break;
 	case DIK_P:
@@ -453,9 +460,6 @@ void PlaySceneKeyHandler::OnKeyDown(int KeyCode)
 	case DIK_S:
 		mario->SetShot(true);
 		break;
-		/*case DIK_Q:
-			mario->SetState(MARIO_STATE_HOLD);
-			break;*/
 	}
 }
 void PlaySceneKeyHandler::OnKeyUp(int KeyCode)
@@ -475,6 +479,23 @@ void PlaySceneKeyHandler::OnKeyUp(int KeyCode)
 	case DIK_A:
 		mario->SetFastSpeed(false);
 		break;
+	case DIK_D:
+		mario->SetFly(false);
+		mario->SetFall(true);
+		break;
+	case DIK_SPACE:
+	{
+		if (mario->GetFly() == true)
+		{
+			mario->SetFall(true);
+			mario->SetFly(false);
+			mario->SetReadyFly(false);
+		}
+		if (mario->GetRestrain() == true)
+		{
+			mario->SetRestrain(false);
+		}
+	}
 	}
 }
 
@@ -492,7 +513,13 @@ void PlaySceneKeyHandler::KeyState(BYTE *states)
 	}
 	if (game->IsKeyDown(DIK_A))
 	{
-		mario->SetFastSpeed(true);
+		if (mario->GetFly() == false)
+			mario->SetFastSpeed(true);
+	}
+	if (game->IsKeyDown(DIK_SPACE) && mario->GetReadyFly() == true && mario->GetFall() == false)
+	{
+		mario->SetFly(true);
+		mario->SetFastSpeed(false);
 	}
 	if (game->IsKeyDown(DIK_RIGHT))
 		mario->SetState(MARIO_STATE_WALKING_RIGHT);

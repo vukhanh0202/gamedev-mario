@@ -14,7 +14,3 @@ void Brick::GetBoundingBox(float &l, float &t, float &r, float &b)
 	b = y + BRICK_BBOX_HEIGHT;
 	
 }
-void Brick::Update(DWORD dt, vector<LPGameObject> *coObjects)
-{
-
-}

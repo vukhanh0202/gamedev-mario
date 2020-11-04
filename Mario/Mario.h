@@ -8,6 +8,7 @@
 #define MARIO_JUMP_SPEED_Y		0.5f
 #define MARIO_JUMP_DEFLECT_SPEED 0.2f
 #define MARIO_GRAVITY			0.002f
+#define MARIO_FLY				0.00005f
 #define MARIO_DIE_DEFLECT_SPEED	 0.5f
 
 #define MARIO_STATE_IDLE			0
@@ -64,6 +65,14 @@
 #define MARIO_ANI_BIG_HOLD_IDLE_LEFT			32
 #define MARIO_ANI_SUPER_BIG_IDLE_HOLD_RIGHT		33
 #define MARIO_ANI_SUPER_BIG_IDLE_HOLD_LEFT		34
+#define MARIO_ANI_SUPER_BIG_FLY_RIGHT			35
+#define MARIO_ANI_SUPER_BIG_FLY_LEFT			36
+#define MARIO_ANI_SUPER_BIG_FALL_RIGHT			37
+#define MARIO_ANI_SUPER_BIG_FALL_LEFT			38
+#define MARIO_ANI_SUPER_BIG_RESTRAIN_RIGHT		39
+#define MARIO_ANI_SUPER_BIG_RESTRAIN_LEFT		40
+#define MARIO_ANI_SUPER_BIG_READY_FLY_RIGHT		41
+#define MARIO_ANI_SUPER_BIG_READY_FLY_LEFT		42
 
 #define	MARIO_LEVEL_SMALL			1
 #define	MARIO_LEVEL_BIG				2
@@ -83,18 +92,26 @@
 
 #define MARIO_UNTOUCHABLE_TIME 5000
 
+#define MARIO_POWER_READY_FLY	240
+
+#define MARIO_LIMIT_FLY			-400
+
 
 class Mario : public GameObject
 {
 	int level;
 	int untouchable;
 	int ny; // Determine sit or not
+	int power; // Determine Mario ready for fly (power = 5 mario can fly)
 
 	boolean hold; // Hold koopa
 	boolean hit;
 	boolean fast; // fast speed
 	boolean shot; // shot bullet(fire)
-
+	boolean readyFly; //Determine mario can fly or not
+	boolean fly;  // Determine mario fly or not
+	boolean fall; // Determine mario fall. While falling, mario can not fly
+	boolean restrain; // Restrain mario fall
 
 	DWORD untouchable_start;
 
@@ -123,6 +140,14 @@ public:
 	void SetFastSpeed(boolean fast) { this->fast = fast; };
 	void SetShot(boolean shot) { this->shot = shot; };
 	void SetBullet(FireMario *bullet) { this->bullet = bullet; }
+	void SetFly(boolean fly) { this->fly = fly; }
+	boolean GetFly() { return this->fly; }
+	void SetFall(boolean fall) { this->fall = fall; }
+	boolean GetFall() { return this->fall; }
+	void SetReadyFly(boolean readyFly) { this->readyFly = readyFly; }
+	boolean GetReadyFly() { return this->readyFly; }
+	void SetRestrain(boolean restrain) { this->restrain = restrain; }
+	boolean GetRestrain() { return this->restrain; }
 	void SetLevel(int l) { level = l; }
 	void StartUntouchable() { untouchable = 1; untouchable_start = GetTickCount(); }
 

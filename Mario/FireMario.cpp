@@ -39,8 +39,6 @@ void FireMario::Update(DWORD dt, vector<LPGameObject> *coObjects)
 	{
 		vy += FIRE_MARIO_GRAVITY;
 
-		
-
 		//if (StartLoop == false)
 		//{
 		//}

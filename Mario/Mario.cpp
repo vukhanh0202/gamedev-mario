@@ -5,6 +5,7 @@
 #include "Koopa.h"
 #include "PlayScene.h"
 #include "Game.h"
+#include "Utils.h"
 
 Mario::Mario(float x, float y) : GameObject()
 {
@@ -22,6 +23,8 @@ Mario::Mario(float x, float y) : GameObject()
 	hold = false;
 	hit = false;
 	shot = false;
+	fly = false;
+	power = 0;
 	bullet = NULL;
 }
 
@@ -30,8 +33,50 @@ void Mario::Update(DWORD dt, vector<LPGameObject> *coObjects)
 	// Calculate dx, dy 
 	GameObject::Update(dt);
 
-	// Simple fall down
-	vy += MARIO_GRAVITY * dt;
+
+	if (level == MARIO_LEVEL_SUPER_BIG)
+	{
+		// Top high => Mario fall
+		if (this->y < MARIO_LIMIT_FLY)
+		{
+			fall = true;
+			fly = false;
+			readyFly = false;
+		}
+
+		// Mario accumulate to fly
+		if (fast == true && readyFly == false && vx != 0)
+		{
+			this->power++;
+			if (power >= MARIO_POWER_READY_FLY) readyFly = true;
+		}
+		else {
+			if (power <= 0) readyFly = false;
+			else power--;
+		}
+		// Speed fly
+		if (fly == true)
+		{
+			vy = -0.2f;
+		}
+		else if (fall == true)
+		{
+			if (restrain == true)
+			{
+				vy = 0.1f;
+			}
+			else {
+				vy = 0.2f;
+			}
+		}
+		else {
+			vy += MARIO_GRAVITY * dt;
+		}
+	}
+	else {
+		vy += MARIO_GRAVITY * dt;
+	}
+	
 
 	vector<LPCollisionEvent> coEvents;
 	vector<LPCollisionEvent> coEventsResult;
@@ -76,8 +121,8 @@ void Mario::Update(DWORD dt, vector<LPGameObject> *coObjects)
 	}
 	else
 	{
-
 		isCollision = true;
+		fall = false;
 		float min_tx, min_ty, nx = 0, ny;
 		float rdx = 0;
 		float rdy = 0;
@@ -433,7 +478,17 @@ void Mario::Render()
 		}
 		else if (level == MARIO_LEVEL_SUPER_BIG)
 		{
-			if (hold == true)
+			if (readyFly == true && fly == false) { // Ready for state
+				if (nx > 0)
+				{
+					ani = MARIO_ANI_SUPER_BIG_READY_FLY_RIGHT;
+				}
+				else
+				{
+					ani = MARIO_ANI_SUPER_BIG_READY_FLY_LEFT;
+				}
+			}
+			else if (hold == true)
 			{
 				if (vx == 0)
 				{
@@ -466,6 +521,41 @@ void Mario::Render()
 					ani = MARIO_ANI_SUPER_BIG_HIT_LEFT;
 				}
 			}
+			else if (fly == true) {
+				if (nx > 0)
+				{
+					ani = MARIO_ANI_SUPER_BIG_FLY_RIGHT;
+				}
+				else
+				{
+					ani = MARIO_ANI_SUPER_BIG_FLY_LEFT;
+				}
+			}
+			else if (fall == true) {
+
+				if (restrain == true) {
+					if (nx > 0)
+					{
+						ani = MARIO_ANI_SUPER_BIG_RESTRAIN_RIGHT;
+					}
+					else
+					{
+						ani = MARIO_ANI_SUPER_BIG_RESTRAIN_LEFT;
+					}
+				}
+				else
+				{
+					if (nx > 0)
+					{
+						ani = MARIO_ANI_SUPER_BIG_FALL_RIGHT;
+					}
+					else
+					{
+						ani = MARIO_ANI_SUPER_BIG_FALL_LEFT;
+					}
+				}
+			}
+
 			else {
 				if (vx == 0)
 				{
@@ -510,6 +600,7 @@ void Mario::Render()
 
 	animation_set->at(ani)->Render(x, y, alpha);
 
+	//RenderBoundingBox();
 }
 
 void Mario::SetState(int state)
@@ -550,7 +641,6 @@ void Mario::SetState(int state)
 			// 0.5s sleep when mario jump
 			if (t > 500 && isCollision == true)
 			{
-
 				lastJumpTime = GetTickCount();
 				isCollision = false;
 				vy = -MARIO_JUMP_SPEED_Y;
@@ -567,8 +657,6 @@ void Mario::SetState(int state)
 			this->y -= (b - t);
 		}
 		ny = -1;
-		//hold = false;
-		//hit = false; // cancel state hit
 		break;
 	case MARIO_STATE_SITTING_RIGHT:
 		vx = 0;

@@ -1,66 +1,28 @@
-﻿  FireMario.cpp
-  Game.cpp
+﻿  Mario.cpp
   c:\program files (x86)\microsoft directx sdk (june 2010)\include\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
 d:\uit\kì 1 2021 (kì 5)\nhập môn game\mario\mario\mario\game.h(11): warning C4005: 'DIRECTINPUT_VERSION': macro redefinition
   c:\program files (x86)\microsoft directx sdk (june 2010)\include\dinput.h(42): note: see previous definition of 'DIRECTINPUT_VERSION'
-d:\uit\kì 1 2021 (kì 5)\nhập môn game\mario\mario\mario\game.cpp(280): warning C4305: '=': truncation from '__int64' to 'float'
-d:\uit\kì 1 2021 (kì 5)\nhập môn game\mario\mario\mario\game.cpp(281): warning C4305: '=': truncation from '__int64' to 'float'
-d:\uit\kì 1 2021 (kì 5)\nhập môn game\mario\mario\mario\game.cpp(291): warning C4305: '=': truncation from '__int64' to 'float'
-d:\uit\kì 1 2021 (kì 5)\nhập môn game\mario\mario\mario\game.cpp(292): warning C4305: '=': truncation from '__int64' to 'float'
-  GameObject.cpp
-  c:\program files (x86)\microsoft directx sdk (june 2010)\include\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
-d:\uit\kì 1 2021 (kì 5)\nhập môn game\mario\mario\mario\game.h(11): warning C4005: 'DIRECTINPUT_VERSION': macro redefinition
-  c:\program files (x86)\microsoft directx sdk (june 2010)\include\dinput.h(42): note: see previous definition of 'DIRECTINPUT_VERSION'
-  Koopa.cpp
-  c:\program files (x86)\microsoft directx sdk (june 2010)\include\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
-d:\uit\kì 1 2021 (kì 5)\nhập môn game\mario\mario\mario\game.h(11): warning C4005: 'DIRECTINPUT_VERSION': macro redefinition
-  c:\program files (x86)\microsoft directx sdk (june 2010)\include\dinput.h(42): note: see previous definition of 'DIRECTINPUT_VERSION'
-d:\uit\kì 1 2021 (kì 5)\nhập môn game\mario\mario\mario\koopa.cpp(101): warning C4552: '>': result of expression not used
-d:\uit\kì 1 2021 (kì 5)\nhập môn game\mario\mario\mario\koopa.cpp(220): warning C4805: '==': unsafe mix of type 'boolean' and type 'bool' in operation
-  Mario.cpp
-  c:\program files (x86)\microsoft directx sdk (june 2010)\include\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
-d:\uit\kì 1 2021 (kì 5)\nhập môn game\mario\mario\mario\game.h(11): warning C4005: 'DIRECTINPUT_VERSION': macro redefinition
-  c:\program files (x86)\microsoft directx sdk (june 2010)\include\dinput.h(42): note: see previous definition of 'DIRECTINPUT_VERSION'
-d:\uit\kì 1 2021 (kì 5)\nhập môn game\mario\mario\mario\mario.cpp(52): warning C4805: '==': unsafe mix of type 'boolean' and type 'bool' in operation
-d:\uit\kì 1 2021 (kì 5)\nhập môn game\mario\mario\mario\mario.cpp(58): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-d:\uit\kì 1 2021 (kì 5)\nhập môn game\mario\mario\mario\mario.cpp(63): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-d:\uit\kì 1 2021 (kì 5)\nhập môn game\mario\mario\mario\mario.cpp(180): warning C4805: '==': unsafe mix of type 'boolean' and type 'bool' in operation
-d:\uit\kì 1 2021 (kì 5)\nhập môn game\mario\mario\mario\mario.cpp(223): warning C4805: '==': unsafe mix of type 'boolean' and type 'bool' in operation
-d:\uit\kì 1 2021 (kì 5)\nhập môn game\mario\mario\mario\mario.cpp(248): warning C4805: '==': unsafe mix of type 'boolean' and type 'bool' in operation
-d:\uit\kì 1 2021 (kì 5)\nhập môn game\mario\mario\mario\mario.cpp(303): warning C4805: '==': unsafe mix of type 'boolean' and type 'bool' in operation
-d:\uit\kì 1 2021 (kì 5)\nhập môn game\mario\mario\mario\mario.cpp(325): warning C4805: '==': unsafe mix of type 'boolean' and type 'bool' in operation
-d:\uit\kì 1 2021 (kì 5)\nhập môn game\mario\mario\mario\mario.cpp(377): warning C4805: '==': unsafe mix of type 'boolean' and type 'bool' in operation
-d:\uit\kì 1 2021 (kì 5)\nhập môn game\mario\mario\mario\mario.cpp(399): warning C4805: '==': unsafe mix of type 'boolean' and type 'bool' in operation
-d:\uit\kì 1 2021 (kì 5)\nhập môn game\mario\mario\mario\mario.cpp(436): warning C4805: '==': unsafe mix of type 'boolean' and type 'bool' in operation
-d:\uit\kì 1 2021 (kì 5)\nhập môn game\mario\mario\mario\mario.cpp(458): warning C4805: '==': unsafe mix of type 'boolean' and type 'bool' in operation
-d:\uit\kì 1 2021 (kì 5)\nhập môn game\mario\mario\mario\mario.cpp(522): warning C4805: '==': unsafe mix of type 'boolean' and type 'bool' in operation
-d:\uit\kì 1 2021 (kì 5)\nhập môn game\mario\mario\mario\mario.cpp(535): warning C4805: '==': unsafe mix of type 'boolean' and type 'bool' in operation
-d:\uit\kì 1 2021 (kì 5)\nhập môn game\mario\mario\mario\mario.cpp(551): warning C4805: '==': unsafe mix of type 'boolean' and type 'bool' in operation
-  PlayScene.cpp
-  c:\program files (x86)\microsoft directx sdk (june 2010)\include\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
-d:\uit\kì 1 2021 (kì 5)\nhập môn game\mario\mario\mario\game.h(11): warning C4005: 'DIRECTINPUT_VERSION': macro redefinition
-  c:\program files (x86)\microsoft directx sdk (june 2010)\include\dinput.h(42): note: see previous definition of 'DIRECTINPUT_VERSION'
-d:\uit\kì 1 2021 (kì 5)\nhập môn game\mario\mario\mario\playscene.cpp(98): warning C4018: '<': signed/unsigned mismatch
-d:\uit\kì 1 2021 (kì 5)\nhập môn game\mario\mario\mario\playscene.cpp(120): warning C4018: '<': signed/unsigned mismatch
-d:\uit\kì 1 2021 (kì 5)\nhập môn game\mario\mario\mario\playscene.cpp(205): warning C4805: '==': unsafe mix of type 'boolean' and type 'bool' in operation
-d:\uit\kì 1 2021 (kì 5)\nhập môn game\mario\mario\mario\playscene.cpp(210): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-d:\uit\kì 1 2021 (kì 5)\nhập môn game\mario\mario\mario\playscene.cpp(211): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-d:\uit\kì 1 2021 (kì 5)\nhập môn game\mario\mario\mario\playscene.cpp(245): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-d:\uit\kì 1 2021 (kì 5)\nhập môn game\mario\mario\mario\playscene.cpp(246): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-d:\uit\kì 1 2021 (kì 5)\nhập môn game\mario\mario\mario\playscene.cpp(398): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-d:\uit\kì 1 2021 (kì 5)\nhập môn game\mario\mario\mario\playscene.cpp(410): warning C4018: '<': signed/unsigned mismatch
-d:\uit\kì 1 2021 (kì 5)\nhập môn game\mario\mario\mario\playscene.cpp(419): warning C4018: '<': signed/unsigned mismatch
-  Sprite.cpp
-  c:\program files (x86)\microsoft directx sdk (june 2010)\include\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
-d:\uit\kì 1 2021 (kì 5)\nhập môn game\mario\mario\mario\game.h(11): warning C4005: 'DIRECTINPUT_VERSION': macro redefinition
-  c:\program files (x86)\microsoft directx sdk (june 2010)\include\dinput.h(42): note: see previous definition of 'DIRECTINPUT_VERSION'
-  Texture.cpp
-  c:\program files (x86)\microsoft directx sdk (june 2010)\include\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
-d:\uit\kì 1 2021 (kì 5)\nhập môn game\mario\mario\mario\game.h(11): warning C4005: 'DIRECTINPUT_VERSION': macro redefinition
-  c:\program files (x86)\microsoft directx sdk (june 2010)\include\dinput.h(42): note: see previous definition of 'DIRECTINPUT_VERSION'
-  main.cpp
-  c:\program files (x86)\microsoft directx sdk (june 2010)\include\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
-d:\uit\kì 1 2021 (kì 5)\nhập môn game\mario\mario\mario\game.h(11): warning C4005: 'DIRECTINPUT_VERSION': macro redefinition
-  c:\program files (x86)\microsoft directx sdk (june 2010)\include\dinput.h(42): note: see previous definition of 'DIRECTINPUT_VERSION'
-  Generating Code...
+d:\uit\kì 1 2021 (kì 5)\nhập môn game\mario\mario\mario\mario.cpp(48): warning C4805: '==': unsafe mix of type 'boolean' and type 'bool' in operation
+d:\uit\kì 1 2021 (kì 5)\nhập môn game\mario\mario\mario\mario.cpp(58): warning C4805: '==': unsafe mix of type 'boolean' and type 'bool' in operation
+d:\uit\kì 1 2021 (kì 5)\nhập môn game\mario\mario\mario\mario.cpp(62): warning C4805: '==': unsafe mix of type 'boolean' and type 'bool' in operation
+d:\uit\kì 1 2021 (kì 5)\nhập môn game\mario\mario\mario\mario.cpp(64): warning C4805: '==': unsafe mix of type 'boolean' and type 'bool' in operation
+d:\uit\kì 1 2021 (kì 5)\nhập môn game\mario\mario\mario\mario.cpp(97): warning C4805: '==': unsafe mix of type 'boolean' and type 'bool' in operation
+d:\uit\kì 1 2021 (kì 5)\nhập môn game\mario\mario\mario\mario.cpp(103): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+d:\uit\kì 1 2021 (kì 5)\nhập môn game\mario\mario\mario\mario.cpp(108): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+d:\uit\kì 1 2021 (kì 5)\nhập môn game\mario\mario\mario\mario.cpp(225): warning C4805: '==': unsafe mix of type 'boolean' and type 'bool' in operation
+d:\uit\kì 1 2021 (kì 5)\nhập môn game\mario\mario\mario\mario.cpp(268): warning C4805: '==': unsafe mix of type 'boolean' and type 'bool' in operation
+d:\uit\kì 1 2021 (kì 5)\nhập môn game\mario\mario\mario\mario.cpp(293): warning C4805: '==': unsafe mix of type 'boolean' and type 'bool' in operation
+d:\uit\kì 1 2021 (kì 5)\nhập môn game\mario\mario\mario\mario.cpp(348): warning C4805: '==': unsafe mix of type 'boolean' and type 'bool' in operation
+d:\uit\kì 1 2021 (kì 5)\nhập môn game\mario\mario\mario\mario.cpp(370): warning C4805: '==': unsafe mix of type 'boolean' and type 'bool' in operation
+d:\uit\kì 1 2021 (kì 5)\nhập môn game\mario\mario\mario\mario.cpp(422): warning C4805: '==': unsafe mix of type 'boolean' and type 'bool' in operation
+d:\uit\kì 1 2021 (kì 5)\nhập môn game\mario\mario\mario\mario.cpp(444): warning C4805: '==': unsafe mix of type 'boolean' and type 'bool' in operation
+d:\uit\kì 1 2021 (kì 5)\nhập môn game\mario\mario\mario\mario.cpp(481): warning C4805: '==': unsafe mix of type 'boolean' and type 'bool' in operation
+d:\uit\kì 1 2021 (kì 5)\nhập môn game\mario\mario\mario\mario.cpp(491): warning C4805: '==': unsafe mix of type 'boolean' and type 'bool' in operation
+d:\uit\kì 1 2021 (kì 5)\nhập môn game\mario\mario\mario\mario.cpp(513): warning C4805: '==': unsafe mix of type 'boolean' and type 'bool' in operation
+d:\uit\kì 1 2021 (kì 5)\nhập môn game\mario\mario\mario\mario.cpp(524): warning C4805: '==': unsafe mix of type 'boolean' and type 'bool' in operation
+d:\uit\kì 1 2021 (kì 5)\nhập môn game\mario\mario\mario\mario.cpp(534): warning C4805: '==': unsafe mix of type 'boolean' and type 'bool' in operation
+d:\uit\kì 1 2021 (kì 5)\nhập môn game\mario\mario\mario\mario.cpp(536): warning C4805: '==': unsafe mix of type 'boolean' and type 'bool' in operation
+d:\uit\kì 1 2021 (kì 5)\nhập môn game\mario\mario\mario\mario.cpp(613): warning C4805: '==': unsafe mix of type 'boolean' and type 'bool' in operation
+d:\uit\kì 1 2021 (kì 5)\nhập môn game\mario\mario\mario\mario.cpp(626): warning C4805: '==': unsafe mix of type 'boolean' and type 'bool' in operation
+d:\uit\kì 1 2021 (kì 5)\nhập môn game\mario\mario\mario\mario.cpp(642): warning C4805: '==': unsafe mix of type 'boolean' and type 'bool' in operation
   Mario.vcxproj -> D:\UIT\Kì 1 2021 (Kì 5)\Nhập môn Game\Mario\Mario\Debug\Mario.exe
