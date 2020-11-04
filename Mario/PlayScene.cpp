@@ -399,9 +399,9 @@ void PlayScene::Update(DWORD dt)
 	}// Mario in tail map
 
 	if (player->y <= MARIO_LIMIT_FLY + game->GetScreenHeight() / 2.2f)
-        cy = MARIO_LIMIT_FLY;
+		cy = MARIO_LIMIT_FLY;
 
-	
+
 	if ((player->y < game->GetScreenHeight() / 4 && player->GetFly() == true) || (player->y <= game->GetScreenHeight() / 4 && player->GetFall() == true))
 		Game::GetInstance()->SetCamPosition(cx, cy /*cy*/);
 	else Game::GetInstance()->SetCamPosition(cx, 0.0f /*cy*/);
@@ -459,6 +459,7 @@ void PlaySceneKeyHandler::OnKeyDown(int KeyCode)
 		break;
 	case DIK_S:
 		mario->SetShot(true);
+		mario->SetHolding(false);
 		break;
 	}
 }
@@ -496,6 +497,9 @@ void PlaySceneKeyHandler::OnKeyUp(int KeyCode)
 			mario->SetRestrain(false);
 		}
 	}
+	case DIK_S:
+		mario->SetShot(false);
+		break;
 	}
 }
 

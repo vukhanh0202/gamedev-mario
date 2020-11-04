@@ -22,7 +22,10 @@ d:\uit\kì 1 2021 (kì 5)\nhập môn game\mario\mario\mario\mario.cpp(513): war
 d:\uit\kì 1 2021 (kì 5)\nhập môn game\mario\mario\mario\mario.cpp(524): warning C4805: '==': unsafe mix of type 'boolean' and type 'bool' in operation
 d:\uit\kì 1 2021 (kì 5)\nhập môn game\mario\mario\mario\mario.cpp(534): warning C4805: '==': unsafe mix of type 'boolean' and type 'bool' in operation
 d:\uit\kì 1 2021 (kì 5)\nhập môn game\mario\mario\mario\mario.cpp(536): warning C4805: '==': unsafe mix of type 'boolean' and type 'bool' in operation
-d:\uit\kì 1 2021 (kì 5)\nhập môn game\mario\mario\mario\mario.cpp(613): warning C4805: '==': unsafe mix of type 'boolean' and type 'bool' in operation
-d:\uit\kì 1 2021 (kì 5)\nhập môn game\mario\mario\mario\mario.cpp(626): warning C4805: '==': unsafe mix of type 'boolean' and type 'bool' in operation
-d:\uit\kì 1 2021 (kì 5)\nhập môn game\mario\mario\mario\mario.cpp(642): warning C4805: '==': unsafe mix of type 'boolean' and type 'bool' in operation
+d:\uit\kì 1 2021 (kì 5)\nhập môn game\mario\mario\mario\mario.cpp(596): warning C4805: '==': unsafe mix of type 'boolean' and type 'bool' in operation
+d:\uit\kì 1 2021 (kì 5)\nhập môn game\mario\mario\mario\mario.cpp(618): warning C4805: '==': unsafe mix of type 'boolean' and type 'bool' in operation
+d:\uit\kì 1 2021 (kì 5)\nhập môn game\mario\mario\mario\mario.cpp(629): warning C4805: '==': unsafe mix of type 'boolean' and type 'bool' in operation
+d:\uit\kì 1 2021 (kì 5)\nhập môn game\mario\mario\mario\mario.cpp(694): warning C4805: '==': unsafe mix of type 'boolean' and type 'bool' in operation
+d:\uit\kì 1 2021 (kì 5)\nhập môn game\mario\mario\mario\mario.cpp(707): warning C4805: '==': unsafe mix of type 'boolean' and type 'bool' in operation
+d:\uit\kì 1 2021 (kì 5)\nhập môn game\mario\mario\mario\mario.cpp(723): warning C4805: '==': unsafe mix of type 'boolean' and type 'bool' in operation
   Mario.vcxproj -> D:\UIT\Kì 1 2021 (Kì 5)\Nhập môn Game\Mario\Mario\Debug\Mario.exe

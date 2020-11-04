@@ -76,7 +76,7 @@ void Mario::Update(DWORD dt, vector<LPGameObject> *coObjects)
 	else {
 		vy += MARIO_GRAVITY * dt;
 	}
-	
+
 
 	vector<LPCollisionEvent> coEvents;
 	vector<LPCollisionEvent> coEventsResult;
@@ -94,7 +94,7 @@ void Mario::Update(DWORD dt, vector<LPGameObject> *coObjects)
 		untouchable = 0;
 	}
 
-	if (shot == true && level == MARIO_LEVEL_SUPER_BIG)
+	if (shot == true && level == MARIO_LEVEL_FIRE)
 	{
 		if (nx > 0)
 		{
@@ -107,11 +107,11 @@ void Mario::Update(DWORD dt, vector<LPGameObject> *coObjects)
 			//bullet->SetStartLoop(false);
 			bullet->SetPosition(x - MARIO_BIG_BBOX_WIDTH * 0.1f, y + MARIO_BIG_BBOX_HEIGHT * 0.2);
 		}
-		shot = false;
+		//shot = false;
 	}
-	else {
+	/*else {
 		shot = false;
-	}
+	}*/
 
 	// No collision occured, proceed normally
 	if (coEvents.size() == 0)
@@ -555,7 +555,6 @@ void Mario::Render()
 					}
 				}
 			}
-
 			else {
 				if (vx == 0)
 				{
@@ -592,6 +591,88 @@ void Mario::Render()
 				}
 			}
 
+		}
+		else if (level == MARIO_LEVEL_FIRE) {
+			if (hold == true)
+			{
+				if (vx == 0)
+				{
+					if (nx > 0)
+					{
+						ani = MARIO_ANI_FIRE_HOLD_IDLE_RIGHT;
+					}
+					else
+					{
+						ani = MARIO_ANI_FIRE_HOLD_IDLE_LEFT;
+					}
+				}
+				else if (vx > 0)
+				{
+					ani = MARIO_ANI_FIRE_HOLD_RIGHT;
+				}
+				else
+				{
+					ani = MARIO_ANI_FIRE_HOLD_LEFT;
+				}
+			}
+			else if (hit == true)
+			{
+				if (nx > 0)
+				{
+					ani = MARIO_ANI_FIRE_HIT_RIGHT;
+				}
+				else
+				{
+					ani = MARIO_ANI_FIRE_HIT_LEFT;
+				}
+			}
+			if (shot == true) {
+				if (nx > 0)
+				{
+					ani = MARIO_ANI_FIRE_SHOT_RIGHT;
+				}
+				else
+				{
+					ani = MARIO_ANI_FIRE_SHOT_LEFT;
+				}
+			}
+			else
+			{
+				if (vx == 0)
+				{
+					if (ny > 0) // sit
+					{
+						if (nx > 0)
+						{
+							ani = MARIO_ANI_FIRE_SITTING_RIGHT;
+						}
+						else
+						{
+							ani = MARIO_ANI_FIRE_SITTING_LEFT;
+						}
+					}
+					else // not sit
+					{
+						if (nx > 0)
+						{
+							ani = MARIO_ANI_FIRE_IDLE_RIGHT;
+						}
+						else
+						{
+							ani = MARIO_ANI_FIRE_IDLE_LEFT;
+						}
+					}
+
+				}
+				else if (vx > 0)
+				{
+					ani = MARIO_ANI_FIRE_WALKING_RIGHT;
+				}
+				else
+				{
+					ani = MARIO_ANI_FIRE_WALKING_LEFT;
+				}
+			}
 		}
 	}
 
@@ -710,6 +791,18 @@ void Mario::GetBoundingBox(float &left, float &top, float &right, float &bottom)
 		}
 		right = x + MARIO_SUPER_BIG_BBOX_WIDTH;
 	}
+	else if (level == MARIO_LEVEL_FIRE)
+	{
+		if (ny > 0 && hit == false && hold == false)
+		{
+			bottom = y + MARIO_FIRE_BBOX_HEIGHT_SITTING;
+		}
+		else
+		{
+			bottom = y + MARIO_FIRE_BBOX_HEIGHT;
+		}
+		right = x + MARIO_FIRE_BBOX_WIDTH;
+	}
 
 }
 
@@ -726,7 +819,7 @@ void Mario::Reset()
 
 void Mario::UpLevel()
 {
-	if (level != MARIO_LEVEL_SUPER_BIG) {
+	if (level != MARIO_LEVEL_FIRE) {
 		int l = ++level;
 		SetPosition(x, y - MARIO_SUPER_BIG_BBOX_HEIGHT);
 		SetLevel(l);
@@ -737,6 +830,7 @@ void Mario::DownLevel()
 {
 	if (level != MARIO_LEVEL_SMALL) {
 		int l = --level;
+		SetPosition(x, y - MARIO_SUPER_BIG_BBOX_HEIGHT);
 		SetLevel(l);
 	}
 }
