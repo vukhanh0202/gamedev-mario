@@ -56,10 +56,6 @@ void Koopa::Update(DWORD dt, vector<LPGameObject> *coObjects)
 		}
 		x += dx;
 		y += dy;
-		if (state == KOOPA_STATE_HOLDING)
-		{
-			int x = 2;
-		}
 	}
 	else
 	{
@@ -75,7 +71,6 @@ void Koopa::Update(DWORD dt, vector<LPGameObject> *coObjects)
 
 		if (GetState() == KOOPA_STATE_HOLDING)
 		{
-			int x = 2;
 			if (nx != 0) vx = 0;
 		}
 		if (ny != 0) vy = 0;
@@ -104,7 +99,7 @@ void Koopa::Update(DWORD dt, vector<LPGameObject> *coObjects)
 						x = xBox + BOX_BBOX_WIDTH / 2;
 					}
 				}
-
+				
 			}
 			if (nx != 0)
 			{

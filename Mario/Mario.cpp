@@ -138,15 +138,31 @@ void Mario::Update(DWORD dt, vector<LPGameObject> *coObjects)
 		x += min_tx * dx + nx * 0.4f;
 		y += min_ty * dy + ny * 0.4f;
 
-
+		
 		if (nx != 0) vx = 0;
-		if (ny != 0) vy = 0;
 
 		// Collision logic with Goombas
 		for (UINT i = 0; i < coEventsResult.size(); i++)
 		{
 			LPCollisionEvent e = coEventsResult[i];
 
+			if (dynamic_cast<Boxs *>(e->obj))
+			{
+				if (e->ny > 0)
+				{
+					y += dy;
+				}
+				else if (e->nx != 0)
+				{
+					x += dx;
+				}
+				else {
+					if (ny != 0) vy = 0;
+				}
+			}
+			else {
+				if (ny != 0) vy = 0;
+			}
 			if (dynamic_cast<Goomba *>(e->obj)) // if e->obj is Goomba 
 			{
 				Goomba *goomba = dynamic_cast<Goomba *>(e->obj);
@@ -326,8 +342,8 @@ void Mario::Update(DWORD dt, vector<LPGameObject> *coObjects)
 						}
 					}
 				}// Colision left to right
-
 			}
+			
 		}
 	}
 
