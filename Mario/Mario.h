@@ -1,6 +1,7 @@
 #pragma once
 #include "GameObject.h"
 #include "FireMario.h"
+#include "Koopa.h"
 
 #define MARIO_WALKING_SPEED		0.1f 
 #define MARIO_WALKING_SPEED_FAST		0.15f 
@@ -95,6 +96,7 @@
 #define	MARIO_LEVEL_FIRE			4
 
 #define MARIO_BIG_BBOX_WIDTH			15
+#define MARIO_BIG_BBOX_WIDTH_HOLDING	29
 #define MARIO_BIG_BBOX_HEIGHT			27
 #define MARIO_BIG_BBOX_HEIGHT_SITTING	18
 
@@ -142,6 +144,7 @@ class Mario : public GameObject
 	boolean isCollision; // Check object is collision?
 
 	FireMario *bullet;
+	Koopa *koopaHold;
 
 public:
 	/*Mario() : GameObject()

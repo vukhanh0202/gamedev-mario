@@ -26,6 +26,7 @@ Mario::Mario(float x, float y) : GameObject()
 	fly = false;
 	power = 0;
 	bullet = NULL;
+	koopaHold = NULL;
 }
 
 void Mario::Update(DWORD dt, vector<LPGameObject> *coObjects)
@@ -94,24 +95,80 @@ void Mario::Update(DWORD dt, vector<LPGameObject> *coObjects)
 		untouchable = 0;
 	}
 
+	// Handle mario shot a fire
 	if (shot == true && level == MARIO_LEVEL_FIRE)
 	{
 		if (nx > 0)
 		{
 			bullet->SetState(FIRE_MARIO_STATE_RIGHT);
-			//bullet->SetStartLoop(false);
 			bullet->SetPosition(x + MARIO_BIG_BBOX_WIDTH * 1.1f, y + MARIO_BIG_BBOX_HEIGHT * 0.2);
 		}
 		else {
 			bullet->SetState(FIRE_MARIO_STATE_LEFT);
-			//bullet->SetStartLoop(false);
 			bullet->SetPosition(x - MARIO_BIG_BBOX_WIDTH * 0.1f, y + MARIO_BIG_BBOX_HEIGHT * 0.2);
 		}
-		//shot = false;
 	}
-	/*else {
-		shot = false;
-	}*/
+
+
+	// Handle mario hold koopa
+	if (hold == true && koopaHold != NULL)
+	{
+		if (this->nx > 0)
+		{
+			if (this->level == MARIO_LEVEL_FIRE)
+			{
+				koopaHold->SetPosition(x + MARIO_FIRE_BBOX_WIDTH - 2, y + MARIO_FIRE_BBOX_HEIGHT / 4);
+			}
+			else if (this->level == MARIO_LEVEL_SUPER_BIG)
+			{
+				koopaHold->SetPosition(x + MARIO_SUPER_BIG_BBOX_WIDTH - 2, y + MARIO_SUPER_BIG_BBOX_HEIGHT / 4);
+			}
+			else if (this->level == MARIO_LEVEL_BIG)
+			{
+				koopaHold->SetPosition(x + MARIO_BIG_BBOX_WIDTH - 2, y + MARIO_BIG_BBOX_HEIGHT / 4);
+			}
+			else if (this->level == MARIO_LEVEL_SMALL)
+			{
+				koopaHold->SetPosition(x + MARIO_SMALL_BBOX_WIDTH - 2, y - 2);
+			}
+		}
+		else if (this->nx < 0)
+		{
+			if (this->level == MARIO_LEVEL_FIRE)
+			{
+				koopaHold->SetPosition(x - KOOPA_BBOX_WIDTH + 3, y + MARIO_FIRE_BBOX_HEIGHT / 4);
+			}
+			else if (this->level == MARIO_LEVEL_SUPER_BIG)
+			{
+				koopaHold->SetPosition(x - KOOPA_BBOX_WIDTH + 3, y + MARIO_SUPER_BIG_BBOX_HEIGHT / 4);
+			}
+			else if (this->level == MARIO_LEVEL_BIG)
+			{
+				koopaHold->SetPosition(x - KOOPA_BBOX_WIDTH + 3, y + MARIO_BIG_BBOX_HEIGHT / 4);
+			}
+			else if (this->level == MARIO_LEVEL_SMALL)
+			{
+				koopaHold->SetPosition(x - KOOPA_BBOX_WIDTH + 3, y - 2);
+			}
+		}
+	}
+	else if (hold == false && koopaHold != NULL)
+	{
+
+		if (this->nx > 0)
+		{
+			//this->SetState(MARIO_STATE_HIT);
+			koopaHold->SetState(KOOPA_STATE_THROWING_RIGHT);
+			koopaHold = NULL;
+		}
+		else if (this->nx < 0)
+		{
+			//this->SetState(MARIO_STATE_HIT);
+			koopaHold->SetState(KOOPA_STATE_THROWING_LEFT);
+			koopaHold = NULL;
+		}
+	}
+
 
 	// No collision occured, proceed normally
 	if (coEvents.size() == 0)
@@ -138,7 +195,7 @@ void Mario::Update(DWORD dt, vector<LPGameObject> *coObjects)
 		x += min_tx * dx + nx * 0.4f;
 		y += min_ty * dy + ny * 0.4f;
 
-		
+
 		if (nx != 0) vx = 0;
 
 		// Collision logic with Goombas
@@ -163,6 +220,7 @@ void Mario::Update(DWORD dt, vector<LPGameObject> *coObjects)
 			else {
 				if (ny != 0) vy = 0;
 			}
+
 			if (dynamic_cast<Goomba *>(e->obj)) // if e->obj is Goomba 
 			{
 				Goomba *goomba = dynamic_cast<Goomba *>(e->obj);
@@ -215,51 +273,15 @@ void Mario::Update(DWORD dt, vector<LPGameObject> *coObjects)
 						// Hold koopa
 						if (this->hold == hold)
 						{
-							if (this->level == MARIO_LEVEL_SUPER_BIG)
-							{
-								koopa->SetPosition(x - KOOPA_BBOX_WIDTH - 2, y + MARIO_SUPER_BIG_BBOX_HEIGHT / 4);
-							}
-							else if (this->level == MARIO_LEVEL_BIG)
-							{
-								koopa->SetPosition(x - KOOPA_BBOX_WIDTH - 2, y + MARIO_BIG_BBOX_HEIGHT / 4);
-							}
-							else if (this->level == MARIO_LEVEL_SMALL)
-							{
-								koopa->SetPosition(x - KOOPA_BBOX_WIDTH - 2, y - 2);
-							}
 							koopa->SetState(KOOPA_STATE_HOLDING);
+							this->koopaHold = koopa;
 						}
 						else
 						{
 							// Hit Koopa
-							this->SetState(MARIO_STATE_HIT);
+							//this->SetState(MARIO_STATE_HIT);
 							koopa->SetState(KOOPA_STATE_THROWING_LEFT);
 						}
-					}
-					else if (koopa->GetState() == KOOPA_STATE_HOLDING)
-					{
-						if (this->hold == true)
-						{
-							vx = -MARIO_WALKING_SPEED;
-							x += dx;
-							if (this->level == MARIO_LEVEL_SUPER_BIG)
-							{
-								koopa->SetPosition(x - KOOPA_BBOX_WIDTH - 2, y + MARIO_SUPER_BIG_BBOX_HEIGHT / 4);
-							}
-							else if (this->level == MARIO_LEVEL_BIG)
-							{
-								koopa->SetPosition(x - KOOPA_BBOX_WIDTH - 2, y + MARIO_BIG_BBOX_HEIGHT / 4);
-							}
-							else if (this->level == MARIO_LEVEL_SMALL)
-							{
-								koopa->SetPosition(x - KOOPA_BBOX_WIDTH - 2, y - 2);
-							}
-						}
-						else
-						{
-							koopa->SetState(KOOPA_STATE_THROWING_LEFT);
-						}
-
 					}
 					else
 					{
@@ -283,50 +305,15 @@ void Mario::Update(DWORD dt, vector<LPGameObject> *coObjects)
 						// Hold koopa
 						if (this->hold == true)
 						{
-							if (this->level == MARIO_LEVEL_SUPER_BIG)
-							{
-								koopa->SetPosition(x + MARIO_SUPER_BIG_BBOX_WIDTH + 1, y + MARIO_SUPER_BIG_BBOX_HEIGHT / 4);
-							}
-							else if (this->level == MARIO_LEVEL_BIG)
-							{
-								koopa->SetPosition(x + MARIO_BIG_BBOX_WIDTH + 1, y + MARIO_BIG_BBOX_HEIGHT / 4);
-							}
-							else if (this->level == MARIO_LEVEL_SMALL)
-							{
-								koopa->SetPosition(x + MARIO_SMALL_BBOX_WIDTH + 1.9f, y - 2);
-							}
 							koopa->SetState(KOOPA_STATE_HOLDING);
+							this->koopaHold = koopa;
 						}
 						else
 						{
-							this->SetState(MARIO_STATE_HIT);
+							//this->SetState(MARIO_STATE_HIT);
 							koopa->SetState(KOOPA_STATE_THROWING_RIGHT);
 						}
 
-					}
-					else if (koopa->GetState() == KOOPA_STATE_HOLDING)
-					{
-						if (this->hold == true)
-						{
-							vx = MARIO_WALKING_SPEED;
-							x += dx;
-							if (this->level == MARIO_LEVEL_SUPER_BIG)
-							{
-								koopa->SetPosition(x + MARIO_SUPER_BIG_BBOX_WIDTH + 1, y + MARIO_SUPER_BIG_BBOX_HEIGHT / 4);
-							}
-							else if (this->level == MARIO_LEVEL_BIG)
-							{
-								koopa->SetPosition(x + MARIO_BIG_BBOX_WIDTH + 1, y + MARIO_BIG_BBOX_HEIGHT / 4);
-							}
-							else if (this->level == MARIO_LEVEL_SMALL)
-							{
-								koopa->SetPosition(x + MARIO_SMALL_BBOX_WIDTH + 1.9f, y - 2);
-							}
-						}
-						else
-						{
-							koopa->SetState(KOOPA_STATE_THROWING_RIGHT);
-						}
 					}
 					else
 					{
@@ -341,9 +328,9 @@ void Mario::Update(DWORD dt, vector<LPGameObject> *coObjects)
 								SetState(MARIO_STATE_DIE);
 						}
 					}
-				}// Colision left to right
+				}
 			}
-			
+
 		}
 	}
 
@@ -642,7 +629,7 @@ void Mario::Render()
 					ani = MARIO_ANI_FIRE_HIT_LEFT;
 				}
 			}
-			if (shot == true) {
+			else if (shot == true) {
 				if (nx > 0)
 				{
 					ani = MARIO_ANI_FIRE_SHOT_RIGHT;
@@ -697,7 +684,6 @@ void Mario::Render()
 
 	animation_set->at(ani)->Render(x, y, alpha);
 
-	//RenderBoundingBox();
 }
 
 void Mario::SetState(int state)
@@ -776,50 +762,66 @@ void Mario::SetState(int state)
 }
 void Mario::GetBoundingBox(float &left, float &top, float &right, float &bottom)
 {
-	left = x;
-	top = y;
+	// Calculate width - height mario
+	float width = 0, height = 0;
 	if (level == MARIO_LEVEL_BIG)
 	{
 		if (ny > 0 && hit == false && hold == false)
 		{
-			bottom = y + MARIO_BIG_BBOX_HEIGHT_SITTING;
+			height = MARIO_BIG_BBOX_HEIGHT_SITTING;
 		}
 		else
 		{
-			bottom = y + MARIO_BIG_BBOX_HEIGHT;
+			height = MARIO_BIG_BBOX_HEIGHT;
 		}
-		right = x + MARIO_BIG_BBOX_WIDTH;
+		if (hold == true && koopaHold != NULL)
+		{
+			width = MARIO_BIG_BBOX_WIDTH_HOLDING;
+		}
+		else {
+			width = MARIO_BIG_BBOX_WIDTH;
+		}
 	}
 	else if (level == MARIO_LEVEL_SMALL)
 	{
-		right = x + MARIO_SMALL_BBOX_WIDTH;
-		bottom = y + MARIO_SMALL_BBOX_HEIGHT;
+		width = MARIO_SMALL_BBOX_WIDTH;
+		height = MARIO_SMALL_BBOX_HEIGHT;
 	}
 	else if (level == MARIO_LEVEL_SUPER_BIG)
 	{
 		if (ny > 0 && hit == false && hold == false)
 		{
-			bottom = y + MARIO_SUPER_BIG_BBOX_HEIGHT_SITTING;
+			height = MARIO_SUPER_BIG_BBOX_HEIGHT_SITTING;
 		}
 		else
 		{
-			bottom = y + MARIO_SUPER_BIG_BBOX_HEIGHT;
+			height = MARIO_SUPER_BIG_BBOX_HEIGHT;
 		}
-		right = x + MARIO_SUPER_BIG_BBOX_WIDTH;
+		width = MARIO_SUPER_BIG_BBOX_WIDTH;
 	}
 	else if (level == MARIO_LEVEL_FIRE)
 	{
 		if (ny > 0 && hit == false && hold == false)
 		{
-			bottom = y + MARIO_FIRE_BBOX_HEIGHT_SITTING;
+			height = MARIO_FIRE_BBOX_HEIGHT_SITTING;
 		}
 		else
 		{
-			bottom = y + MARIO_FIRE_BBOX_HEIGHT;
+			height = MARIO_FIRE_BBOX_HEIGHT;
 		}
-		right = x + MARIO_FIRE_BBOX_WIDTH;
+		width = MARIO_FIRE_BBOX_WIDTH;
 	}
 
+	top = y;
+	bottom = y + height;
+	if (hold == true && koopaHold != NULL && nx < 0)
+	{
+		left = x - KOOPA_BBOX_WIDTH + 3;
+	}
+	else {
+		left = x;
+	}
+	right = left + width;
 }
 
 /*
