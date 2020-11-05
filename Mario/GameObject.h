@@ -21,6 +21,7 @@ struct CollisionEvent
 	LPGameObject obj;
 	float t, nx, ny;
 
+
 	float dx, dy;		// *RELATIVE* movement distance between this object and obj
 	CollisionEvent(float t, float nx, float ny, float dx = 0, float dy = 0, LPGameObject obj = NULL)
 	{
@@ -55,6 +56,7 @@ public:
 
 	int state;
 
+	boolean disable;
 
 	DWORD dt;
 

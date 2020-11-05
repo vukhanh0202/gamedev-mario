@@ -64,17 +64,19 @@ void FireMario::Update(DWORD dt, vector<LPGameObject> *coObjects)
 			{
 				//x += dx;
 				//y -= 2* dy;
-				y -= dy/2;
-				vy = -2*FIRE_MARIO_DEFLECT;
+				y -= dy / 2;
+				vy = -2 * FIRE_MARIO_DEFLECT;
 				//y += dy;// +sin(x*3.14 / 100);
 				//StartLoop = true;
 			}
-			else if (nx != 0)
+			else// if (nx != 0)
 			{
-				x = -50;
-				y = -50;
+				//x = -50;
+				//y = -50;
+				disable = true;
 				//StartLoop = false;
 				SetState(FIRE_MARIO_STATE_DISABLE);
+				
 			}
 		}
 	}

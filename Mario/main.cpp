@@ -28,7 +28,7 @@
 
 
 Game *game;
-
+int FireMario::count = 0;
 
 LRESULT CALLBACK WinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {

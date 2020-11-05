@@ -90,6 +90,9 @@
 #define MARIO_ANI_FIRE_SHOT_RIGHT				55
 #define MARIO_ANI_FIRE_SHOT_LEFT				56
 
+#define MARIO_ANI_SUPER_BIG_ATTACK_RIGHT		57
+#define MARIO_ANI_SUPER_BIG_ATTACK_LEFT			58
+
 #define	MARIO_LEVEL_SMALL			1
 #define	MARIO_LEVEL_BIG				2
 #define	MARIO_LEVEL_SUPER_BIG		3
@@ -100,15 +103,18 @@
 #define MARIO_BIG_BBOX_HEIGHT			27
 #define MARIO_BIG_BBOX_HEIGHT_SITTING	18
 
-#define MARIO_SMALL_BBOX_WIDTH  13
-#define MARIO_SMALL_BBOX_HEIGHT 15
+#define MARIO_SMALL_BBOX_WIDTH			13
+#define MARIO_SMALL_BBOX_WIDTH_HOLDING  27
+#define MARIO_SMALL_BBOX_HEIGHT			15
 
 
 #define MARIO_SUPER_BIG_BBOX_WIDTH			21
+#define MARIO_SUPER_BIG_BBOX_WIDTH_HOLDING	35
 #define MARIO_SUPER_BIG_BBOX_HEIGHT			28
 #define MARIO_SUPER_BIG_BBOX_HEIGHT_SITTING	18
 
 #define MARIO_FIRE_BBOX_WIDTH			16
+#define MARIO_FIRE_BBOX_WIDTH_HOLDING	30
 #define MARIO_FIRE_BBOX_HEIGHT			27
 #define MARIO_FIRE_BBOX_HEIGHT_SITTING	18
 
@@ -134,6 +140,7 @@ class Mario : public GameObject
 	boolean fly;  // Determine mario fly or not
 	boolean fall; // Determine mario fall. While falling, mario can not fly
 	boolean restrain; // Restrain mario fall
+	boolean attack; // Mario swing attack
 
 	DWORD untouchable_start;
 
@@ -143,7 +150,7 @@ class Mario : public GameObject
 	DWORD lastJumpTime;
 	boolean isCollision; // Check object is collision?
 
-	FireMario *bullet;
+	//FireMario *bullet;
 	Koopa *koopaHold;
 
 public:
@@ -162,7 +169,8 @@ public:
 	void SetHolding(boolean holding) { this->hold = holding; };
 	void SetFastSpeed(boolean fast) { this->fast = fast; };
 	void SetShot(boolean shot) { this->shot = shot; };
-	void SetBullet(FireMario *bullet) { this->bullet = bullet; }
+	boolean GetShot() { return this->shot; }
+	//void SetBullet(FireMario *bullet) { this->bullet = bullet; }
 	void SetFly(boolean fly) { this->fly = fly; }
 	boolean GetFly() { return this->fly; }
 	void SetFall(boolean fall) { this->fall = fall; }
@@ -171,6 +179,7 @@ public:
 	boolean GetReadyFly() { return this->readyFly; }
 	void SetRestrain(boolean restrain) { this->restrain = restrain; }
 	boolean GetRestrain() { return this->restrain; }
+	void SetAttack(boolean attack) { this->attack = attack; }
 	void SetLevel(int l) { level = l; }
 	void StartUntouchable() { untouchable = 1; untouchable_start = GetTickCount(); }
 

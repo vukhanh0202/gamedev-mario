@@ -24,8 +24,9 @@ Mario::Mario(float x, float y) : GameObject()
 	hit = false;
 	shot = false;
 	fly = false;
+	attack = false;
 	power = 0;
-	bullet = NULL;
+	//bullet = NULL;
 	koopaHold = NULL;
 }
 
@@ -96,7 +97,7 @@ void Mario::Update(DWORD dt, vector<LPGameObject> *coObjects)
 	}
 
 	// Handle mario shot a fire
-	if (shot == true && level == MARIO_LEVEL_FIRE)
+	/*if (shot == true && level == MARIO_LEVEL_FIRE)
 	{
 		if (nx > 0)
 		{
@@ -107,7 +108,7 @@ void Mario::Update(DWORD dt, vector<LPGameObject> *coObjects)
 			bullet->SetState(FIRE_MARIO_STATE_LEFT);
 			bullet->SetPosition(x - MARIO_BIG_BBOX_WIDTH * 0.1f, y + MARIO_BIG_BBOX_HEIGHT * 0.2);
 		}
-	}
+	}*/
 
 
 	// Handle mario hold koopa
@@ -558,6 +559,16 @@ void Mario::Render()
 					}
 				}
 			}
+			else if (attack == true) {
+				if (nx > 0)
+				{
+					ani = MARIO_ANI_SUPER_BIG_ATTACK_RIGHT;
+				}
+				else
+				{
+					ani = MARIO_ANI_SUPER_BIG_ATTACK_LEFT;
+				}
+			}
 			else {
 				if (vx == 0)
 				{
@@ -593,7 +604,6 @@ void Mario::Render()
 					ani = MARIO_ANI_SUPER_BIG_WALKING_LEFT;
 				}
 			}
-
 		}
 		else if (level == MARIO_LEVEL_FIRE) {
 			if (hold == true)
@@ -784,7 +794,13 @@ void Mario::GetBoundingBox(float &left, float &top, float &right, float &bottom)
 	}
 	else if (level == MARIO_LEVEL_SMALL)
 	{
-		width = MARIO_SMALL_BBOX_WIDTH;
+		if (hold == true && koopaHold != NULL)
+		{
+			width = MARIO_SMALL_BBOX_WIDTH_HOLDING;
+		}
+		else {
+			width = MARIO_SMALL_BBOX_WIDTH;
+		}
 		height = MARIO_SMALL_BBOX_HEIGHT;
 	}
 	else if (level == MARIO_LEVEL_SUPER_BIG)
@@ -797,7 +813,13 @@ void Mario::GetBoundingBox(float &left, float &top, float &right, float &bottom)
 		{
 			height = MARIO_SUPER_BIG_BBOX_HEIGHT;
 		}
-		width = MARIO_SUPER_BIG_BBOX_WIDTH;
+		if (hold == true && koopaHold != NULL)
+		{
+			width = MARIO_SUPER_BIG_BBOX_WIDTH_HOLDING;
+		}
+		else {
+			width = MARIO_SUPER_BIG_BBOX_WIDTH;
+		}
 	}
 	else if (level == MARIO_LEVEL_FIRE)
 	{
@@ -809,7 +831,13 @@ void Mario::GetBoundingBox(float &left, float &top, float &right, float &bottom)
 		{
 			height = MARIO_FIRE_BBOX_HEIGHT;
 		}
-		width = MARIO_FIRE_BBOX_WIDTH;
+		if (hold == true && koopaHold != NULL)
+		{
+			width = MARIO_FIRE_BBOX_WIDTH_HOLDING;
+		}
+		else {
+			width = MARIO_FIRE_BBOX_WIDTH;
+		}
 	}
 
 	top = y;

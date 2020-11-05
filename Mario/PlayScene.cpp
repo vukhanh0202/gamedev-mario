@@ -272,18 +272,18 @@ void PlayScene::_ParseSection_OBJECTS(string line)
 		case OBJECT_TYPE_BRICK: obj = new Brick(); break;
 		case OBJECT_TYPE_GROUND: obj = new Ground(); break;
 		case OBJECT_TYPE_BACKGROUND: obj = new BackGround(); break;
-		case OBJECT_TYPE_FIRE_MARIO:
-			obj = new FireMario();
-			bullet = (FireMario*)obj;
-			if (player != NULL)
-			{
-				player->SetBullet(bullet);
-			}
-			else {
-				player = new Mario(50, 50);
-				player->SetBullet(bullet);
-			}
-			break;
+			/*case OBJECT_TYPE_FIRE_MARIO:
+				obj = new FireMario();
+				bullet = (FireMario*)obj;
+				if (player != NULL)
+				{
+					player->SetBullet(bullet);
+				}
+				else {
+					player = new Mario(50, 50);
+					player->SetBullet(bullet);
+				}
+				break;*/
 		case OBJECT_TYPE_KOOPA: obj = new Koopa(); break;
 		default:
 			DebugOut(L"[ERR] Invalid object type: %d\n", object_type);
@@ -306,7 +306,6 @@ void PlayScene::Load()
 
 	ifstream f;
 	f.open(sceneFilePath);
-
 	// current resource section flag
 	int section = SCENE_SECTION_UNKNOWN;
 
@@ -358,20 +357,52 @@ void PlayScene::Update(DWORD dt)
 	// We know that Mario is the last object in the list hence we won't add him into the colliable object list
 	// TO-DO: This is a "dirty" way, need a more organized way 
 
+
+
+	// skip the rest if scene was already unloaded (Mario::Update might trigger PlayScene::Unload)
+	if (player == NULL) return;
+
+	if (player->GetShot() == true && player->GetLevel() == MARIO_LEVEL_FIRE && FireMario::count < FIRE_MARIO_MAX_ITEM)
+	{
+		GameObject *bullet = new FireMario();
+		if (player->nx > 0)
+		{
+			bullet->SetState(FIRE_MARIO_STATE_RIGHT);
+			bullet->SetPosition(player->x + MARIO_BIG_BBOX_WIDTH * 1.1f, player->y + MARIO_BIG_BBOX_HEIGHT * 0.2);
+		}
+		else {
+			bullet->SetState(FIRE_MARIO_STATE_LEFT);
+			bullet->SetPosition(player->x - MARIO_BIG_BBOX_WIDTH * 0.1f, player->y + MARIO_BIG_BBOX_HEIGHT * 0.2);
+		}
+
+		LPAnimation_Set ani_set = AnimationSets::GetInstance()->Get(FIRE_MARIO_ANIMATION_SET_ID);
+
+		bullet->SetAnimationSet(ani_set);
+		objects.push_back(bullet);
+		player->SetShot(false);
+	}
+
 	vector<LPGameObject> coObjects;
 	for (size_t i = 0; i < objects.size() - 1; i++)
 	{
-		coObjects.push_back(objects[i]);
+		if (objects[i]->disable == false)
+		{
+			coObjects.push_back(objects[i]);
+		}
 	}
 
 	for (size_t i = 0; i < objects.size(); i++)
 	{
 		objects[i]->Update(dt, &coObjects);
+		if (objects[i]->disable == true || (!dynamic_cast<Mario *>(objects[i]) && objects[i]->y > 300))
+		{
+			//LPGameObject obj = objects[i];
+			objects.erase(objects.begin() + i);
+			//coObjects.erase(coObjects.begin() + i);
+			//delete obj;
+			FireMario::count--;
+		}
 	}
-
-
-	// skip the rest if scene was already unloaded (Mario::Update might trigger PlayScene::Unload)
-	if (player == NULL) return;
 
 	// Update camera to follow mario
 	float cx, cy;
@@ -461,6 +492,9 @@ void PlaySceneKeyHandler::OnKeyDown(int KeyCode)
 		mario->SetShot(true);
 		mario->SetHolding(false);
 		break;
+	case DIK_D:
+		mario->SetAttack(true);
+		break;
 	}
 }
 void PlaySceneKeyHandler::OnKeyUp(int KeyCode)
@@ -480,10 +514,6 @@ void PlaySceneKeyHandler::OnKeyUp(int KeyCode)
 	case DIK_A:
 		mario->SetFastSpeed(false);
 		break;
-	case DIK_D:
-		mario->SetFly(false);
-		mario->SetFall(true);
-		break;
 	case DIK_SPACE:
 	{
 		if (mario->GetFly() == true)
@@ -500,7 +530,11 @@ void PlaySceneKeyHandler::OnKeyUp(int KeyCode)
 	case DIK_S:
 		mario->SetShot(false);
 		break;
+	case DIK_D:
+		mario->SetAttack(false);
+		break;
 	}
+
 }
 
 void PlaySceneKeyHandler::KeyState(BYTE *states)
