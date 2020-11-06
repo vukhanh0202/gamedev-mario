@@ -20,7 +20,7 @@
 #define FIRE_MARIO_ANIMATION_SET_ID		161
 
 
-#define FIRE_MARIO_MAX_ITEM	3
+#define FIRE_MARIO_MAX_ITEM	4
 
 
 
@@ -30,8 +30,7 @@ class FireMario : public GameObject
 
 public:
 	static int count;
-	FireMario() { count++; DebugOut(L"[Created]\n"); }
-	~FireMario() { count--; DebugOut(L"[Destroy]\n"); }
+	FireMario() { count++;}
 
 	//void SetStartLoop(boolean loop) { this->StartLoop = loop; }
 	virtual void Render();

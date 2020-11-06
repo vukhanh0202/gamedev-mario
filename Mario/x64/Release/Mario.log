@@ -1,0 +1,34 @@
+﻿  Animation.cpp
+d:\uit\semester-1-2021\game\mario\mario\mario\sprite.h(3): fatal error C1083: Cannot open include file: 'd3dx9.h': No such file or directory
+  Background.cpp
+d:\uit\semester-1-2021\game\mario\mario\mario\gameobject.h(4): fatal error C1083: Cannot open include file: 'd3dx9.h': No such file or directory
+  Box.cpp
+d:\uit\semester-1-2021\game\mario\mario\mario\gameobject.h(4): fatal error C1083: Cannot open include file: 'd3dx9.h': No such file or directory
+  Brick.cpp
+d:\uit\semester-1-2021\game\mario\mario\mario\gameobject.h(4): fatal error C1083: Cannot open include file: 'd3dx9.h': No such file or directory
+  FireMario.cpp
+d:\uit\semester-1-2021\game\mario\mario\mario\gameobject.h(4): fatal error C1083: Cannot open include file: 'd3dx9.h': No such file or directory
+  Ground.cpp
+d:\uit\semester-1-2021\game\mario\mario\mario\gameobject.h(4): fatal error C1083: Cannot open include file: 'd3dx9.h': No such file or directory
+  Koopa.cpp
+d:\uit\semester-1-2021\game\mario\mario\mario\gameobject.h(4): fatal error C1083: Cannot open include file: 'd3dx9.h': No such file or directory
+  PlayScene.cpp
+d:\uit\semester-1-2021\game\mario\mario\mario\gameobject.h(4): fatal error C1083: Cannot open include file: 'd3dx9.h': No such file or directory
+  Scene.cpp
+  Utils.cpp
+d:\uit\semester-1-2021\game\mario\mario\mario\utils.cpp(11): error C2664: 'void OutputDebugStringA(LPCSTR)': cannot convert argument 1 from 'wchar_t [4096]' to 'LPCSTR'
+  d:\uit\semester-1-2021\game\mario\mario\mario\utils.cpp(11): note: Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or function-style cast
+  Game.cpp
+d:\uit\semester-1-2021\game\mario\mario\mario\game.h(4): fatal error C1083: Cannot open include file: 'd3dx9.h': No such file or directory
+  GameObject.cpp
+d:\uit\semester-1-2021\game\mario\mario\mario\gameobject.h(4): fatal error C1083: Cannot open include file: 'd3dx9.h': No such file or directory
+  Goomba.cpp
+d:\uit\semester-1-2021\game\mario\mario\mario\gameobject.h(4): fatal error C1083: Cannot open include file: 'd3dx9.h': No such file or directory
+  main.cpp
+d:\uit\semester-1-2021\game\mario\mario\mario\main.cpp(3): fatal error C1083: Cannot open include file: 'd3dx9.h': No such file or directory
+  Mario.cpp
+d:\uit\semester-1-2021\game\mario\mario\mario\gameobject.h(4): fatal error C1083: Cannot open include file: 'd3dx9.h': No such file or directory
+  Sprite.cpp
+d:\uit\semester-1-2021\game\mario\mario\mario\sprite.h(3): fatal error C1083: Cannot open include file: 'd3dx9.h': No such file or directory
+  Texture.cpp
+d:\uit\semester-1-2021\game\mario\mario\mario\texture.cpp(3): fatal error C1083: Cannot open include file: 'd3dx9.h': No such file or directory

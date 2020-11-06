@@ -1,6 +1,8 @@
 #include "FireMario.h"
 #include "Ground.h"
 #include "Box.h"
+#include "Koopa.h"
+#include "Goomba.h"
 
 void FireMario::Render()
 {
@@ -38,15 +40,6 @@ void FireMario::Update(DWORD dt, vector<LPGameObject> *coObjects)
 	if (coEvents.size() == 0)
 	{
 		vy += FIRE_MARIO_GRAVITY;
-
-		//if (StartLoop == false)
-		//{
-		//}
-		//else
-		//{
-		//	y += dy;// +sin(x*3.14 / 100);
-		//	StartLoop = false;
-		//}
 	}
 	else
 	{
@@ -62,19 +55,38 @@ void FireMario::Update(DWORD dt, vector<LPGameObject> *coObjects)
 
 			if (dynamic_cast<Ground *>(e->obj) || dynamic_cast<Boxs *>(e->obj)) // if e->obj is Koopa 
 			{
-				//x += dx;
-				//y -= 2* dy;
 				y -= dy / 2;
 				vy = -2 * FIRE_MARIO_DEFLECT;
-				//y += dy;// +sin(x*3.14 / 100);
-				//StartLoop = true;
+			}
+			else if (dynamic_cast<Koopa *>(e->obj)) {
+				Koopa *koopa = dynamic_cast<Koopa *>(e->obj);
+				if (koopa->state == KOOPA_STATE_WALKING) {
+					if (this->nx > 0) {
+						koopa->nx = 1;
+					}
+					else {
+						koopa->nx = -1;
+					}
+					koopa->state = KOOPA_STATE_DIE_DISAPPER;
+				}
+				this->disable = true;
+			}
+			else if (dynamic_cast<Goomba *>(e->obj)) {
+				Goomba *goomba = dynamic_cast<Goomba *>(e->obj);
+				if (goomba->state == GOOMBA_STATE_WALKING) {
+					if (this->nx > 0) {
+						goomba->nx = 1;
+					}
+					else {
+						goomba->nx = -1;
+					}
+					goomba->state = GOOMBA_STATE_DIE_DISAPPER;
+				}
+				this->disable = true;
 			}
 			else// if (nx != 0)
 			{
-				//x = -50;
-				//y = -50;
 				disable = true;
-				//StartLoop = false;
 				SetState(FIRE_MARIO_STATE_DISABLE);
 				
 			}

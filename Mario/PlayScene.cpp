@@ -268,7 +268,7 @@ void PlayScene::_ParseSection_OBJECTS(string line)
 
 			DebugOut(L"[INFO] Player object created!\n");
 			break;
-		case OBJECT_TYPE_GOOMBA: obj = new BackGround(); break;
+		case OBJECT_TYPE_GOOMBA: obj = new Goomba(); break;
 		case OBJECT_TYPE_BRICK: obj = new Brick(); break;
 		case OBJECT_TYPE_GROUND: obj = new Ground(); break;
 		case OBJECT_TYPE_BACKGROUND: obj = new BackGround(); break;
@@ -383,9 +383,9 @@ void PlayScene::Update(DWORD dt)
 	}
 
 	vector<LPGameObject> coObjects;
-	for (size_t i = 0; i < objects.size() - 1; i++)
+	for (size_t i = 0; i < objects.size(); i++)
 	{
-		if (objects[i]->disable == false)
+		if (objects[i]->disable == false && dynamic_cast<Mario *>(objects[i]) == false)
 		{
 			coObjects.push_back(objects[i]);
 		}
@@ -398,7 +398,6 @@ void PlayScene::Update(DWORD dt)
 		{
 			//LPGameObject obj = objects[i];
 			objects.erase(objects.begin() + i);
-			//coObjects.erase(coObjects.begin() + i);
 			//delete obj;
 			FireMario::count--;
 		}

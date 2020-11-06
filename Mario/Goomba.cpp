@@ -4,36 +4,78 @@
 
 void Goomba::GetBoundingBox(float &left, float &top, float &right, float &bottom)
 {
-	left = x;
-	top = y;
-	right = x + GOOMBA_BBOX_WIDTH;
+	if (state == GOOMBA_STATE_DIE_DISAPPER){
+		left = top = right = bottom = 0;
+	}
+	else {
+		left = x;
+		top = y;
+		right = x + GOOMBA_BBOX_WIDTH;
 
-	if (state == GOOMBA_STATE_DIE)
-		bottom = y + GOOMBA_BBOX_HEIGHT_DIE;
-	else
-		bottom = y + GOOMBA_BBOX_HEIGHT;
+		if (state == GOOMBA_STATE_DIE)
+			bottom = y + GOOMBA_BBOX_HEIGHT_DIE;
+		else
+			bottom = y + GOOMBA_BBOX_HEIGHT;
+	}
+	
 }
 
 void Goomba::Update(DWORD dt, vector<LPGameObject> *coObjects)
 {
+	vy += GOOMBA_GRAVITY * dt;
 
 	// Calculate dx, dy 
 	GameObject::Update(dt, coObjects);
 
-	//
-	// TO-DO: make sure Goomba can interact with the world and to each of them too!
-	// 
+	vector<LPCollisionEvent> coEvents;
+	vector<LPCollisionEvent> coEventsResult;
 
-	x += dx;
-	y += dy;
-
-	if (vx < 0 && x < 0) {
-		x = 0; vx = -vx;
+	coEvents.clear();
+	if (state == GOOMBA_STATE_DIE) {
+		if (GetTickCount() - timeDie >= GOOMBA_TIME_DISAPPEAR) {
+			disable = true;
+		}
 	}
 
-	if (vx > 0 && x > 290) {
-		x = 290; vx = -vx;
+	if (state != GOOMBA_STATE_DIE_DISAPPER)
+		CalcPotentialCollisions(coObjects, coEvents);
+
+	if (x <= 0) {
+		vx = -vx;
+		x = 5;
 	}
+	// No collision occured, proceed normally
+	if (coEvents.size() == 0)
+	{
+		x += dx;
+		y += dy;
+	}
+	else
+	{
+		float min_tx, min_ty, nx = 0, ny = 0;
+		float rdx = 0;
+		float rdy = 0;
+		//// TODO: This is a very ugly designed function!!!!
+		FilterCollision(coEvents, coEventsResult, min_tx, min_ty, nx, ny, rdx, rdy);
+
+		// block every object first!
+		x += min_tx * dx + nx * 0.4f;
+		y += min_ty * dy + ny * 0.4f;
+
+		if (ny != 0) vy = 0;
+
+		for (UINT i = 0; i < coEventsResult.size(); i++)
+		{
+			LPCollisionEvent e = coEventsResult[i];
+
+			if (nx != 0)
+			{
+				vx = -vx;
+			}
+		}
+	}
+	// clean up collision events
+	for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];
 }
 
 void Goomba::Render()
@@ -41,6 +83,9 @@ void Goomba::Render()
 	int ani = GOOMBA_ANI_WALKING;
 	if (state == GOOMBA_STATE_DIE) {
 		ani = GOOMBA_ANI_DIE;
+	}
+	else if (state == GOOMBA_STATE_DIE_DISAPPER) {
+		ani = GOOMBA_ANI_DIE_DISAPPER;
 	}
 
 	animation_set->at(ani)->Render(x, y);
@@ -53,15 +98,24 @@ void Goomba::SetState(int state)
 	switch (state)
 	{
 	case GOOMBA_STATE_DIE:
-		y += GOOMBA_BBOX_HEIGHT - GOOMBA_BBOX_HEIGHT_DIE + 1;
 		vx = 0;
 		vy = 0;
 		break;
 	case GOOMBA_STATE_WALKING:
-		vx = -GOOMBA_WALKING_SPEED;
+		vx = GOOMBA_WALKING_SPEED;
+	case GOOMBA_STATE_DIE_DISAPPER:
+		vy = -GOOMBA_DIE_DEFLECT_SPEED;
+		if (nx > 0) {
+			vx = GOOMBA_WALKING_SPEED;
+		}
+		else {
+			vx = -GOOMBA_WALKING_SPEED;
+		}
+		break;
 	}
 }
 Goomba::Goomba()
 {
 	SetState(GOOMBA_STATE_WALKING);
+	timeDie = 0;
 }

@@ -5,12 +5,13 @@
 #include "Mario.h"
 #include "PlayScene.h"
 #include "Game.h"
+#include "Goomba.h"
 
 
 
 void Koopa::GetBoundingBox(float &left, float &top, float &right, float &bottom)
 {
-	if (state == KOOPA_STATE_HOLDING) {
+	if (state == KOOPA_STATE_HOLDING || state == KOOPA_STATE_DIE_DISAPPER) {
 		left = top = right = bottom = 0;
 	}
 	else {
@@ -36,14 +37,16 @@ void Koopa::Update(DWORD dt, vector<LPGameObject> *coObjects)
 
 	coEvents.clear();
 	
-	CalcPotentialCollisions(coObjects, coEvents);
+
+	if (state != KOOPA_STATE_DIE_DISAPPER)
+		CalcPotentialCollisions(coObjects, coEvents);
 
 	// No collision occured, proceed normally
 	if (coEvents.size() == 0)
 	{
 		if (state != KOOPA_STATE_HOLDING)
 		{
-			vy += KOOPA_GRAVITY;
+			vy += KOOPA_GRAVITY * dt;
 		}
 		x += dx;
 		y += dy;
@@ -84,15 +87,42 @@ void Koopa::Update(DWORD dt, vector<LPGameObject> *coObjects)
 					}
 					if (x > boxs->getWidth() + xBox - BOX_BBOX_WIDTH * 1.5)
 					{
-						x > boxs->getWidth() + xBox - BOX_BBOX_WIDTH * 1.5;
+						x = boxs->getWidth() + xBox - BOX_BBOX_WIDTH * 1.5;
 					}
 					else if (x < xBox + BOX_BBOX_WIDTH / 2) {
 						x = xBox + BOX_BBOX_WIDTH / 2;
 					}
 				}
-				
+
 			}
-			if (nx != 0)
+			else if (dynamic_cast<Koopa *>(e->obj) && (this->state == KOOPA_STATE_THROWING_LEFT || this->state == KOOPA_STATE_THROWING_RIGHT)) {
+				Koopa *koopa = dynamic_cast<Koopa *>(e->obj);
+				if (koopa->state == KOOPA_STATE_WALKING) {
+					if (this->nx > 0) {
+						koopa->nx = 1;
+					}
+					else {
+						koopa->nx = -1;
+					}
+					koopa->state = KOOPA_STATE_DIE_DISAPPER;
+				}
+				/*else {
+					vx = -vx;
+				}*/
+			}
+			else if (dynamic_cast<Goomba *>(e->obj) && (this->state == KOOPA_STATE_THROWING_LEFT || this->state == KOOPA_STATE_THROWING_RIGHT)) {
+				Goomba *goomba = dynamic_cast<Goomba *>(e->obj);
+				if (goomba->state == GOOMBA_STATE_WALKING) {
+					if (this->nx > 0) {
+						goomba->nx = 1;
+					}
+					else {
+						goomba->nx = -1;
+					}
+					goomba->state = GOOMBA_STATE_DIE_DISAPPER;
+				}
+			}
+			else if (nx != 0)
 			{
 				vx = -vx;
 			}
@@ -110,6 +140,9 @@ void Koopa::Render()
 	}
 	else if (state == KOOPA_STATE_THROWING_RIGHT || state == KOOPA_STATE_THROWING_LEFT) {
 		ani = KOOPA_ANI_THROWING;
+	}
+	else if (state == KOOPA_STATE_DIE_DISAPPER) {
+		ani = KOOPA_ANI_DIE_DISAPPEAR;
 	}
 	else if (vx > 0) ani = KOOPA_ANI_WALKING_RIGHT;
 	else if (vx <= 0) ani = KOOPA_ANI_WALKING_LEFT;
@@ -135,9 +168,11 @@ void Koopa::SetState(int state)
 		break;
 	case KOOPA_STATE_THROWING_LEFT:
 		vx = -KOOPA_THROWING_SPEED;
+		nx = -1;
 		break;
 	case KOOPA_STATE_THROWING_RIGHT:
 		vx = KOOPA_THROWING_SPEED;
+		nx = 1;
 		break;
 	case KOOPA_STATE_WALKING:
 		vx = KOOPA_WALKING_SPEED;
@@ -145,6 +180,15 @@ void Koopa::SetState(int state)
 	case KOOPA_STATE_HOLDING:
 		vx = 0;
 		vy = 0;
+		break;
+	case KOOPA_STATE_DIE_DISAPPER:
+		vy = -KOOPA_DIE_DEFLECT_SPEED;
+		if (nx > 0) {
+			vx = KOOPA_WALKING_SPEED;
+		}
+		else {
+			vx = -KOOPA_WALKING_SPEED;
+		}
 		break;
 	}
 }

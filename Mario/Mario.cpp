@@ -96,21 +96,6 @@ void Mario::Update(DWORD dt, vector<LPGameObject> *coObjects)
 		untouchable = 0;
 	}
 
-	// Handle mario shot a fire
-	/*if (shot == true && level == MARIO_LEVEL_FIRE)
-	{
-		if (nx > 0)
-		{
-			bullet->SetState(FIRE_MARIO_STATE_RIGHT);
-			bullet->SetPosition(x + MARIO_BIG_BBOX_WIDTH * 1.1f, y + MARIO_BIG_BBOX_HEIGHT * 0.2);
-		}
-		else {
-			bullet->SetState(FIRE_MARIO_STATE_LEFT);
-			bullet->SetPosition(x - MARIO_BIG_BBOX_WIDTH * 0.1f, y + MARIO_BIG_BBOX_HEIGHT * 0.2);
-		}
-	}*/
-
-
 	// Handle mario hold koopa
 	if (hold == true && koopaHold != NULL)
 	{
@@ -232,6 +217,7 @@ void Mario::Update(DWORD dt, vector<LPGameObject> *coObjects)
 					if (goomba->GetState() != GOOMBA_STATE_DIE)
 					{
 						goomba->SetState(GOOMBA_STATE_DIE);
+						goomba->setTimeDie(GetTickCount());
 						vy = -MARIO_JUMP_DEFLECT_SPEED;
 					}
 				}
@@ -257,76 +243,79 @@ void Mario::Update(DWORD dt, vector<LPGameObject> *coObjects)
 			{
 				Koopa *koopa = dynamic_cast<Koopa *>(e->obj);
 
-				// jump on top >> kill Koopa
-				if (e->ny < 0)
+				if (koopa->state != KOOPA_STATE_DIE_DISAPPER)
 				{
-					if (koopa->GetState() != KOOPA_STATE_DIE)
+					// jump on top >> kill Koopa
+					if (e->ny < 0)
 					{
-						koopa->SetState(KOOPA_STATE_DIE);
-						vy = -MARIO_JUMP_DEFLECT_SPEED;
-					}
-				}
-				else if (e->nx > 0) // collision right to left
-				{
-					// Koopa die
-					if (koopa->GetState() == KOOPA_STATE_DIE)
-					{
-						// Hold koopa
-						if (this->hold == hold)
+						if (koopa->GetState() != KOOPA_STATE_DIE)
 						{
-							koopa->SetState(KOOPA_STATE_HOLDING);
-							this->koopaHold = koopa;
-						}
-						else
-						{
-							// Hit Koopa
-							//this->SetState(MARIO_STATE_HIT);
-							koopa->SetState(KOOPA_STATE_THROWING_LEFT);
+							koopa->SetState(KOOPA_STATE_DIE);
+							vy = -MARIO_JUMP_DEFLECT_SPEED;
 						}
 					}
-					else
+					else if (e->nx > 0) // collision right to left
 					{
-						// koopa live
-						if (untouchable == 0)
+						// Koopa die
+						if (koopa->GetState() == KOOPA_STATE_DIE)
 						{
-							if (level > MARIO_LEVEL_SMALL)
+							// Hold koopa
+							if (this->hold == hold)
 							{
-								level--;
-								StartUntouchable();
+								koopa->SetState(KOOPA_STATE_HOLDING);
+								this->koopaHold = koopa;
 							}
 							else
-								SetState(MARIO_STATE_DIE);
-						}
-					}
-				}
-				else if (e->nx < 0) // collision left->right
-				{
-					if (koopa->GetState() == KOOPA_STATE_DIE)
-					{
-						// Hold koopa
-						if (this->hold == true)
-						{
-							koopa->SetState(KOOPA_STATE_HOLDING);
-							this->koopaHold = koopa;
+							{
+								// Hit Koopa
+								//this->SetState(MARIO_STATE_HIT);
+								koopa->SetState(KOOPA_STATE_THROWING_LEFT);
+							}
 						}
 						else
 						{
-							//this->SetState(MARIO_STATE_HIT);
-							koopa->SetState(KOOPA_STATE_THROWING_RIGHT);
+							// koopa live
+							if (untouchable == 0)
+							{
+								if (level > MARIO_LEVEL_SMALL)
+								{
+									level--;
+									StartUntouchable();
+								}
+								else
+									SetState(MARIO_STATE_DIE);
+							}
 						}
+					}
+					else if (e->nx < 0) // collision left->right
+					{
+						if (koopa->GetState() == KOOPA_STATE_DIE)
+						{
+							// Hold koopa
+							if (this->hold == true)
+							{
+								koopa->SetState(KOOPA_STATE_HOLDING);
+								this->koopaHold = koopa;
+							}
+							else
+							{
+								//this->SetState(MARIO_STATE_HIT);
+								koopa->SetState(KOOPA_STATE_THROWING_RIGHT);
+							}
 
-					}
-					else
-					{
-						if (untouchable == 0)
+						}
+						else
 						{
-							if (level > MARIO_LEVEL_SMALL)
+							if (untouchable == 0)
 							{
-								level--;
-								StartUntouchable();
+								if (level > MARIO_LEVEL_SMALL)
+								{
+									level--;
+									StartUntouchable();
+								}
+								else
+									SetState(MARIO_STATE_DIE);
 							}
-							else
-								SetState(MARIO_STATE_DIE);
 						}
 					}
 				}
@@ -865,7 +854,7 @@ void Mario::Reset()
 
 void Mario::UpLevel()
 {
-	if (level != MARIO_LEVEL_FIRE) {
+	if (level != MARIO_LEVEL_SUPER_BIG) {
 		int l = ++level;
 		SetPosition(x, y - MARIO_SUPER_BIG_BBOX_HEIGHT);
 		SetLevel(l);
