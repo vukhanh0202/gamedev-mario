@@ -20,7 +20,7 @@
 #define FIRE_MARIO_ANIMATION_SET_ID		161
 
 
-#define FIRE_MARIO_MAX_ITEM	4
+#define FIRE_MARIO_MAX_ITEM	3
 
 
 
@@ -32,7 +32,6 @@ public:
 	static int count;
 	FireMario() { count++;}
 
-	//void SetStartLoop(boolean loop) { this->StartLoop = loop; }
 	virtual void Render();
 	virtual void Update(DWORD dt, vector<LPGameObject> *coObjects);
 	virtual void GetBoundingBox(float &l, float &t, float &r, float &b);

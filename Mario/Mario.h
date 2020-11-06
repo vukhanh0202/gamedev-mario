@@ -123,7 +123,7 @@
 
 #define MARIO_POWER_READY_FLY	240
 
-#define MARIO_LIMIT_FLY			-400
+#define MARIO_LIMIT_FLY			-210
 
 
 class Mario : public GameObject

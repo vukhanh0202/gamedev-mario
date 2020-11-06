@@ -272,18 +272,6 @@ void PlayScene::_ParseSection_OBJECTS(string line)
 		case OBJECT_TYPE_BRICK: obj = new Brick(); break;
 		case OBJECT_TYPE_GROUND: obj = new Ground(); break;
 		case OBJECT_TYPE_BACKGROUND: obj = new BackGround(); break;
-			/*case OBJECT_TYPE_FIRE_MARIO:
-				obj = new FireMario();
-				bullet = (FireMario*)obj;
-				if (player != NULL)
-				{
-					player->SetBullet(bullet);
-				}
-				else {
-					player = new Mario(50, 50);
-					player->SetBullet(bullet);
-				}
-				break;*/
 		case OBJECT_TYPE_KOOPA: obj = new Koopa(); break;
 		default:
 			DebugOut(L"[ERR] Invalid object type: %d\n", object_type);
@@ -364,6 +352,7 @@ void PlayScene::Update(DWORD dt)
 
 	if (player->GetShot() == true && player->GetLevel() == MARIO_LEVEL_FIRE && FireMario::count < FIRE_MARIO_MAX_ITEM)
 	{
+
 		GameObject *bullet = new FireMario();
 		if (player->nx > 0)
 		{
@@ -385,7 +374,7 @@ void PlayScene::Update(DWORD dt)
 	vector<LPGameObject> coObjects;
 	for (size_t i = 0; i < objects.size(); i++)
 	{
-		if (objects[i]->disable == false && dynamic_cast<Mario *>(objects[i]) == false)
+		if (objects[i]->disable == false /*&& dynamic_cast<Mario *>(objects[i]) == false*/ && objects[i]->y <= 300)
 		{
 			coObjects.push_back(objects[i]);
 		}
@@ -393,14 +382,16 @@ void PlayScene::Update(DWORD dt)
 
 	for (size_t i = 0; i < objects.size(); i++)
 	{
-		objects[i]->Update(dt, &coObjects);
 		if (objects[i]->disable == true || (!dynamic_cast<Mario *>(objects[i]) && objects[i]->y > 300))
 		{
-			//LPGameObject obj = objects[i];
+			LPGameObject obj = objects[i];
+			if (dynamic_cast<FireMario *>(objects[i]))
+				FireMario::count--;
 			objects.erase(objects.begin() + i);
-			//delete obj;
-			FireMario::count--;
+			delete obj;
 		}
+		else
+			objects[i]->Update(dt, &coObjects);
 	}
 
 	// Update camera to follow mario
@@ -428,11 +419,12 @@ void PlayScene::Update(DWORD dt)
 		cx = 2880 - (game->GetScreenWidth());
 	}// Mario in tail map
 
-	if (player->y <= MARIO_LIMIT_FLY + game->GetScreenHeight() / 2.2f)
+	else if (player->y < MARIO_LIMIT_FLY + (game->GetScreenHeight() / 1.2f))
 		cy = MARIO_LIMIT_FLY;
 
-
-	if ((player->y < game->GetScreenHeight() / 4 && player->GetFly() == true) || (player->y <= game->GetScreenHeight() / 4 && player->GetFall() == true))
+	if ((player->y < game->GetScreenHeight() / 4 && player->GetFly() == true)
+		|| (player->y <= game->GetScreenHeight() / 4 && player->GetFall() == true)
+		|| (player->y <= -game->GetScreenHeight() / 4))
 		Game::GetInstance()->SetCamPosition(cx, cy /*cy*/);
 	else Game::GetInstance()->SetCamPosition(cx, 0.0f /*cy*/);
 }

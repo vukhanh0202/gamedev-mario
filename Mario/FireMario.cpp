@@ -88,7 +88,6 @@ void FireMario::Update(DWORD dt, vector<LPGameObject> *coObjects)
 			{
 				disable = true;
 				SetState(FIRE_MARIO_STATE_DISABLE);
-				
 			}
 		}
 	}

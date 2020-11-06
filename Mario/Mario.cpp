@@ -12,6 +12,7 @@ Mario::Mario(float x, float y) : GameObject()
 	level = MARIO_LEVEL_SUPER_BIG;
 	untouchable = 0;
 	SetState(MARIO_STATE_IDLE);
+	vy = 0.1f;
 
 	start_x = x;
 	start_y = y;
@@ -34,7 +35,6 @@ void Mario::Update(DWORD dt, vector<LPGameObject> *coObjects)
 {
 	// Calculate dx, dy 
 	GameObject::Update(dt);
-
 
 	if (level == MARIO_LEVEL_SUPER_BIG && hold == false)
 	{
@@ -72,6 +72,7 @@ void Mario::Update(DWORD dt, vector<LPGameObject> *coObjects)
 			}
 		}
 		else {
+			if (vy > 0 && y < 0 && GetTickCount() - lastJumpTime >500) fall = true;
 			vy += MARIO_GRAVITY * dt;
 		}
 	}
@@ -161,6 +162,10 @@ void Mario::Update(DWORD dt, vector<LPGameObject> *coObjects)
 	{
 		x += dx;
 		y += dy;
+		/*if (fall == false && vy > 0)
+		{
+			fall = true;
+		}*/
 	}
 	else
 	{
@@ -206,110 +211,61 @@ void Mario::Update(DWORD dt, vector<LPGameObject> *coObjects)
 			else {
 				if (ny != 0) vy = 0;
 			}
-
-			if (dynamic_cast<Goomba *>(e->obj)) // if e->obj is Goomba 
+			// Handle mario attack monster
+			if (attack == true)
 			{
-				Goomba *goomba = dynamic_cast<Goomba *>(e->obj);
-
-				// jump on top >> kill Goomba and deflect a bit 
-				if (e->ny < 0)
+				if (dynamic_cast<Goomba *>(e->obj)) // if e->obj is Goomba 
 				{
-					if (goomba->GetState() != GOOMBA_STATE_DIE)
-					{
-						goomba->SetState(GOOMBA_STATE_DIE);
-						goomba->setTimeDie(GetTickCount());
-						vy = -MARIO_JUMP_DEFLECT_SPEED;
+					Goomba *goomba = dynamic_cast<Goomba *>(e->obj);
+
+					if (goomba->state == GOOMBA_STATE_WALKING) {
+						if (this->nx > 0) {
+							goomba->nx = 1;
+						}
+						else {
+							goomba->nx = -1;
+						}
+						goomba->state = GOOMBA_STATE_DIE_DISAPPER;
 					}
 				}
-				else if (e->nx != 0)
+				else if (dynamic_cast<Koopa *>(e->obj)) // if e->obj is Koopa 
 				{
-					if (untouchable == 0)
+					Koopa *koopa = dynamic_cast<Koopa *>(e->obj);
+
+					if (this->nx > 0) {
+						koopa->nx = 1;
+					}
+					else {
+						koopa->nx = -1;
+					}
+					koopa->state = KOOPA_STATE_DIE_DISAPPER;
+				}
+			}
+			else
+			{
+				if (dynamic_cast<Goomba *>(e->obj)) // if e->obj is Goomba 
+				{
+					Goomba *goomba = dynamic_cast<Goomba *>(e->obj);
+
+					// jump on top >> kill Goomba and deflect a bit 
+					if (e->ny < 0)
 					{
 						if (goomba->GetState() != GOOMBA_STATE_DIE)
 						{
-							if (level > MARIO_LEVEL_SMALL)
-							{
-								//level = MARIO_LEVEL_SMALL;
-								level--;
-								StartUntouchable();
-							}
-							else
-								SetState(MARIO_STATE_DIE);
-						}
-					}
-				}
-			}
-			else if (dynamic_cast<Koopa *>(e->obj)) // if e->obj is Koopa 
-			{
-				Koopa *koopa = dynamic_cast<Koopa *>(e->obj);
-
-				if (koopa->state != KOOPA_STATE_DIE_DISAPPER)
-				{
-					// jump on top >> kill Koopa
-					if (e->ny < 0)
-					{
-						if (koopa->GetState() != KOOPA_STATE_DIE)
-						{
-							koopa->SetState(KOOPA_STATE_DIE);
+							goomba->SetState(GOOMBA_STATE_DIE);
+							goomba->setTimeDie(GetTickCount());
 							vy = -MARIO_JUMP_DEFLECT_SPEED;
 						}
 					}
-					else if (e->nx > 0) // collision right to left
+					else if (e->nx != 0)
 					{
-						// Koopa die
-						if (koopa->GetState() == KOOPA_STATE_DIE)
+						if (untouchable == 0)
 						{
-							// Hold koopa
-							if (this->hold == hold)
-							{
-								koopa->SetState(KOOPA_STATE_HOLDING);
-								this->koopaHold = koopa;
-							}
-							else
-							{
-								// Hit Koopa
-								//this->SetState(MARIO_STATE_HIT);
-								koopa->SetState(KOOPA_STATE_THROWING_LEFT);
-							}
-						}
-						else
-						{
-							// koopa live
-							if (untouchable == 0)
+							if (goomba->GetState() != GOOMBA_STATE_DIE)
 							{
 								if (level > MARIO_LEVEL_SMALL)
 								{
-									level--;
-									StartUntouchable();
-								}
-								else
-									SetState(MARIO_STATE_DIE);
-							}
-						}
-					}
-					else if (e->nx < 0) // collision left->right
-					{
-						if (koopa->GetState() == KOOPA_STATE_DIE)
-						{
-							// Hold koopa
-							if (this->hold == true)
-							{
-								koopa->SetState(KOOPA_STATE_HOLDING);
-								this->koopaHold = koopa;
-							}
-							else
-							{
-								//this->SetState(MARIO_STATE_HIT);
-								koopa->SetState(KOOPA_STATE_THROWING_RIGHT);
-							}
-
-						}
-						else
-						{
-							if (untouchable == 0)
-							{
-								if (level > MARIO_LEVEL_SMALL)
-								{
+									//level = MARIO_LEVEL_SMALL;
 									level--;
 									StartUntouchable();
 								}
@@ -319,7 +275,89 @@ void Mario::Update(DWORD dt, vector<LPGameObject> *coObjects)
 						}
 					}
 				}
+				else if (dynamic_cast<Koopa *>(e->obj)) // if e->obj is Koopa 
+				{
+					Koopa *koopa = dynamic_cast<Koopa *>(e->obj);
+
+					if (koopa->state != KOOPA_STATE_DIE_DISAPPER)
+					{
+						// jump on top >> kill Koopa
+						if (e->ny < 0)
+						{
+							if (koopa->GetState() != KOOPA_STATE_DIE)
+							{
+								koopa->SetState(KOOPA_STATE_DIE);
+								vy = -MARIO_JUMP_DEFLECT_SPEED;
+							}
+						}
+						else if (e->nx > 0) // collision right to left
+						{
+							// Koopa die
+							if (koopa->GetState() == KOOPA_STATE_DIE)
+							{
+								// Hold koopa
+								if (this->hold == hold)
+								{
+									koopa->SetState(KOOPA_STATE_HOLDING);
+									this->koopaHold = koopa;
+								}
+								else
+								{
+									// Hit Koopa
+									//this->SetState(MARIO_STATE_HIT);
+									koopa->SetState(KOOPA_STATE_THROWING_LEFT);
+								}
+							}
+							else
+							{
+								// koopa live
+								if (untouchable == 0)
+								{
+									if (level > MARIO_LEVEL_SMALL)
+									{
+										level--;
+										StartUntouchable();
+									}
+									else
+										SetState(MARIO_STATE_DIE);
+								}
+							}
+						}
+						else if (e->nx < 0) // collision left->right
+						{
+							if (koopa->GetState() == KOOPA_STATE_DIE)
+							{
+								// Hold koopa
+								if (this->hold == true)
+								{
+									koopa->SetState(KOOPA_STATE_HOLDING);
+									this->koopaHold = koopa;
+								}
+								else
+								{
+									//this->SetState(MARIO_STATE_HIT);
+									koopa->SetState(KOOPA_STATE_THROWING_RIGHT);
+								}
+
+							}
+							else
+							{
+								if (untouchable == 0)
+								{
+									if (level > MARIO_LEVEL_SMALL)
+									{
+										level--;
+										StartUntouchable();
+									}
+									else
+										SetState(MARIO_STATE_DIE);
+								}
+							}
+						}
+					}
+				}
 			}
+
 
 		}
 	}
