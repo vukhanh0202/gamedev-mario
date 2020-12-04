@@ -36,7 +36,7 @@ void Koopa::Update(DWORD dt, vector<LPGameObject> *coObjects)
 	vector<LPCollisionEvent> coEventsResult;
 
 	coEvents.clear();
-	
+
 
 	if (state != KOOPA_STATE_DIE_DISAPPER)
 		CalcPotentialCollisions(coObjects, coEvents);
@@ -61,7 +61,10 @@ void Koopa::Update(DWORD dt, vector<LPGameObject> *coObjects)
 
 		// block every object first!
 		x += min_tx * dx + nx * 0.4f;
-		y += min_ty * dy + ny * 0.4f;
+		if (state == KOOPA_STATE_WALKING)
+		{
+			y += min_ty * dy + ny * 0.4f;
+		}
 
 		if (GetState() == KOOPA_STATE_HOLDING)
 		{
@@ -78,7 +81,7 @@ void Koopa::Update(DWORD dt, vector<LPGameObject> *coObjects)
 				if (state == KOOPA_STATE_WALKING)
 				{
 					Boxs *boxs = dynamic_cast<Boxs *>(e->obj);
-					float xBox, yBox;
+					double xBox, yBox;
 					boxs->GetPosition(xBox, yBox);
 
 					if (x >= boxs->getWidth() + xBox - BOX_BBOX_WIDTH * 1.5 || x <= xBox + BOX_BBOX_WIDTH / 2)
@@ -113,12 +116,12 @@ void Koopa::Update(DWORD dt, vector<LPGameObject> *coObjects)
 			else if (dynamic_cast<Goomba *>(e->obj) && (this->state == KOOPA_STATE_THROWING_LEFT || this->state == KOOPA_STATE_THROWING_RIGHT)) {
 				Goomba *goomba = dynamic_cast<Goomba *>(e->obj);
 				if (goomba->state == GOOMBA_STATE_WALKING) {
-					if (this->nx > 0) {
+					/*if (this->nx > 0) {
 						goomba->nx = 1;
 					}
 					else {
 						goomba->nx = -1;
-					}
+					}*/
 					goomba->state = GOOMBA_STATE_DIE_DISAPPER;
 				}
 			}
@@ -162,7 +165,7 @@ void Koopa::SetState(int state)
 	switch (state)
 	{
 	case KOOPA_STATE_DIE:
-		if (vx != 0 && flag == true)
+		if (vx != 0 && flag)
 			y += KOOPA_BBOX_HEIGHT - KOOPA_BBOX_HEIGHT_DIE;
 		vx = 0;
 		break;

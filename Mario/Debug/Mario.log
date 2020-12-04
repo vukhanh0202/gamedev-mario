@@ -1,26 +1,5 @@
-﻿  PlayScene.cpp
+﻿  main.cpp
   c:\program files (x86)\microsoft directx sdk (june 2010)\include\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
 d:\uit\semester-1-2021\game\mario\mario\mario\game.h(11): warning C4005: 'DIRECTINPUT_VERSION': macro redefinition
   c:\program files (x86)\microsoft directx sdk (june 2010)\include\dinput.h(42): note: see previous definition of 'DIRECTINPUT_VERSION'
-d:\uit\semester-1-2021\game\mario\mario\mario\playscene.cpp(98): warning C4018: '<': signed/unsigned mismatch
-d:\uit\semester-1-2021\game\mario\mario\mario\playscene.cpp(120): warning C4018: '<': signed/unsigned mismatch
-d:\uit\semester-1-2021\game\mario\mario\mario\playscene.cpp(205): warning C4805: '==': unsafe mix of type 'boolean' and type 'bool' in operation
-d:\uit\semester-1-2021\game\mario\mario\mario\playscene.cpp(210): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-d:\uit\semester-1-2021\game\mario\mario\mario\playscene.cpp(211): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-d:\uit\semester-1-2021\game\mario\mario\mario\playscene.cpp(245): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-d:\uit\semester-1-2021\game\mario\mario\mario\playscene.cpp(246): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-d:\uit\semester-1-2021\game\mario\mario\mario\playscene.cpp(353): warning C4805: '==': unsafe mix of type 'boolean' and type 'bool' in operation
-d:\uit\semester-1-2021\game\mario\mario\mario\playscene.cpp(360): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-d:\uit\semester-1-2021\game\mario\mario\mario\playscene.cpp(364): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-d:\uit\semester-1-2021\game\mario\mario\mario\playscene.cpp(385): warning C4805: '==': unsafe mix of type 'boolean' and type 'bool' in operation
-d:\uit\semester-1-2021\game\mario\mario\mario\playscene.cpp(419): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-d:\uit\semester-1-2021\game\mario\mario\mario\playscene.cpp(425): warning C4805: '==': unsafe mix of type 'boolean' and type 'bool' in operation
-d:\uit\semester-1-2021\game\mario\mario\mario\playscene.cpp(426): warning C4805: '==': unsafe mix of type 'boolean' and type 'bool' in operation
-d:\uit\semester-1-2021\game\mario\mario\mario\playscene.cpp(434): warning C4018: '<': signed/unsigned mismatch
-d:\uit\semester-1-2021\game\mario\mario\mario\playscene.cpp(443): warning C4018: '<': signed/unsigned mismatch
-d:\uit\semester-1-2021\game\mario\mario\mario\playscene.cpp(462): warning C4805: '!=': unsafe mix of type 'boolean' and type 'bool' in operation
-d:\uit\semester-1-2021\game\mario\mario\mario\playscene.cpp(464): warning C4805: '==': unsafe mix of type 'boolean' and type 'bool' in operation
-d:\uit\semester-1-2021\game\mario\mario\mario\playscene.cpp(510): warning C4805: '==': unsafe mix of type 'boolean' and type 'bool' in operation
-d:\uit\semester-1-2021\game\mario\mario\mario\playscene.cpp(516): warning C4805: '==': unsafe mix of type 'boolean' and type 'bool' in operation
-d:\uit\semester-1-2021\game\mario\mario\mario\playscene.cpp(548): warning C4805: '==': unsafe mix of type 'boolean' and type 'bool' in operation
   Mario.vcxproj -> D:\UIT\Semester-1-2021\Game\Mario\Mario\Debug\Mario.exe

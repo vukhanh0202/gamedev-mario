@@ -125,6 +125,8 @@
 
 #define MARIO_LIMIT_FLY			-210
 
+#define OBJECT_TYPE_MARIO	-2
+
 
 class Mario : public GameObject
 {
@@ -183,6 +185,9 @@ public:
 	void SetAttack(boolean attack) { this->attack = attack; }
 	void SetLevel(int l) { level = l; }
 	void StartUntouchable() { untouchable = 1; untouchable_start = GetTickCount(); }
+	int GetTypeObject() {
+		return OBJECT_TYPE_MARIO;
+	}
 
 	void Reset();
 	void UpLevel();

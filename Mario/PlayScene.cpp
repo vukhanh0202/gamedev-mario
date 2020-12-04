@@ -41,6 +41,7 @@ PlayScene::PlayScene(int id, LPCWSTR filePath) :
 #define OBJECT_TYPE_KOOPA	3
 #define OBJECT_TYPE_FIRE_MARIO	4
 #define OBJECT_TYPE_BOX		5
+#define OBJECT_TYPE_BOXS	6
 
 #define OBJECT_TYPE_PORTAL	50
 
@@ -155,7 +156,7 @@ void PlayScene::_ParseSection_OBJECTS(string line)
 					{
 						boxs->setMergeComplete(true);
 						vector<Box*> listBox = boxs->getListBox();
-						float xBoxs, yBoxs;
+						double xBoxs, yBoxs;
 						listBox[0]->GetPosition(xBoxs, yBoxs);
 						boxs->SetPosition(xBoxs, yBoxs);
 						boxs->setWidth(BOX_BBOX_WIDTH);
@@ -164,7 +165,7 @@ void PlayScene::_ParseSection_OBJECTS(string line)
 
 						for (size_t i = 1; i < listBox.size(); i++)
 						{
-							float xItem, yItem;
+							double xItem, yItem;
 							listBox[i]->GetPosition(xItem, yItem);
 
 							// Set width
@@ -174,7 +175,7 @@ void PlayScene::_ParseSection_OBJECTS(string line)
 							}
 							else
 							{
-								float width = boxs->getWidth();
+								double width = boxs->getWidth();
 								boxs->setWidth(xBoxs - xItem + width);
 								xBoxs = xItem;
 							}
@@ -182,7 +183,7 @@ void PlayScene::_ParseSection_OBJECTS(string line)
 							// Set height
 							if (yItem < yBoxs)
 							{
-								float height = boxs->getHeight();
+								double height = boxs->getHeight();
 								boxs->setHeight(yBoxs - yItem + height);
 								yBoxs = yItem;
 							}
@@ -202,13 +203,13 @@ void PlayScene::_ParseSection_OBJECTS(string line)
 	}
 
 	// MERGE BOX
-	if (mergeObject == true)
+	if (mergeObject)
 	{
 		if (tokens.size() < 3) return; // skip invalid lines - an object set must have at least id, x, y
 
 		int object_type = atoi(tokens[0].c_str());
-		float x = atof(tokens[1].c_str());
-		float y = atof(tokens[2].c_str());
+		double x = atof(tokens[1].c_str());
+		double y = atof(tokens[2].c_str());
 
 		int ani_set_id = atoi(tokens[3].c_str());
 
@@ -242,8 +243,8 @@ void PlayScene::_ParseSection_OBJECTS(string line)
 		if (tokens.size() < 3) return; // skip invalid lines - an object set must have at least id, x, y
 
 		int object_type = atoi(tokens[0].c_str());
-		float x = atof(tokens[1].c_str());
-		float y = atof(tokens[2].c_str());
+		double x = atof(tokens[1].c_str());
+		double y = atof(tokens[2].c_str());
 
 		int ani_set_id = atoi(tokens[3].c_str());
 
@@ -346,11 +347,10 @@ void PlayScene::Update(DWORD dt)
 	// TO-DO: This is a "dirty" way, need a more organized way 
 
 
-
 	// skip the rest if scene was already unloaded (Mario::Update might trigger PlayScene::Unload)
 	if (player == NULL) return;
 
-	if (player->GetShot() == true && player->GetLevel() == MARIO_LEVEL_FIRE && FireMario::count < FIRE_MARIO_MAX_ITEM)
+	if (player->GetShot() && player->GetLevel() == MARIO_LEVEL_FIRE && FireMario::count < FIRE_MARIO_MAX_ITEM)
 	{
 
 		GameObject *bullet = new FireMario();
@@ -382,7 +382,7 @@ void PlayScene::Update(DWORD dt)
 
 	for (size_t i = 0; i < objects.size(); i++)
 	{
-		if (objects[i]->disable == true || (!dynamic_cast<Mario *>(objects[i]) && objects[i]->y > 300))
+		if (objects[i]->disable || (!dynamic_cast<Mario *>(objects[i]) && objects[i]->y > 300))
 		{
 			LPGameObject obj = objects[i];
 			if (dynamic_cast<FireMario *>(objects[i]))
@@ -395,7 +395,7 @@ void PlayScene::Update(DWORD dt)
 	}
 
 	// Update camera to follow mario
-	float cx, cy;
+	double cx, cy;
 	player->GetPosition(cx, cy);
 
 	Game *game = Game::GetInstance();
@@ -416,17 +416,17 @@ void PlayScene::Update(DWORD dt)
 		cx = 0;
 	}
 	else if (player->x > 2880 - (game->GetScreenWidth())) {
-		cx = 2880 - (game->GetScreenWidth());
+		cx = (double)2880 - (game->GetScreenWidth());
 	}// Mario in tail map
 
 	else if (player->y < MARIO_LIMIT_FLY + (game->GetScreenHeight() / 1.2f))
 		cy = MARIO_LIMIT_FLY;
 
-	if ((player->y < game->GetScreenHeight() / 4 && player->GetFly() == true)
-		|| (player->y <= game->GetScreenHeight() / 4 && player->GetFall() == true)
+	if ((player->y < game->GetScreenHeight() / 4 && player->GetFly())
+		|| (player->y <= game->GetScreenHeight() / 4 && player->GetFall())
 		|| (player->y <= -game->GetScreenHeight() / 4))
 		Game::GetInstance()->SetCamPosition(cx, cy /*cy*/);
-	else Game::GetInstance()->SetCamPosition(cx, 0.0f /*cy*/);
+	else Game::GetInstance()->SetCamPosition(cx, -50.0f /*cy*/);
 }
 
 void PlayScene::Render()
@@ -459,9 +459,9 @@ void PlaySceneKeyHandler::OnKeyDown(int KeyCode)
 	{
 	case DIK_SPACE:
 	{
-		if (mario->GetFly() != true && mario->GetFall() != true)
+		if (!mario->GetFly() && !mario->GetFall())
 			mario->SetState(MARIO_STATE_JUMP);
-		else if (mario->GetFall() == true)
+		else if (mario->GetFall())
 		{
 			mario->SetRestrain(true);
 		}
@@ -507,13 +507,13 @@ void PlaySceneKeyHandler::OnKeyUp(int KeyCode)
 		break;
 	case DIK_SPACE:
 	{
-		if (mario->GetFly() == true)
+		if (mario->GetFly())
 		{
 			mario->SetFall(true);
 			mario->SetFly(false);
 			mario->SetReadyFly(false);
 		}
-		if (mario->GetRestrain() == true)
+		if (mario->GetRestrain())
 		{
 			mario->SetRestrain(false);
 		}
@@ -545,7 +545,7 @@ void PlaySceneKeyHandler::KeyState(BYTE *states)
 		if (mario->GetFly() == false)
 			mario->SetFastSpeed(true);
 	}
-	if (game->IsKeyDown(DIK_SPACE) && mario->GetReadyFly() == true && mario->GetFall() == false)
+	if (game->IsKeyDown(DIK_SPACE) && mario->GetReadyFly() && !mario->GetFall())
 	{
 		mario->SetFly(true);
 		mario->SetFastSpeed(false);

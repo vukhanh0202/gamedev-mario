@@ -18,7 +18,7 @@
 
 #define BACKGROUND_COLOR D3DCOLOR_XRGB(156, 252, 240)
 #define SCREEN_WIDTH 480
-#define SCREEN_HEIGHT 240
+#define SCREEN_HEIGHT 320
 
 #define MAX_FRAME_RATE 120
 
@@ -174,7 +174,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 	game->Load(L"mario-sample.txt");
 
-	SetWindowPos(hWnd, 0, 0, 0, SCREEN_WIDTH * 2, SCREEN_HEIGHT * 2, SWP_NOMOVE | SWP_NOOWNERZORDER | SWP_NOZORDER);
+	SetWindowPos(hWnd, 0, 20, -20, SCREEN_WIDTH * 2, SCREEN_HEIGHT * 2, SWP_NOMOVE | SWP_NOOWNERZORDER | SWP_NOZORDER);
 
 	Run();
 

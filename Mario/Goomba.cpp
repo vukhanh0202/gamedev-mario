@@ -4,7 +4,7 @@
 
 void Goomba::GetBoundingBox(float &left, float &top, float &right, float &bottom)
 {
-	if (state == GOOMBA_STATE_DIE_DISAPPER){
+	if (state == GOOMBA_STATE_DIE_DISAPPER) {
 		left = top = right = bottom = 0;
 	}
 	else {
@@ -17,7 +17,7 @@ void Goomba::GetBoundingBox(float &left, float &top, float &right, float &bottom
 		else
 			bottom = y + GOOMBA_BBOX_HEIGHT;
 	}
-	
+
 }
 
 void Goomba::Update(DWORD dt, vector<LPGameObject> *coObjects)
@@ -59,8 +59,9 @@ void Goomba::Update(DWORD dt, vector<LPGameObject> *coObjects)
 		FilterCollision(coEvents, coEventsResult, min_tx, min_ty, nx, ny, rdx, rdy);
 
 		// block every object first!
+		if (state != GOOMBA_STATE_DIE)
+			y += min_ty * dy + ny * 0.4f;
 		x += min_tx * dx + nx * 0.4f;
-		y += min_ty * dy + ny * 0.4f;
 
 		if (ny != 0) vy = 0;
 

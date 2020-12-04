@@ -22,7 +22,7 @@
 
 #define FIRE_MARIO_MAX_ITEM	3
 
-
+#define OBJECT_TYPE_FIRE_MARIO	4
 
 
 class FireMario : public GameObject
@@ -36,5 +36,9 @@ public:
 	virtual void Update(DWORD dt, vector<LPGameObject> *coObjects);
 	virtual void GetBoundingBox(float &l, float &t, float &r, float &b);
 	virtual void SetState(int state);
+
+	int GetTypeObject() {
+		return OBJECT_TYPE_FIRE_MARIO;
+	}
 };
 

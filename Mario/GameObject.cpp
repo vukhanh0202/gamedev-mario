@@ -48,7 +48,7 @@ LPCollisionEvent GameObject::SweptAABBEx(LPGameObject coO)
 	coO->GetBoundingBox(sl, st, sr, sb);
 
 	// deal with moving object: m speed = original m speed - collide object speed
-	float svx, svy;
+	double svx, svy;
 	coO->GetSpeed(svx, svy);
 
 	float sdx = svx * dt;

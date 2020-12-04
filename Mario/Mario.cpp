@@ -376,7 +376,7 @@ void Mario::Render()
 	else {
 		if (level == MARIO_LEVEL_BIG)
 		{
-			if (hold == true)
+			if (hold == true && koopaHold != NULL)
 			{
 				if (vx == 0)
 				{
@@ -450,7 +450,7 @@ void Mario::Render()
 		}
 		else if (level == MARIO_LEVEL_SMALL)
 		{
-			if (hold == true)
+			if (hold == true && koopaHold != NULL)
 			{
 				if (vx == 0)
 				{
@@ -519,7 +519,7 @@ void Mario::Render()
 					ani = MARIO_ANI_SUPER_BIG_READY_FLY_LEFT;
 				}
 			}
-			else if (hold == true)
+			else if (hold == true && koopaHold != NULL)
 			{
 				if (vx == 0)
 				{
@@ -633,7 +633,7 @@ void Mario::Render()
 			}
 		}
 		else if (level == MARIO_LEVEL_FIRE) {
-			if (hold == true)
+			if (hold == true && koopaHold != NULL)
 			{
 				if (vx == 0)
 				{

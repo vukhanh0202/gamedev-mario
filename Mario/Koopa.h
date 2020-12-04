@@ -24,6 +24,8 @@
 
 #define KOOPA_GRAVITY			0.0015f
 
+#define OBJECT_TYPE_KOOPA	3
+
 
 class Koopa : public GameObject
 {
@@ -34,5 +36,8 @@ public:
 	virtual void GetBoundingBox(float &left, float &top, float &right, float &bottom);
 	virtual void Update(DWORD dt, vector<LPGameObject> *coObjects);
 	virtual void Render();
+	int GetTypeObject() {
+		return OBJECT_TYPE_KOOPA;
+	}
 };
 

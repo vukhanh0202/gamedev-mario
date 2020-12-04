@@ -20,6 +20,8 @@
 
 #define GOOMBA_TIME_DISAPPEAR		500  //0.5s
 
+#define OBJECT_TYPE_GOOMBA	2
+
 class Goomba : public GameObject
 {
 	DWORD timeDie;
@@ -32,5 +34,8 @@ public:
 	Goomba();
 	virtual void SetState(int state);
 	void setTimeDie(DWORD timeDie) { this->timeDie = timeDie; }
+	int GetTypeObject() {
+		return OBJECT_TYPE_GOOMBA;
+	}
 };
 

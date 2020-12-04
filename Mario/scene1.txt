@@ -10,6 +10,8 @@
 50	textures\world11.png	156	252	240
 60	textures\enemies-2.png	0	128	128
 70	textures\enemies-rolate.png	3	26	110
+80	textures\hud.png	255	0	255
+90	textures\blackBackground.png	10	10	10
 
 # id	left	top	right	bottom	texture_id
 [SPRITES]
@@ -316,6 +318,12 @@
 #Răng
 180001	222	188	238	204	30
 
+#Hub
+190001	10	10	600	300	90
+
+#Hub
+1000001	3	3	155	31	80
+
 # ani_id	sprite1_id	time1	sprite2_id	time2	...
 [ANIMATIONS]
 
@@ -591,6 +599,12 @@
 #Răng
 1801	180001	100
 
+#background-black
+1901	190001	100
+
+#background-black
+100001	1000001	100
+
 #
 # id	ani1	ani2	ani3
 #
@@ -707,14 +721,25 @@
 #Răng
 181	1801
 
+#Black-background
+191	1901
+
+#Hub
+10001	100001
+
 [OBJECTS]
 # type	x	y	ani_set_id	extra_settings per object type
 # type: 0 = Ground , 1 = Brick, 2 = Goomba, 3 = Koopa,4= Mario Fire, 5 = Box 
 # type: -1 = Background, -2 = Mario
 
+#background-black-hud
+-1	0	202	191
+
+#Hub
+-1	0	204	10001
 # Background
 # Màn hình đen kết thúc
--1	2550	0	141
+#-1	2550	0	141
 #Bụi cây lớn đầu tiên
 -1	15	171	23
 -1	15	155	23
@@ -1518,7 +1543,7 @@
 # GOOMBA
 2	150	171	3
 2	750	160	3
-2	790	160	3
+2	820	160	3
 2	400	171	3
 #2	480	171	3
 #2	500	171	3
@@ -1602,7 +1627,7 @@
 
 
 # MARIO
--2	520.0	0	1
+-2	50.0	0	1
 # --- SCENE PORTAL ----
 # type	l	t	ani_set_id	r	b	scene_id
 #50	300	98	0	316	150	2
