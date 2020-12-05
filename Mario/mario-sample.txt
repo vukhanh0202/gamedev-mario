@@ -1,8 +1,9 @@
 [SETTINGS]
-start	4
+start	1
 #scene list
 [SCENES]
-1	scene1.txt
-2	scene2.txt
-3	scene-test.txt
-4	screen-start.txt
+1	screen-start.txt
+2	switch-map.txt
+3	scene1.txt
+4	scene2.txt
+5	scene-test.txt

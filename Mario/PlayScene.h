@@ -13,7 +13,7 @@ protected:
 
 	vector<LPGameObject> objects;
 
-	BackGroundMotion *bgMotion;
+	BackGroundMotion *bgMotion;		// Start screen have background move
 
 	void _ParseSection_TEXTURES(string line);
 	void _ParseSection_SPRITES(string line);

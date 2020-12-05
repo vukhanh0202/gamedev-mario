@@ -52,10 +52,20 @@ PlayScene::PlayScene(int id, LPCWSTR filePath) :
 #define OBJECT_TYPE_BACKGROUND_MOTION_LOGO_COLOR	12
 #define OBJECT_TYPE_BACKGROUND_MOTION_LOGO_NUMBER	13
 #define OBJECT_TYPE_BACKGROUND_MOTION_LOGO_ARROW	14
+#define OBJECT_TYPE_SWITCH_MAP	15
+
+#define HUD_HEIGHT	53
 
 
 
 #define OBJECT_TYPE_PORTAL	50
+
+#define SCENE_MAP_SWITCH	2
+#define SCENE_1				3
+
+#define SPACE_ENOUGH_SWITCH_MAP		10
+#define SCENE_1_COORDINATES_X		55
+#define SCENE_1_COORDINATES_Y		0
 
 #define MAX_SCENE_LINE 1024
 
@@ -312,6 +322,12 @@ void PlayScene::_ParseSection_OBJECTS(string line)
 			obj = new BackGroundMotionLogoArrow();
 			this->bgMotion->InsertArrArrow((BackGroundMotionLogoArrow*)obj);
 			break;
+		case OBJECT_TYPE_SWITCH_MAP:
+			obj = new Mario(x, y);
+			player = (Mario*)obj;
+			player->SetLevel(MARIO_LEVEL_SWITCH_MAP);
+			player->SetSpeed(0, 0);
+			break;
 		default:
 			DebugOut(L"[ERR] Invalid object type: %d\n", object_type);
 			return;
@@ -386,12 +402,35 @@ void PlayScene::Update(DWORD dt)
 
 
 	// skip the rest if scene was already unloaded (Mario::Update might trigger PlayScene::Unload)
-	if (player == NULL) {
+	if (player == NULL || player->GetLevel() == MARIO_LEVEL_SWITCH_MAP) {
 
 		vector<LPGameObject> coObjects;
 		for (size_t i = 0; i < objects.size(); i++)
 		{
+			if (objects[i]->GetTypeObject() != OBJECT_TYPE_BACKGROUND
+				&& objects[i]->GetTypeObject() != OBJECT_TYPE_HUD)
+			{
+				coObjects.push_back(objects[i]);
+			}
+		}
+		for (size_t i = 0; i < objects.size(); i++)
+		{
 			objects[i]->Update(dt, &coObjects);
+		}
+		if (player != NULL) {
+			Game *game = Game::GetInstance();
+			if (player->x < 5) {
+				player->x = 5;
+			}
+			else if (player->x > game->GetScreenWidth() - MARIO_SWITCH_MAP_WIDTH) {
+				player->x = game->GetScreenWidth() - MARIO_SWITCH_MAP_WIDTH;
+			}
+			else if (player->y < 5) {
+				player->y = 5;
+			}
+			else if (player->y > game->GetScreenHeight() - MARIO_SWITCH_MAP_HEIGHT - HUD_HEIGHT) {
+				player->y = game->GetScreenHeight() - MARIO_SWITCH_MAP_HEIGHT - HUD_HEIGHT;
+			}
 		}
 	}
 	else {
@@ -510,70 +549,87 @@ void PlaySceneKeyHandler::OnKeyDown(int KeyCode)
 
 	if (mario == NULL) {
 		BackGroundMotion *bg = ((PlayScene*)scene)->GetBGMotion();
-		BackGroundMotionLogoArrow* logoArrow1 = (BackGroundMotionLogoArrow*)bg->GetArrArrow()[0];
-		BackGroundMotionLogoArrow* logoArrow2 = (BackGroundMotionLogoArrow*)bg->GetArrArrow()[1];
-		switch (KeyCode)
-		{
-		case DIK_DOWN:
-			if (logoArrow1->disable) {
-				logoArrow1->disable = false;
-				logoArrow2->disable = true;
+		if (bg != NULL) {
+			BackGroundMotionLogoArrow* logoArrow1 = (BackGroundMotionLogoArrow*)bg->GetArrArrow()[0];
+			BackGroundMotionLogoArrow* logoArrow2 = (BackGroundMotionLogoArrow*)bg->GetArrArrow()[1];
+			switch (KeyCode)
+			{
+			case DIK_DOWN:
+				if (logoArrow1->disable) {
+					logoArrow1->disable = false;
+					logoArrow2->disable = true;
+				}
+				else {
+					logoArrow1->disable = true;
+					logoArrow2->disable = false;
+				}
+				break;
+			case DIK_UP:
+				if (logoArrow1->disable) {
+					logoArrow1->disable = false;
+					logoArrow2->disable = true;
+				}
+				else {
+					logoArrow1->disable = true;
+					logoArrow2->disable = false;
+				}
+				break;
+			case DIK_A:
+				if (!logoArrow1->disable) {
+					Portal *p = new Portal(SCENE_MAP_SWITCH);
+					Game::GetInstance()->SwitchScene(p->GetSceneId());
+				}
+				break;
 			}
-			else {
-				logoArrow1->disable = true;
-				logoArrow2->disable = false;
-			}
-			break;
-		case DIK_UP:
-			if (logoArrow1->disable) {
-				logoArrow1->disable = false;
-				logoArrow2->disable = true;
-			}
-			else {
-				logoArrow1->disable = true;
-				logoArrow2->disable = false;
-			}
-			break;
-		case DIK_A:
-			if (!logoArrow1->disable) {
-				Portal *p = new Portal(1);
-				Game::GetInstance()->SwitchScene(p->GetSceneId());
-			}
-			break;
 		}
 	}
 	else {
-		switch (KeyCode)
-		{
-		case DIK_SPACE:
-		{
-			if (!mario->GetFly() && !mario->GetFall())
-				mario->SetState(MARIO_STATE_JUMP);
-			else if (mario->GetFall())
+		if (mario->GetLevel() == MARIO_LEVEL_SWITCH_MAP) {
+			switch (KeyCode)
 			{
-				mario->SetRestrain(true);
+			case DIK_A:
+				double x, y;
+				mario->GetPosition(x, y);
+				if (abs(x - SCENE_1_COORDINATES_X) < SPACE_ENOUGH_SWITCH_MAP && abs(y - SCENE_1_COORDINATES_Y) < SPACE_ENOUGH_SWITCH_MAP) {
+					Portal *p = new Portal(SCENE_1);
+					Game::GetInstance()->SwitchScene(p->GetSceneId());
+				}
+				break;
 			}
 		}
-		break;
-		case DIK_P:
-			mario->Reset();
+		else {
+			switch (KeyCode)
+			{
+			case DIK_SPACE:
+			{
+				if (!mario->GetFly() && !mario->GetFall())
+					mario->SetState(MARIO_STATE_JUMP);
+				else if (mario->GetFall())
+				{
+					mario->SetRestrain(true);
+				}
+			}
 			break;
-		case DIK_Z:
-			mario->UpLevel();
-			break;
-		case DIK_X:
-			mario->DownLevel();
-			break;
-		case DIK_W:
-			mario->SetState(MARIO_STATE_HIT);
-			break;
-		case DIK_S:
-			mario->SetShot(true);
-			mario->SetHolding(false);
-			break;
-		case DIK_D:
-			mario->SetAttack(true);
-			break;
+			case DIK_P:
+				mario->Reset();
+				break;
+			case DIK_Z:
+				mario->UpLevel();
+				break;
+			case DIK_X:
+				mario->DownLevel();
+				break;
+			case DIK_W:
+				mario->SetState(MARIO_STATE_HIT);
+				break;
+			case DIK_S:
+				mario->SetShot(true);
+				mario->SetHolding(false);
+				break;
+			case DIK_D:
+				mario->SetAttack(true);
+				break;
+			}
 		}
 	}
 }
@@ -650,13 +706,24 @@ void PlaySceneKeyHandler::KeyState(BYTE *states)
 		mario->SetState(MARIO_STATE_WALKING_LEFT);
 	else if (game->IsKeyDown(DIK_DOWN))
 	{
-		if (mario->nx < 0)
-		{
-			mario->SetState(MARIO_STATE_SITTING_LEFT);
+		if (mario->GetLevel() == MARIO_LEVEL_SWITCH_MAP) {
+			mario->SetState(MARIO_STATE_WALKING_DOWN);
 		}
-		else
-		{
-			mario->SetState(MARIO_STATE_SITTING_RIGHT);
+		else {
+			if (mario->nx < 0)
+			{
+				mario->SetState(MARIO_STATE_SITTING_LEFT);
+			}
+			else
+			{
+				mario->SetState(MARIO_STATE_SITTING_RIGHT);
+			}
+		}
+	}
+	else if (game->IsKeyDown(DIK_UP))
+	{
+		if (mario->GetLevel() == MARIO_LEVEL_SWITCH_MAP) {
+			mario->SetState(MARIO_STATE_WALKING_UP);
 		}
 	}
 	else

@@ -1,16 +1,5 @@
 # id	file_path	transparent_color_r	g	b
 [TEXTURES]
-0	textures\mario.png	255	255	255
-1	textures\MarioRight.png	252	188	176
-2	textures\MarioLeft.png	252	188	176
-20	textures\misc.png	176	224	248
-10	textures\enemies.png	3	26	110
-30 	textures\scene1.png	255	128	192
-40 	textures\scene2.png	4	193	170
-50	textures\world11.png	156	252	240
-60	textures\enemies-2.png	0	128	128
-70	textures\enemies-rolate.png	3	26	110
-80	textures\hud.png	255	0	255
 90	textures\blackBackground.png	10	10	10
 100	textures\title.png	100	100	100
 101	textures\title.png	255	255	255
