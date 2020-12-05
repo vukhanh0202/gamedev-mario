@@ -40,26 +40,24 @@ void BackGroundMotion::Update(DWORD dt, vector<LPGameObject> *coObjects)
 	BackGroundMotionLogoBlack* logoBlack = (BackGroundMotionLogoBlack*)bg->arr[OBJECT_TYPE_BACKGROUND_MOTION_LOGO_BLACK];
 	BackGroundMotionLogoColor* logoColor = (BackGroundMotionLogoColor*)bg->arr[OBJECT_TYPE_BACKGROUND_MOTION_LOGO_COLOR];
 	BackGroundMotionLogoNumber* logoNumber = (BackGroundMotionLogoNumber*)bg->arr[OBJECT_TYPE_BACKGROUND_MOTION_LOGO_NUMBER];
+
+	BackGroundMotionLogoArrow* logoArrow1 = (BackGroundMotionLogoArrow*)bg->arrArrow[0];
+	BackGroundMotionLogoArrow* logoArrow2 = (BackGroundMotionLogoArrow*)bg->arrArrow[1];
 	
 	if (tile->disable == true) {
 		logoBlack->Show();
 		if (logoBlack->y == 0 && tile->disable == true) {
 			logoColor->Show();
 			logoNumber->Show();
+			if (logoArrow1->disable && logoArrow2->disable) {
+				logoArrow1->Show();
+				logoArrow2->Hide();
+			}
 		}
 	}
 	else {
 		tile->Show();
 	}
-	
-
-	
-
-	//// Calculate dx, dy 
-	//GameObject::Update(dt);
-
-	//x += dx;
-	//y += dy;
 }
 
 void BackGroundMotionTile::Update(DWORD dt, vector<LPGameObject> *coObjects)
@@ -93,17 +91,13 @@ void BackGroundMotionLogoBlack::Update(DWORD dt, vector<LPGameObject> *coObjects
 }
 void BackGroundMotionLogoColor::Update(DWORD dt, vector<LPGameObject> *coObjects)
 {
-	// Calculate dx, dy 
 	GameObject::Update(dt);
-
-	/*x += dx;
-	y += dy;*/
 }
 void BackGroundMotionLogoNumber::Update(DWORD dt, vector<LPGameObject> *coObjects)
 {
-	// Calculate dx, dy 
 	GameObject::Update(dt);
-
-	/*x += dx;
-	y += dy;*/
+}
+void BackGroundMotionLogoArrow::Update(DWORD dt, vector<LPGameObject> *coObjects)
+{
+	GameObject::Update(dt);
 }

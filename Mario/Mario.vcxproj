@@ -137,6 +137,7 @@
     <ClCompile Include="Hud.cpp" />
     <ClCompile Include="Koopa.cpp" />
     <ClCompile Include="PlayScene.cpp" />
+    <ClCompile Include="Portal.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="Utils.cpp" />
     <ClCompile Include="Game.cpp" />
@@ -157,6 +158,7 @@
     <ClInclude Include="Hud.h" />
     <ClInclude Include="Koopa.h" />
     <ClInclude Include="PlayScene.h" />
+    <ClInclude Include="Portal.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="Utils.h" />
     <ClInclude Include="Game.h" />

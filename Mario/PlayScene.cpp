@@ -16,6 +16,7 @@
 #include "Ground.h"
 #include "FireMario.h"
 #include "Hud.h"
+#include "Portal.h"
 
 
 using namespace std;
@@ -25,8 +26,6 @@ PlayScene::PlayScene(int id, LPCWSTR filePath) :
 {
 	key_handler = new PlaySceneKeyHandler(this);
 	mergeObject = false;
-	bgMotion = new BackGroundMotion();
-	objects.push_back(bgMotion);
 }
 
 #define SCENE_SECTION_UNKNOWN -1
@@ -52,6 +51,7 @@ PlayScene::PlayScene(int id, LPCWSTR filePath) :
 #define OBJECT_TYPE_BACKGROUND_MOTION_LOGO_BLACK	11
 #define OBJECT_TYPE_BACKGROUND_MOTION_LOGO_COLOR	12
 #define OBJECT_TYPE_BACKGROUND_MOTION_LOGO_NUMBER	13
+#define OBJECT_TYPE_BACKGROUND_MOTION_LOGO_ARROW	14
 
 
 
@@ -308,6 +308,10 @@ void PlayScene::_ParseSection_OBJECTS(string line)
 			obj = new BackGroundMotionLogoNumber();
 			this->bgMotion->InsertArr(OBJECT_TYPE_BACKGROUND_MOTION_LOGO_NUMBER, (BackGroundMotionLogoNumber*)obj);
 			break;
+		case OBJECT_TYPE_BACKGROUND_MOTION_LOGO_ARROW:
+			obj = new BackGroundMotionLogoArrow();
+			this->bgMotion->InsertArrArrow((BackGroundMotionLogoArrow*)obj);
+			break;
 		default:
 			DebugOut(L"[ERR] Invalid object type: %d\n", object_type);
 			return;
@@ -503,37 +507,74 @@ void PlaySceneKeyHandler::OnKeyDown(int KeyCode)
 	//DebugOut(L"[INFO] KeyDown: %d\n", KeyCode);
 
 	Mario *mario = ((PlayScene*)scene)->GetPlayer();
-	switch (KeyCode)
-	{
-	case DIK_SPACE:
-	{
-		if (!mario->GetFly() && !mario->GetFall())
-			mario->SetState(MARIO_STATE_JUMP);
-		else if (mario->GetFall())
+
+	if (mario == NULL) {
+		BackGroundMotion *bg = ((PlayScene*)scene)->GetBGMotion();
+		BackGroundMotionLogoArrow* logoArrow1 = (BackGroundMotionLogoArrow*)bg->GetArrArrow()[0];
+		BackGroundMotionLogoArrow* logoArrow2 = (BackGroundMotionLogoArrow*)bg->GetArrArrow()[1];
+		switch (KeyCode)
 		{
-			mario->SetRestrain(true);
+		case DIK_DOWN:
+			if (logoArrow1->disable) {
+				logoArrow1->disable = false;
+				logoArrow2->disable = true;
+			}
+			else {
+				logoArrow1->disable = true;
+				logoArrow2->disable = false;
+			}
+			break;
+		case DIK_UP:
+			if (logoArrow1->disable) {
+				logoArrow1->disable = false;
+				logoArrow2->disable = true;
+			}
+			else {
+				logoArrow1->disable = true;
+				logoArrow2->disable = false;
+			}
+			break;
+		case DIK_A:
+			if (!logoArrow1->disable) {
+				Portal *p = new Portal(1);
+				Game::GetInstance()->SwitchScene(p->GetSceneId());
+			}
+			break;
 		}
 	}
-	break;
-	case DIK_P:
-		mario->Reset();
+	else {
+		switch (KeyCode)
+		{
+		case DIK_SPACE:
+		{
+			if (!mario->GetFly() && !mario->GetFall())
+				mario->SetState(MARIO_STATE_JUMP);
+			else if (mario->GetFall())
+			{
+				mario->SetRestrain(true);
+			}
+		}
 		break;
-	case DIK_Z:
-		mario->UpLevel();
-		break;
-	case DIK_X:
-		mario->DownLevel();
-		break;
-	case DIK_W:
-		mario->SetState(MARIO_STATE_HIT);
-		break;
-	case DIK_S:
-		mario->SetShot(true);
-		mario->SetHolding(false);
-		break;
-	case DIK_D:
-		mario->SetAttack(true);
-		break;
+		case DIK_P:
+			mario->Reset();
+			break;
+		case DIK_Z:
+			mario->UpLevel();
+			break;
+		case DIK_X:
+			mario->DownLevel();
+			break;
+		case DIK_W:
+			mario->SetState(MARIO_STATE_HIT);
+			break;
+		case DIK_S:
+			mario->SetShot(true);
+			mario->SetHolding(false);
+			break;
+		case DIK_D:
+			mario->SetAttack(true);
+			break;
+		}
 	}
 }
 void PlaySceneKeyHandler::OnKeyUp(int KeyCode)
@@ -541,38 +582,43 @@ void PlaySceneKeyHandler::OnKeyUp(int KeyCode)
 	//DebugOut(L"[INFO] KeyDown: %d\n", KeyCode);
 
 	Mario *mario = ((PlayScene*)scene)->GetPlayer();
+	if (mario == NULL) {
 
-	switch (KeyCode)
-	{
-	case DIK_DOWN:
-		mario->SetState(MARIO_STATE_IDLE);
-		break;
-	case DIK_Q:
-		mario->SetHolding(false);
-		break;
-	case DIK_A:
-		mario->SetFastSpeed(false);
-		break;
-	case DIK_SPACE:
-	{
-		if (mario->GetFly())
+	}
+	else {
+		switch (KeyCode)
 		{
-			mario->SetFall(true);
-			mario->SetFly(false);
-			mario->SetReadyFly(false);
+		case DIK_DOWN:
+			mario->SetState(MARIO_STATE_IDLE);
+			break;
+		case DIK_Q:
+			mario->SetHolding(false);
+			break;
+		case DIK_A:
+			mario->SetFastSpeed(false);
+			break;
+		case DIK_SPACE:
+		{
+			if (mario->GetFly())
+			{
+				mario->SetFall(true);
+				mario->SetFly(false);
+				mario->SetReadyFly(false);
+			}
+			if (mario->GetRestrain())
+			{
+				mario->SetRestrain(false);
+			}
 		}
-		if (mario->GetRestrain())
-		{
-			mario->SetRestrain(false);
+		case DIK_S:
+			mario->SetShot(false);
+			break;
+		case DIK_D:
+			mario->SetAttack(false);
+			break;
 		}
 	}
-	case DIK_S:
-		mario->SetShot(false);
-		break;
-	case DIK_D:
-		mario->SetAttack(false);
-		break;
-	}
+
 
 }
 

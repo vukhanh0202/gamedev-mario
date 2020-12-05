@@ -34,6 +34,8 @@
 60002	287	363	329	404	101
 60003	333	363	375	404	101
 60004	194	363	236	404	101
+# Arrow
+70001	30	307	37	315	101
 
 # ani_id	sprite1_id	time1	sprite2_id	time2	...
 [ANIMATIONS]
@@ -57,6 +59,9 @@
 #logo-number
 60001	60001	150	60002	150	60003	150	60004	150
 
+#Arrow
+70001	70001	100
+
 #
 # id	ani1	ani2	ani3
 #
@@ -79,11 +84,14 @@
 #logo-number
 60001	60001
 
+#Arrow
+70001	70001
+
 [OBJECTS]
 # type	x	y	ani_set_id	extra_settings per object type
 # type: 0 = Ground , 1 = Brick, 2 = Goomba, 3 = Koopa,4= Mario Fire, 5 = Box 
 #	7 = hudBackground, 8=hudSpeed, 9 = BackgroundMotion, 10 = BackgroundMotionTile
-#	11 = BGLogoBlack, 12=BGLogoColor, 13 = BgNumber
+#	11 = BGLogoBlack, 12=BGLogoColor, 13 = BgNumber, 14= BgArrow
 # type: -1 = Background, -2 = Mario,
 
 #Background black
@@ -103,6 +111,10 @@
 
 #logo number
 13	112	96	60001
+
+#Arrow
+14	70	144	70001
+14	70	160	70001
 
 
 # --- SCENE PORTAL ----

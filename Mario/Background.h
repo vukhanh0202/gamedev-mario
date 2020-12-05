@@ -8,6 +8,7 @@
 #define OBJECT_TYPE_BACKGROUND_MOTION_LOGO_BLACK	11
 #define OBJECT_TYPE_BACKGROUND_MOTION_LOGO_COLOR	12
 #define OBJECT_TYPE_BACKGROUND_MOTION_LOGO_NUMBER	13
+#define OBJECT_TYPE_BACKGROUND_MOTION_LOGO_ARROW	14
 
 #define BACKGROUND_SPEED		0.1f 
 using namespace std;
@@ -25,17 +26,22 @@ public:
 class BackGroundMotion : public GameObject
 {
 	map<int, BackGroundMotion*> arr;
+	vector<BackGroundMotion*> arrArrow; // vector array arrow - size =2;
 
 public:
 	BackGroundMotion() { disable = true; }
 	void InsertArr(int key, BackGroundMotion* value) {
 		this->arr.insert(std::pair<int, BackGroundMotion*>(key, value));
 	}
+	void InsertArrArrow(BackGroundMotion* value) {
+		this->arrArrow.push_back(value);
+	}
 	virtual void Render();
 	virtual void GetBoundingBox(float &l, float &t, float &r, float &b);
 	virtual void Update(DWORD dt, vector<LPGameObject> *coObjects);
 	virtual void Show() { disable = false; };
 	virtual void Hide() { disable = true; };
+	vector<BackGroundMotion*> GetArrArrow() { return this->arrArrow; }
 	int GetTypeObject() {
 		return OBJECT_TYPE_BACKGROUND_MOTION;
 	}
@@ -92,6 +98,15 @@ public:
 	virtual void Update(DWORD dt, vector<LPGameObject> *coObjects);
 	int GetTypeObject() {
 		return OBJECT_TYPE_BACKGROUND_MOTION_LOGO_NUMBER;
+	}
+};
+
+class BackGroundMotionLogoArrow : public BackGroundMotion
+{
+public:
+	virtual void Update(DWORD dt, vector<LPGameObject> *coObjects);
+	int GetTypeObject() {
+		return OBJECT_TYPE_BACKGROUND_MOTION_LOGO_ARROW;
 	}
 };
 
