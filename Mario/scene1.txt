@@ -319,10 +319,12 @@
 180001	222	188	238	204	30
 
 #Hub
-190001	10	10	600	300	90
+190001	10	10	600	45	90
 
 #Hub
 1000001	3	3	155	31	80
+1000002	3	33	11	40	80
+1000003	163	3	235	31	80
 
 # ani_id	sprite1_id	time1	sprite2_id	time2	...
 [ANIMATIONS]
@@ -604,6 +606,8 @@
 
 #background-black
 100001	1000001	100
+100002	1000002	100
+100003	1000003	100
 
 #
 # id	ani1	ani2	ani3
@@ -726,17 +730,19 @@
 
 #Hub
 10001	100001
+#Hub-speedfly-enable
+10002	100002
+#Hud-status
+10003	100003
+
 
 [OBJECTS]
 # type	x	y	ani_set_id	extra_settings per object type
 # type: 0 = Ground , 1 = Brick, 2 = Goomba, 3 = Koopa,4= Mario Fire, 5 = Box 
+#	7 = hudBackground, 8=hudSpeed
 # type: -1 = Background, -2 = Mario
 
-#background-black-hud
--1	0	202	191
 
-#Hub
--1	0	204	10001
 # Background
 # Màn hình đen kết thúc
 #-1	2550	0	141
@@ -1625,9 +1631,25 @@
 1	1681	-56	181
 1	1697	-56	181
 
-
 # MARIO
--2	50.0	0	1
+-2	1000.0	0	1
+
+# HUD need init after init MARIO
+#background-black-hud
+7	0	202	191
+
+#Hud
+7	10	204	10001
+#Hud-speed-fly-enable
+8	62	211	10002
+8	70	211	10002
+8	78	211	10002
+8	86	211	10002
+8	92	211	10002
+8	100	211	10002
+#Hud-speed-status
+7	170	204	10003
+
 # --- SCENE PORTAL ----
 # type	l	t	ani_set_id	r	b	scene_id
 #50	300	98	0	316	150	2

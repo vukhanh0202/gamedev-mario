@@ -134,6 +134,7 @@
     <ClCompile Include="Brick.cpp" />
     <ClCompile Include="FireMario.cpp" />
     <ClCompile Include="Ground.cpp" />
+    <ClCompile Include="Hud.cpp" />
     <ClCompile Include="Koopa.cpp" />
     <ClCompile Include="PlayScene.cpp" />
     <ClCompile Include="Scene.cpp" />
@@ -153,6 +154,7 @@
     <ClInclude Include="Brick.h" />
     <ClInclude Include="FireMario.h" />
     <ClInclude Include="Ground.h" />
+    <ClInclude Include="Hud.h" />
     <ClInclude Include="Koopa.h" />
     <ClInclude Include="PlayScene.h" />
     <ClInclude Include="Scene.h" />

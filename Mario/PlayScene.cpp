@@ -15,6 +15,7 @@
 #include "Koopa.h"
 #include "Ground.h"
 #include "FireMario.h"
+#include "Hud.h"
 
 
 using namespace std;
@@ -24,6 +25,8 @@ PlayScene::PlayScene(int id, LPCWSTR filePath) :
 {
 	key_handler = new PlaySceneKeyHandler(this);
 	mergeObject = false;
+	bgMotion = new BackGroundMotion();
+	objects.push_back(bgMotion);
 }
 
 #define SCENE_SECTION_UNKNOWN -1
@@ -33,15 +36,24 @@ PlayScene::PlayScene(int id, LPCWSTR filePath) :
 #define SCENE_SECTION_ANIMATION_SETS	5
 #define SCENE_SECTION_OBJECTS	6
 
-#define OBJECT_TYPE_MARIO	-2
-#define OBJECT_TYPE_BACKGROUND	-1
-#define OBJECT_TYPE_GROUND	0
-#define OBJECT_TYPE_BRICK	1
-#define OBJECT_TYPE_GOOMBA	2
-#define OBJECT_TYPE_KOOPA	3
-#define OBJECT_TYPE_FIRE_MARIO	4
-#define OBJECT_TYPE_BOX		5
-#define OBJECT_TYPE_BOXS	6
+#define OBJECT_TYPE_MARIO				-2
+#define OBJECT_TYPE_BACKGROUND			-1
+#define OBJECT_TYPE_GROUND				0
+#define OBJECT_TYPE_BRICK				1
+#define OBJECT_TYPE_GOOMBA				2
+#define OBJECT_TYPE_KOOPA				3
+#define OBJECT_TYPE_FIRE_MARIO			4
+#define OBJECT_TYPE_BOX					5
+#define OBJECT_TYPE_BOXS				6
+#define OBJECT_TYPE_HUD					7
+#define OBJECT_TYPE_HUD_SPEED			8
+#define OBJECT_TYPE_BACKGROUND_MOTION	9
+#define OBJECT_TYPE_BACKGROUND_MOTION_TILE	10
+#define OBJECT_TYPE_BACKGROUND_MOTION_LOGO_BLACK	11
+#define OBJECT_TYPE_BACKGROUND_MOTION_LOGO_COLOR	12
+#define OBJECT_TYPE_BACKGROUND_MOTION_LOGO_NUMBER	13
+
+
 
 #define OBJECT_TYPE_PORTAL	50
 
@@ -274,6 +286,28 @@ void PlayScene::_ParseSection_OBJECTS(string line)
 		case OBJECT_TYPE_GROUND: obj = new Ground(); break;
 		case OBJECT_TYPE_BACKGROUND: obj = new BackGround(); break;
 		case OBJECT_TYPE_KOOPA: obj = new Koopa(); break;
+		case OBJECT_TYPE_HUD: obj = new Hud(x, y); break;
+		case OBJECT_TYPE_HUD_SPEED: obj = new HudSpeed(x, y); player->addHudSpeed((HudSpeed*)obj); break;
+		case OBJECT_TYPE_BACKGROUND_MOTION:
+			obj = new BackGroundMotion();
+			this->bgMotion = (BackGroundMotion*)obj;
+			break;
+		case OBJECT_TYPE_BACKGROUND_MOTION_TILE:
+			obj = new BackGroundMotionTile();
+			this->bgMotion->InsertArr(OBJECT_TYPE_BACKGROUND_MOTION_TILE, (BackGroundMotionTile*)obj);
+			break;
+		case OBJECT_TYPE_BACKGROUND_MOTION_LOGO_BLACK:
+			obj = new BackGroundMotionLogoBlack();
+			this->bgMotion->InsertArr(OBJECT_TYPE_BACKGROUND_MOTION_LOGO_BLACK, (BackGroundMotionLogoBlack*)obj);
+			break;
+		case OBJECT_TYPE_BACKGROUND_MOTION_LOGO_COLOR:
+			obj = new BackGroundMotionLogoColor();
+			this->bgMotion->InsertArr(OBJECT_TYPE_BACKGROUND_MOTION_LOGO_COLOR, (BackGroundMotionLogoColor*)obj);
+			break;
+		case OBJECT_TYPE_BACKGROUND_MOTION_LOGO_NUMBER:
+			obj = new BackGroundMotionLogoNumber();
+			this->bgMotion->InsertArr(OBJECT_TYPE_BACKGROUND_MOTION_LOGO_NUMBER, (BackGroundMotionLogoNumber*)obj);
+			break;
 		default:
 			DebugOut(L"[ERR] Invalid object type: %d\n", object_type);
 			return;
@@ -348,91 +382,105 @@ void PlayScene::Update(DWORD dt)
 
 
 	// skip the rest if scene was already unloaded (Mario::Update might trigger PlayScene::Unload)
-	if (player == NULL) return;
+	if (player == NULL) {
 
-	if (player->GetShot() && player->GetLevel() == MARIO_LEVEL_FIRE && FireMario::count < FIRE_MARIO_MAX_ITEM)
-	{
-
-		GameObject *bullet = new FireMario();
-		if (player->nx > 0)
+		vector<LPGameObject> coObjects;
+		for (size_t i = 0; i < objects.size(); i++)
 		{
-			bullet->SetState(FIRE_MARIO_STATE_RIGHT);
-			bullet->SetPosition(player->x + MARIO_BIG_BBOX_WIDTH * 1.1f, player->y + MARIO_BIG_BBOX_HEIGHT * 0.2);
-		}
-		else {
-			bullet->SetState(FIRE_MARIO_STATE_LEFT);
-			bullet->SetPosition(player->x - MARIO_BIG_BBOX_WIDTH * 0.1f, player->y + MARIO_BIG_BBOX_HEIGHT * 0.2);
-		}
-
-		LPAnimation_Set ani_set = AnimationSets::GetInstance()->Get(FIRE_MARIO_ANIMATION_SET_ID);
-
-		bullet->SetAnimationSet(ani_set);
-		objects.push_back(bullet);
-		player->SetShot(false);
-	}
-
-	vector<LPGameObject> coObjects;
-	for (size_t i = 0; i < objects.size(); i++)
-	{
-		if (objects[i]->disable == false /*&& dynamic_cast<Mario *>(objects[i]) == false*/ && objects[i]->y <= 300)
-		{
-			coObjects.push_back(objects[i]);
-		}
-	}
-
-	for (size_t i = 0; i < objects.size(); i++)
-	{
-		if (objects[i]->disable || (!dynamic_cast<Mario *>(objects[i]) && objects[i]->y > 300))
-		{
-			LPGameObject obj = objects[i];
-			if (dynamic_cast<FireMario *>(objects[i]))
-				FireMario::count--;
-			objects.erase(objects.begin() + i);
-			delete obj;
-		}
-		else
 			objects[i]->Update(dt, &coObjects);
+		}
 	}
+	else {
+		if (player->GetShot() && player->GetLevel() == MARIO_LEVEL_FIRE && FireMario::count < FIRE_MARIO_MAX_ITEM)
+		{
 
-	// Update camera to follow mario
-	double cx, cy;
-	player->GetPosition(cx, cy);
+			GameObject *bullet = new FireMario();
+			if (player->nx > 0)
+			{
+				bullet->SetState(FIRE_MARIO_STATE_RIGHT);
+				bullet->SetPosition(player->x + MARIO_BIG_BBOX_WIDTH * 1.1f, player->y + MARIO_BIG_BBOX_HEIGHT * 0.2);
+			}
+			else {
+				bullet->SetState(FIRE_MARIO_STATE_LEFT);
+				bullet->SetPosition(player->x - MARIO_BIG_BBOX_WIDTH * 0.1f, player->y + MARIO_BIG_BBOX_HEIGHT * 0.2);
+			}
 
-	Game *game = Game::GetInstance();
-	cx -= game->GetScreenWidth() / 2;
-	cy -= game->GetScreenHeight() / 2;
+			LPAnimation_Set ani_set = AnimationSets::GetInstance()->Get(FIRE_MARIO_ANIMATION_SET_ID);
+
+			bullet->SetAnimationSet(ani_set);
+			objects.push_back(bullet);
+			player->SetShot(false);
+		}
+
+		vector<LPGameObject> coObjects;
+		for (size_t i = 0; i < objects.size(); i++)
+		{
+			if (objects[i]->disable == false && objects[i]->y <= 300
+				&& objects[i]->GetTypeObject() != OBJECT_TYPE_BACKGROUND
+				&& objects[i]->GetTypeObject() != OBJECT_TYPE_HUD)
+			{
+				coObjects.push_back(objects[i]);
+			}
+		}
+
+		for (size_t i = 0; i < objects.size(); i++)
+		{
+			if (objects[i]->disable || (!dynamic_cast<Mario *>(objects[i]) && objects[i]->y > 300))
+			{
+				LPGameObject obj = objects[i];
+				if (dynamic_cast<FireMario *>(objects[i])) {
+					FireMario::count--;
+					objects.erase(objects.begin() + i);
+					delete obj;
+				}
+			}
+			else
+				objects[i]->Update(dt, &coObjects);
+		}
+
+		// Update camera to follow mario
+		double cx, cy;
+		player->GetPosition(cx, cy);
+
+		Game *game = Game::GetInstance();
+		cx -= game->GetScreenWidth() / 2;
+		cy -= game->GetScreenHeight() / 2;
 
 
-	// Keep mario not overcome screen
-	if (player->x < 5) {
-		player->x = 5;
+		// Keep mario not overcome screen
+		if (player->x < 5) {
+			player->x = 5;
+		}
+		else if (player->x > 2862) {
+			player->x = 2862;
+		}// Overcome end map
+
+		// Mario in head map
+		if (player->x < (game->GetScreenWidth() / 2)) {
+			cx = 0;
+		}
+		else if (player->x > 2880 - (game->GetScreenWidth())) {
+			cx = (double)2880 - (game->GetScreenWidth());
+		}// Mario in tail map
+
+		else if (player->y < MARIO_LIMIT_FLY + (game->GetScreenHeight() / 1.2f))
+			cy = MARIO_LIMIT_FLY;
+
+		if ((player->y < game->GetScreenHeight() / 4 && player->GetFly())
+			|| (player->y <= game->GetScreenHeight() / 4 && player->GetFall())
+			|| (player->y <= -game->GetScreenHeight() / 4))
+			Game::GetInstance()->SetCamPosition((int)cx, (int)cy /*cy*/);
+		else Game::GetInstance()->SetCamPosition((int)cx, (int)20.0f /*cy*/);
 	}
-	else if (player->x > 2862) {
-		player->x = 2862;
-	}// Overcome end map
-
-	// Mario in head map
-	if (player->x < (game->GetScreenWidth() / 2)) {
-		cx = 0;
-	}
-	else if (player->x > 2880 - (game->GetScreenWidth())) {
-		cx = (double)2880 - (game->GetScreenWidth());
-	}// Mario in tail map
-
-	else if (player->y < MARIO_LIMIT_FLY + (game->GetScreenHeight() / 1.2f))
-		cy = MARIO_LIMIT_FLY;
-
-	if ((player->y < game->GetScreenHeight() / 4 && player->GetFly())
-		|| (player->y <= game->GetScreenHeight() / 4 && player->GetFall())
-		|| (player->y <= -game->GetScreenHeight() / 4))
-		Game::GetInstance()->SetCamPosition(cx, cy /*cy*/);
-	else Game::GetInstance()->SetCamPosition(cx, -50.0f /*cy*/);
 }
 
 void PlayScene::Render()
 {
-	for (int i = 0; i < objects.size(); i++)
-		objects[i]->Render();
+	for (int i = 0; i < objects.size(); i++) {
+		if (!objects[i]->disable) {
+			objects[i]->Render();
+		}
+	}
 }
 
 /*
@@ -532,7 +580,7 @@ void PlaySceneKeyHandler::KeyState(BYTE *states)
 {
 	Game *game = Game::GetInstance();
 	Mario *mario = ((PlayScene*)scene)->GetPlayer();
-
+	if (mario == NULL) return;
 	// disable control key when Mario die 
 	if (mario->GetState() == MARIO_STATE_DIE) return;
 

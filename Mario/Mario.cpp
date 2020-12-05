@@ -35,7 +35,7 @@ void Mario::Update(DWORD dt, vector<LPGameObject> *coObjects)
 {
 	// Calculate dx, dy 
 	GameObject::Update(dt);
-
+	
 	if (level == MARIO_LEVEL_SUPER_BIG && hold == false)
 	{
 		// Top high => Mario fall
@@ -56,6 +56,21 @@ void Mario::Update(DWORD dt, vector<LPGameObject> *coObjects)
 			if (power <= 0) readyFly = false;
 			else power--;
 		}
+
+		// ----- Set speed hud
+		int powerPerLevel = MARIO_POWER_READY_FLY / MAX_SPEED_QUANTITY;
+		int levelFly = power / powerPerLevel;
+		for (size_t i = 0; i < hudSpeedList.size(); i++)
+		{
+			if (i < levelFly || levelFly == MAX_SPEED_QUANTITY) {
+				hudSpeedList[i]->disable = false;
+			}
+			else if (levelFly != MAX_SPEED_QUANTITY && readyFly == false){
+				hudSpeedList[i]->disable = true;
+			}
+		}
+		// ----- End Set Speed hud
+
 		// Speed fly
 		if (fly == true)
 		{
@@ -267,6 +282,7 @@ void Mario::Update(DWORD dt, vector<LPGameObject> *coObjects)
 								{
 									//level = MARIO_LEVEL_SMALL;
 									level--;
+									unableReadyFly();
 									StartUntouchable();
 								}
 								else
@@ -316,6 +332,7 @@ void Mario::Update(DWORD dt, vector<LPGameObject> *coObjects)
 									if (level > MARIO_LEVEL_SMALL)
 									{
 										level--;
+										unableReadyFly();
 										StartUntouchable();
 									}
 									else
@@ -347,6 +364,7 @@ void Mario::Update(DWORD dt, vector<LPGameObject> *coObjects)
 									if (level > MARIO_LEVEL_SMALL)
 									{
 										level--;
+										unableReadyFly();
 										StartUntouchable();
 									}
 									else
@@ -878,7 +896,14 @@ void Mario::GetBoundingBox(float &left, float &top, float &right, float &bottom)
 	}
 	right = left + width;
 }
-
+void Mario::unableReadyFly()
+{
+	power = 0;
+	for (size_t i = 0; i < hudSpeedList.size(); i++)
+	{
+		hudSpeedList[i]->disable = true;
+	}
+}
 /*
 	Reset Mario status to the beginning state of a scene
 */
@@ -888,6 +913,7 @@ void Mario::Reset()
 	SetLevel(MARIO_LEVEL_SUPER_BIG);
 	SetPosition(start_x, start_y);
 	SetSpeed(0, 0);
+	unableReadyFly();
 }
 
 void Mario::UpLevel()

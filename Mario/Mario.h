@@ -2,6 +2,7 @@
 #include "GameObject.h"
 #include "FireMario.h"
 #include "Koopa.h"
+#include "Hud.h"
 
 #define MARIO_WALKING_SPEED		0.1f 
 #define MARIO_WALKING_SPEED_FAST		0.15f 
@@ -156,6 +157,9 @@ class Mario : public GameObject
 	//FireMario *bullet;
 	Koopa *koopaHold;
 
+
+	vector<HudSpeed*> hudSpeedList;
+
 public:
 	/*Mario() : GameObject()
 	{
@@ -173,7 +177,6 @@ public:
 	void SetFastSpeed(boolean fast) { this->fast = fast; };
 	void SetShot(boolean shot) { this->shot = shot; };
 	boolean GetShot() { return this->shot; }
-	//void SetBullet(FireMario *bullet) { this->bullet = bullet; }
 	void SetFly(boolean fly) { this->fly = fly; }
 	boolean GetFly() { return this->fly; }
 	void SetFall(boolean fall) { this->fall = fall; }
@@ -183,11 +186,15 @@ public:
 	void SetRestrain(boolean restrain) { this->restrain = restrain; }
 	boolean GetRestrain() { return this->restrain; }
 	void SetAttack(boolean attack) { this->attack = attack; }
-	void SetLevel(int l) { level = l; }
+	void SetLevel(int l) { level = l; unableReadyFly(); }
 	void StartUntouchable() { untouchable = 1; untouchable_start = GetTickCount(); }
+	void addHudSpeed(HudSpeed* hudSpeed) { this->hudSpeedList.push_back(hudSpeed); }
+	void unableReadyFly();
 	int GetTypeObject() {
 		return OBJECT_TYPE_MARIO;
 	}
+	
+
 
 	void Reset();
 	void UpLevel();

@@ -1,0 +1,111 @@
+# id	file_path	transparent_color_r	g	b
+[TEXTURES]
+0	textures\mario.png	255	255	255
+1	textures\MarioRight.png	252	188	176
+2	textures\MarioLeft.png	252	188	176
+20	textures\misc.png	176	224	248
+10	textures\enemies.png	3	26	110
+30 	textures\scene1.png	255	128	192
+40 	textures\scene2.png	4	193	170
+50	textures\world11.png	156	252	240
+60	textures\enemies-2.png	0	128	128
+70	textures\enemies-rolate.png	3	26	110
+80	textures\hud.png	255	0	255
+90	textures\blackBackground.png	10	10	10
+100	textures\title.png	100	100	100
+101	textures\title.png	255	255	255
+
+# id	left	top	right	bottom	texture_id
+[SPRITES]
+ 
+# Floor
+10001	0	188	256	244	100
+
+# Background black
+20001	10	10	650	380	90
+# tile
+30001	0	0	256	187	100
+# logo-black
+40001	516	0	772	187	100
+# logo-color
+50001	516	226	772	413	100
+# logo-number
+60001	240	363	282	404	101
+60002	287	363	329	404	101
+60003	333	363	375	404	101
+60004	194	363	236	404	101
+
+# ani_id	sprite1_id	time1	sprite2_id	time2	...
+[ANIMATIONS]
+
+# ==== MARIO =========
+#Floor
+10001	10001	100
+
+#Background black
+20001	20001	100
+
+#tile
+30001	30001	100
+
+#logo-black
+40001	40001	100
+
+#logo-color
+50001	50001	100
+
+#logo-number
+60001	60001	150	60002	150	60003	150	60004	150
+
+#
+# id	ani1	ani2	ani3
+#
+[ANIMATION_SETS]
+#Floor
+10001	10001
+
+#Background black
+20001	20001
+
+#Tile
+30001	30001
+
+#logo-black
+40001	40001
+
+#logo-color
+50001	50001
+
+#logo-number
+60001	60001
+
+[OBJECTS]
+# type	x	y	ani_set_id	extra_settings per object type
+# type: 0 = Ground , 1 = Brick, 2 = Goomba, 3 = Koopa,4= Mario Fire, 5 = Box 
+#	7 = hudBackground, 8=hudSpeed, 9 = BackgroundMotion, 10 = BackgroundMotionTile
+#	11 = BGLogoBlack, 12=BGLogoColor, 13 = BgNumber
+# type: -1 = Background, -2 = Mario,
+
+#Background black
+-1	0	0	20001
+#Floor
+-1	0	186	10001
+#tile
+9	0	0	30001
+#tile
+10	0	0	30001
+
+#logo black
+11	0	-200	40001
+
+#logo color
+12	0	0	50001
+
+#logo number
+13	112	96	60001
+
+
+# --- SCENE PORTAL ----
+# type	l	t	ani_set_id	r	b	scene_id
+#50	300	98	0	316	150	2
+

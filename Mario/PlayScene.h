@@ -2,6 +2,7 @@
 #include "Scene.h"
 #include "Mario.h"
 #include "GameObject.h"
+#include "BackGround.h"
 
 class PlayScene : public Scene
 {
@@ -11,6 +12,8 @@ protected:
 	boolean mergeObject;			// merge object (present is only box) ? merge status : do normally
 
 	vector<LPGameObject> objects;
+
+	BackGroundMotion *bgMotion;
 
 	void _ParseSection_TEXTURES(string line);
 	void _ParseSection_SPRITES(string line);
@@ -26,8 +29,9 @@ public:
 	virtual void Update(DWORD dt);
 	virtual void Render();
 	virtual void Unload();
-
+	vector<LPGameObject> getObjects() { return objects; }
 	Mario * GetPlayer() { return player; }
+	BackGroundMotion * GetBGMotion() { return bgMotion; }
 };
 
 class PlaySceneKeyHandler : public SceneKeyHandler
