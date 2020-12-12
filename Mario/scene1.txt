@@ -819,6 +819,7 @@
 # type	x	y	ani_set_id	extra_settings per object type
 # type: 0 = Ground , 1 = Brick, 2 = Goomba, 3 = Koopa,4= Mario Fire, 5 = Box 
 #	7 = hudBackground, 8=hudSpeed, 16 = coin, 17 = hud point, 18 = venus
+#	19 = FireEnemy
 # type: -1 = Background, -2 = Mario
 
 

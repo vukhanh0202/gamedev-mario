@@ -133,6 +133,7 @@
     <ClCompile Include="Box.cpp" />
     <ClCompile Include="Brick.cpp" />
     <ClCompile Include="Coin.cpp" />
+    <ClCompile Include="FireEnemy.cpp" />
     <ClCompile Include="FireMario.cpp" />
     <ClCompile Include="Ground.cpp" />
     <ClCompile Include="Hud.cpp" />
@@ -157,6 +158,7 @@
     <ClInclude Include="Box.h" />
     <ClInclude Include="Brick.h" />
     <ClInclude Include="Coin.h" />
+    <ClInclude Include="FireEnemy.h" />
     <ClInclude Include="FireMario.h" />
     <ClInclude Include="Ground.h" />
     <ClInclude Include="Hud.h" />

@@ -7,6 +7,7 @@
 #include "Game.h"
 #include "Utils.h"
 #include "Coin.h"
+#include "FireEnemy.h"
 
 Mario::Mario(float x, float y) : GameObject()
 {
@@ -173,6 +174,29 @@ void Mario::Update(DWORD dt, vector<LPGameObject> *coObjects)
 		}
 	}
 
+	// Handle mario shot bullet
+	if (shot && level == MARIO_LEVEL_FIRE && FireMario::count < FIRE_MARIO_MAX_ITEM)
+	{
+		Game *game = Game::GetInstance();
+		LPScene scene = Game::GetInstance()->GetCurrentScene();
+
+		GameObject *bullet = new FireMario();
+		if (this->nx > 0)
+		{
+			bullet->SetState(FIRE_MARIO_STATE_RIGHT);
+			bullet->SetPosition(this->x + MARIO_BIG_BBOX_WIDTH * 1.1f, this->y + MARIO_BIG_BBOX_HEIGHT * 0.2);
+		}
+		else {
+			bullet->SetState(FIRE_MARIO_STATE_LEFT);
+			bullet->SetPosition(this->x - MARIO_BIG_BBOX_WIDTH * 0.1f, this->y + MARIO_BIG_BBOX_HEIGHT * 0.2);
+		}
+
+		LPAnimation_Set ani_set = AnimationSets::GetInstance()->Get(FIRE_MARIO_ANIMATION_SET_ID);
+
+		bullet->SetAnimationSet(ani_set);
+		((PlayScene*)scene)->pushObject(bullet);
+		SetShot(false);
+	}
 
 	// No collision occured, proceed normally
 	if (coEvents.size() == 0)
@@ -224,7 +248,8 @@ void Mario::Update(DWORD dt, vector<LPGameObject> *coObjects)
 				else {
 					if (ny != 0) vy = 0;
 				}
-			}else if (dynamic_cast<Coin *>(e->obj))
+			}
+			else if (dynamic_cast<Coin *>(e->obj))
 			{
 				Coin *coin = dynamic_cast<Coin *>(e->obj);
 				coin->disable = true;
@@ -382,6 +407,21 @@ void Mario::Update(DWORD dt, vector<LPGameObject> *coObjects)
 								}
 							}
 						}
+					}
+				}
+				else if (dynamic_cast<FireEnemy *>(e->obj)) // if e->obj is fireEnemy
+				{
+					// koopa live
+					if (untouchable == 0)
+					{
+						if (level > MARIO_LEVEL_SMALL)
+						{
+							level--;
+							unableReadyFly();
+							StartUntouchable();
+						}
+						else
+							SetState(MARIO_STATE_DIE);
 					}
 				}
 			}

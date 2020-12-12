@@ -3,6 +3,7 @@
 #include "Box.h"
 #include "Koopa.h"
 #include "Goomba.h"
+#include "VenusFire.h"
 
 void FireMario::Render()
 {
@@ -82,6 +83,12 @@ void FireMario::Update(DWORD dt, vector<LPGameObject> *coObjects)
 					}
 					goomba->state = GOOMBA_STATE_DIE_DISAPPER;
 				}
+				this->disable = true;
+			}
+			else if (dynamic_cast<VenusFire *>(e->obj)) {
+				VenusFire *venusFire = dynamic_cast<VenusFire *>(e->obj);
+
+				venusFire->disable = true;
 				this->disable = true;
 			}
 			else// if (nx != 0)

@@ -29,6 +29,7 @@ public:
 	virtual void Update(DWORD dt);
 	virtual void Render();
 	virtual void Unload();
+	void pushObject(LPGameObject LPObject) { this->objects.push_back(LPObject); }
 	vector<LPGameObject> getObjects() { return objects; }
 	Mario * GetPlayer() { return player; }
 	BackGroundMotion * GetBGMotion() { return bgMotion; }

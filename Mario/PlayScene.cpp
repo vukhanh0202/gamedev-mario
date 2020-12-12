@@ -20,6 +20,7 @@
 #include "Coin.h"
 #include "Point.h"
 #include "VenusFire.h"
+#include "FireEnemy.h"
 
 
 using namespace std;
@@ -443,27 +444,6 @@ void PlayScene::Update(DWORD dt)
 		}
 	}
 	else {
-		if (player->GetShot() && player->GetLevel() == MARIO_LEVEL_FIRE && FireMario::count < FIRE_MARIO_MAX_ITEM)
-		{
-
-			GameObject *bullet = new FireMario();
-			if (player->nx > 0)
-			{
-				bullet->SetState(FIRE_MARIO_STATE_RIGHT);
-				bullet->SetPosition(player->x + MARIO_BIG_BBOX_WIDTH * 1.1f, player->y + MARIO_BIG_BBOX_HEIGHT * 0.2);
-			}
-			else {
-				bullet->SetState(FIRE_MARIO_STATE_LEFT);
-				bullet->SetPosition(player->x - MARIO_BIG_BBOX_WIDTH * 0.1f, player->y + MARIO_BIG_BBOX_HEIGHT * 0.2);
-			}
-
-			LPAnimation_Set ani_set = AnimationSets::GetInstance()->Get(FIRE_MARIO_ANIMATION_SET_ID);
-
-			bullet->SetAnimationSet(ani_set);
-			objects.push_back(bullet);
-			player->SetShot(false);
-		}
-
 		vector<LPGameObject> coObjects;
 		for (size_t i = 0; i < objects.size(); i++)
 		{
@@ -488,6 +468,10 @@ void PlayScene::Update(DWORD dt)
 					delete obj;
 				}
 				else if (dynamic_cast<Coin *>(objects[i])) {
+					objects.erase(objects.begin() + i);
+					delete obj;
+				}
+				else if (dynamic_cast<FireEnemy *>(objects[i])) {
 					objects.erase(objects.begin() + i);
 					delete obj;
 				}

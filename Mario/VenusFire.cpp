@@ -2,6 +2,7 @@
 #include "Game.h"
 #include "PlayScene.h"
 #include "Mario.h"
+#include "FireEnemy.h"
 
 void VenusFire::Render()
 {
@@ -57,10 +58,43 @@ void VenusFire::GetBoundingBox(float &l, float &t, float &r, float &b)
 }
 void VenusFire::Update(DWORD dt, vector<LPGameObject> *coObjects)
 {
+	Game *game = Game::GetInstance();
+	LPScene scene = Game::GetInstance()->GetCurrentScene();
+	Mario *mario = ((PlayScene*)scene)->GetPlayer();
 
 	if (this->y <= this->position_default_y - VENUS_FIRE_BBOX_HEIGHT && !fire) {
 		lastFireTime = GetTickCount();
 		fire = true;
+		GameObject *fireEnemy = new FireEnemy();
+		if (this->nx > 0)
+		{
+			fireEnemy->SetState(FIRE_ENEMY_STATE_RIGHT);
+			fireEnemy->SetPosition(this->x , this->y);
+		}
+		else {
+			fireEnemy->SetState(FIRE_ENEMY_STATE_LEFT);
+			fireEnemy->SetPosition(this->x, this->y);
+		}
+		double fireEnemyVx, fireEnemyVy;
+		double positionFireEnemyX, positionFireEnemyY;
+		double marioX, marioY;
+		double distanceX, distanceY;
+		// Get speed fire enemy
+		fireEnemy->GetSpeed(fireEnemyVx, fireEnemyVy);
+		// Get position fire enemy
+		fireEnemy->GetPosition(positionFireEnemyX, positionFireEnemyY);
+		// Get position mario
+		mario->GetPosition(marioX, marioY);
+		// cal distance
+		distanceX = marioX - positionFireEnemyX;
+		distanceY = marioY - positionFireEnemyY;
+
+		fireEnemyVy = (distanceY / distanceX) *fireEnemyVx;
+		fireEnemy->SetSpeed(fireEnemyVx, fireEnemyVy);
+		LPAnimation_Set ani_set = AnimationSets::GetInstance()->Get(FIRE_MARIO_ANIMATION_SET_ID);
+
+		fireEnemy->SetAnimationSet(ani_set);
+		((PlayScene*)scene)->pushObject(fireEnemy);
 	}
 	else if (fire && GetTickCount() - lastFireTime > VENUS_FIRE_TIME_FIRE) {
 		fire = false;
@@ -84,9 +118,7 @@ void VenusFire::Update(DWORD dt, vector<LPGameObject> *coObjects)
 		DebugOut(L"3\n");
 	}
 
-	Game *game = Game::GetInstance();
-	LPScene scene = Game::GetInstance()->GetCurrentScene();
-	Mario *mario = ((PlayScene*)scene)->GetPlayer();
+	
 	if (mario->x > this->position_default_x) {
 		this->nx = 1;
 	}
