@@ -6,6 +6,7 @@
 #include "PlayScene.h"
 #include "Game.h"
 #include "Utils.h"
+#include "Coin.h"
 
 Mario::Mario(float x, float y) : GameObject()
 {
@@ -29,6 +30,7 @@ Mario::Mario(float x, float y) : GameObject()
 	power = 0;
 	//bullet = NULL;
 	koopaHold = NULL;
+	point = 0;
 }
 
 void Mario::Update(DWORD dt, vector<LPGameObject> *coObjects)
@@ -222,6 +224,14 @@ void Mario::Update(DWORD dt, vector<LPGameObject> *coObjects)
 				else {
 					if (ny != 0) vy = 0;
 				}
+			}else if (dynamic_cast<Coin *>(e->obj))
+			{
+				Coin *coin = dynamic_cast<Coin *>(e->obj);
+				coin->disable = true;
+				point++;
+				if (point >= 100) point = 0;
+				hudPointList.at(0)->SetState(point % 10);
+				hudPointList.at(1)->SetState(point / 10);
 			}
 			else {
 				if (ny != 0) vy = 0;

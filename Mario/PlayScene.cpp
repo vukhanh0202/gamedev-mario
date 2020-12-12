@@ -17,6 +17,8 @@
 #include "FireMario.h"
 #include "Hud.h"
 #include "Portal.h"
+#include "Coin.h"
+#include "Point.h"
 
 
 using namespace std;
@@ -53,6 +55,8 @@ PlayScene::PlayScene(int id, LPCWSTR filePath) :
 #define OBJECT_TYPE_BACKGROUND_MOTION_LOGO_NUMBER	13
 #define OBJECT_TYPE_BACKGROUND_MOTION_LOGO_ARROW	14
 #define OBJECT_TYPE_SWITCH_MAP	15
+#define OBJECT_TYPE_COIN	16
+#define OBJECT_TYPE_HUD_POINT	17
 
 #define HUD_HEIGHT	53
 
@@ -328,6 +332,8 @@ void PlayScene::_ParseSection_OBJECTS(string line)
 			player->SetLevel(MARIO_LEVEL_SWITCH_MAP);
 			player->SetSpeed(0, 0);
 			break;
+		case OBJECT_TYPE_COIN: obj = new Coin(); break;
+		case OBJECT_TYPE_HUD_POINT: obj = new Point(x,y); player->addPoint((Point*)obj); break;
 		default:
 			DebugOut(L"[ERR] Invalid object type: %d\n", object_type);
 			return;
@@ -460,7 +466,9 @@ void PlayScene::Update(DWORD dt)
 		{
 			if (objects[i]->disable == false && objects[i]->y <= 300
 				&& objects[i]->GetTypeObject() != OBJECT_TYPE_BACKGROUND
-				&& objects[i]->GetTypeObject() != OBJECT_TYPE_HUD)
+				&& objects[i]->GetTypeObject() != OBJECT_TYPE_HUD
+				&& objects[i]->GetTypeObject() != OBJECT_TYPE_HUD_POINT
+				)
 			{
 				coObjects.push_back(objects[i]);
 			}
@@ -473,6 +481,10 @@ void PlayScene::Update(DWORD dt)
 				LPGameObject obj = objects[i];
 				if (dynamic_cast<FireMario *>(objects[i])) {
 					FireMario::count--;
+					objects.erase(objects.begin() + i);
+					delete obj;
+				}
+				else if (dynamic_cast<Coin *>(objects[i])) {
 					objects.erase(objects.begin() + i);
 					delete obj;
 				}
@@ -692,8 +704,9 @@ void PlaySceneKeyHandler::KeyState(BYTE *states)
 	}
 	if (game->IsKeyDown(DIK_A))
 	{
-		if (mario->GetFly() == false)
+		if (mario->GetFly() == false) {
 			mario->SetFastSpeed(true);
+		}
 	}
 	if (game->IsKeyDown(DIK_SPACE) && mario->GetReadyFly() && !mario->GetFall())
 	{

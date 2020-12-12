@@ -3,11 +3,12 @@
 #include "FireMario.h"
 #include "Koopa.h"
 #include "Hud.h"
+#include "Point.h"
 
 #define MARIO_WALKING_SPEED		0.1f 
 #define MARIO_WALKING_SPEED_FAST		0.15f 
 
-#define MARIO_JUMP_SPEED_Y		0.5f
+#define MARIO_JUMP_SPEED_Y		0.45f
 #define MARIO_JUMP_DEFLECT_SPEED 0.2f
 #define MARIO_GRAVITY			0.002f
 #define MARIO_FLY				0.00005f
@@ -141,6 +142,7 @@ class Mario : public GameObject
 	int untouchable;
 	int ny; // Determine sit or not
 	int power; // Determine Mario ready for fly (power = 5 mario can fly)
+	int point; // point when mario earn gold
 
 	boolean hold; // Hold koopa
 	boolean hit;
@@ -165,6 +167,8 @@ class Mario : public GameObject
 
 
 	vector<HudSpeed*> hudSpeedList;
+
+	vector<Point*> hudPointList;
 
 public:
 	/*Mario() : GameObject()
@@ -195,6 +199,7 @@ public:
 	void SetLevel(int l) { level = l; unableReadyFly(); }
 	void StartUntouchable() { untouchable = 1; untouchable_start = GetTickCount(); }
 	void addHudSpeed(HudSpeed* hudSpeed) { this->hudSpeedList.push_back(hudSpeed); }
+	void addPoint(Point* point) { this->hudPointList.push_back(point); }
 	void unableReadyFly();
 	int GetTypeObject() {
 		return OBJECT_TYPE_MARIO;

@@ -1,19 +1,6 @@
-﻿  PlayScene.cpp
+﻿  Hud.cpp
   c:\program files (x86)\microsoft directx sdk (june 2010)\include\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
 d:\uit\semester-1-2021\game\mario\mario\mario\game.h(11): warning C4005: 'DIRECTINPUT_VERSION': macro redefinition
   c:\program files (x86)\microsoft directx sdk (june 2010)\include\dinput.h(42): note: see previous definition of 'DIRECTINPUT_VERSION'
-d:\uit\semester-1-2021\game\mario\mario\mario\playscene.cpp(48): warning C4005: 'OBJECT_TYPE_HUD_SPEED': macro redefinition
-  d:\uit\semester-1-2021\game\mario\mario\mario\hud.h(7): note: see previous definition of 'OBJECT_TYPE_HUD_SPEED'
-d:\uit\semester-1-2021\game\mario\mario\mario\playscene.cpp(121): warning C4018: '<': signed/unsigned mismatch
-d:\uit\semester-1-2021\game\mario\mario\mario\playscene.cpp(143): warning C4018: '<': signed/unsigned mismatch
-d:\uit\semester-1-2021\game\mario\mario\mario\playscene.cpp(196): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-d:\uit\semester-1-2021\game\mario\mario\mario\playscene.cpp(201): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-d:\uit\semester-1-2021\game\mario\mario\mario\playscene.cpp(209): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-d:\uit\semester-1-2021\game\mario\mario\mario\playscene.cpp(214): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-d:\uit\semester-1-2021\game\mario\mario\mario\playscene.cpp(288): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-d:\uit\semester-1-2021\game\mario\mario\mario\playscene.cpp(326): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-d:\uit\semester-1-2021\game\mario\mario\mario\playscene.cpp(515): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-d:\uit\semester-1-2021\game\mario\mario\mario\playscene.cpp(516): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-d:\uit\semester-1-2021\game\mario\mario\mario\playscene.cpp(522): warning C4018: '<': signed/unsigned mismatch
-d:\uit\semester-1-2021\game\mario\mario\mario\playscene.cpp(534): warning C4018: '<': signed/unsigned mismatch
+d:\uit\semester-1-2021\game\mario\mario\mario\hud.cpp(10): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
   Mario.vcxproj -> D:\UIT\Semester-1-2021\Game\Mario\Mario\Debug\Mario.exe
