@@ -1,7 +1,7 @@
 ﻿  FireMario.cpp
-d:\uit\semester-1-2021\game\mario\mario\mario\firemario.cpp(15): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-d:\uit\semester-1-2021\game\mario\mario\mario\firemario.cpp(20): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-d:\uit\semester-1-2021\game\mario\mario\mario\firemario.cpp(21): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+d:\uit\semester-1-2021\game\mario\mario\mario\firemario.cpp(17): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
 d:\uit\semester-1-2021\game\mario\mario\mario\firemario.cpp(22): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
 d:\uit\semester-1-2021\game\mario\mario\mario\firemario.cpp(23): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+d:\uit\semester-1-2021\game\mario\mario\mario\firemario.cpp(24): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+d:\uit\semester-1-2021\game\mario\mario\mario\firemario.cpp(25): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
   Mario.vcxproj -> D:\UIT\Semester-1-2021\Game\Mario\Mario\Debug\Mario.exe

@@ -163,7 +163,7 @@ class Mario : public GameObject
 	boolean isCollision; // Check object is collision?
 
 	//FireMario *bullet;
-	Koopa *koopaHold;
+	GameObject *koopaHold;
 
 
 	vector<HudSpeed*> hudSpeedList;

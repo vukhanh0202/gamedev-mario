@@ -103,7 +103,9 @@ void Goomba::SetState(int state)
 		vy = 0;
 		break;
 	case GOOMBA_STATE_WALKING:
-		vx = GOOMBA_WALKING_SPEED;
+		vx = -GOOMBA_WALKING_SPEED;
+		vy = 0;
+		break;
 	case GOOMBA_STATE_DIE_DISAPPER:
 		vy = -GOOMBA_DIE_DEFLECT_SPEED;
 		if (nx > 0) {
@@ -117,6 +119,8 @@ void Goomba::SetState(int state)
 }
 Goomba::Goomba()
 {
+	nx = -1;
 	SetState(GOOMBA_STATE_WALKING);
 	timeDie = 0;
 }
+

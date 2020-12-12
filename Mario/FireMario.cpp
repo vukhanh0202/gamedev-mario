@@ -4,6 +4,8 @@
 #include "Koopa.h"
 #include "Goomba.h"
 #include "VenusFire.h"
+#include "ParaGoomba.h"
+#include "ParaKoopa.h"
 
 void FireMario::Render()
 {
@@ -91,6 +93,32 @@ void FireMario::Update(DWORD dt, vector<LPGameObject> *coObjects)
 				venusFire->disable = true;
 				this->disable = true;
 			}
+			else if (dynamic_cast<ParaGoomba *>(e->obj)) {
+				ParaGoomba *paraGoomba = dynamic_cast<ParaGoomba *>(e->obj);
+				if (paraGoomba->state != PARA_GOOMBA_STATE_DIE) {
+					if (this->nx > 0) {
+						paraGoomba->nx = 1;
+					}
+					else {
+						paraGoomba->nx = -1;
+					}
+					paraGoomba->state = PARA_GOOMBA_STATE_DIE_DISAPPER;
+				}
+				this->disable = true;
+			}
+			else if (dynamic_cast<ParaKoopa *>(e->obj)) {
+				ParaKoopa *paraKoopa = dynamic_cast<ParaKoopa *>(e->obj);
+				if (paraKoopa->state != PARA_GOOMBA_STATE_DIE) {
+					if (this->nx > 0) {
+						paraKoopa->nx = 1;
+					}
+					else {
+						paraKoopa->nx = -1;
+					}
+					paraKoopa->state = PARA_KOOPA_STATE_DIE_DISAPPER;
+				}
+				this->disable = true;
+			}
 			else// if (nx != 0)
 			{
 				disable = true;
@@ -100,8 +128,6 @@ void FireMario::Update(DWORD dt, vector<LPGameObject> *coObjects)
 	}
 	// clean up collision events
 	for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];
-	//}
-
 }
 void FireMario::SetState(int state)
 {

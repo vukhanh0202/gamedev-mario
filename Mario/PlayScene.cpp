@@ -21,6 +21,8 @@
 #include "Point.h"
 #include "VenusFire.h"
 #include "FireEnemy.h"
+#include "ParaGoomba.h"
+#include "ParaKoopa.h"
 
 
 using namespace std;
@@ -60,6 +62,9 @@ PlayScene::PlayScene(int id, LPCWSTR filePath) :
 #define OBJECT_TYPE_COIN	16
 #define OBJECT_TYPE_HUD_POINT	17
 #define OBJECT_TYPE_VENUS_FIRE	18
+#define OBJECT_TYPE_FIRE_ENEMY	19
+#define OBJECT_TYPE_PARA_GOOMBA	20
+#define OBJECT_TYPE_PARA_KOOPA	21
 
 #define HUD_HEIGHT	53
 
@@ -336,8 +341,10 @@ void PlayScene::_ParseSection_OBJECTS(string line)
 			player->SetSpeed(0, 0);
 			break;
 		case OBJECT_TYPE_COIN: obj = new Coin(); break;
-		case OBJECT_TYPE_HUD_POINT: obj = new Point(x,y); player->addPoint((Point*)obj); break;
+		case OBJECT_TYPE_HUD_POINT: obj = new Point(x, y); player->addPoint((Point*)obj); break;
 		case OBJECT_TYPE_VENUS_FIRE: obj = new VenusFire(x, y); break;
+		case OBJECT_TYPE_PARA_GOOMBA: obj = new ParaGoomba(); break;
+		case OBJECT_TYPE_PARA_KOOPA: obj = new ParaKoopa(); break;
 		default:
 			DebugOut(L"[ERR] Invalid object type: %d\n", object_type);
 			return;
@@ -410,6 +417,7 @@ void PlayScene::Update(DWORD dt)
 	// We know that Mario is the last object in the list hence we won't add him into the colliable object list
 	// TO-DO: This is a "dirty" way, need a more organized way 
 
+	Game *game = Game::GetInstance();
 
 	// skip the rest if scene was already unloaded (Mario::Update might trigger PlayScene::Unload)
 	if (player == NULL || player->GetLevel() == MARIO_LEVEL_SWITCH_MAP) {
@@ -476,15 +484,25 @@ void PlayScene::Update(DWORD dt)
 					delete obj;
 				}
 			}
-			else
+			else if (objects[i]->x >= player->x - game->GetScreenWidth() && 
+				objects[i]->x <= player->x + game->GetScreenWidth() &&
+				objects[i]->y >= player->y - game->GetScreenHeight() && 
+				objects[i]->y <= player->y + game->GetScreenHeight()) 
+			{
 				objects[i]->Update(dt, &coObjects);
+			}
+			else if (objects[i]->GetTypeObject() == OBJECT_TYPE_HUD_SPEED
+				|| objects[i]->GetTypeObject() == OBJECT_TYPE_HUD_BACKGROUND
+				|| objects[i]->GetTypeObject() == OBJECT_TYPE_HUD
+				|| objects[i]->GetTypeObject() == OBJECT_TYPE_HUD_POINT) {
+				objects[i]->Update(dt, &coObjects);
+			}
 		}
 
 		// Update camera to follow mario
 		double cx, cy;
 		player->GetPosition(cx, cy);
 
-		Game *game = Game::GetInstance();
 		cx -= game->GetScreenWidth() / 2;
 		cy -= game->GetScreenHeight() / 2;
 

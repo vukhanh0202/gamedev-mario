@@ -8,6 +8,8 @@
 #include "Utils.h"
 #include "Coin.h"
 #include "FireEnemy.h"
+#include "ParaGoomba.h"
+#include "ParaKoopa.h"
 
 Mario::Mario(float x, float y) : GameObject()
 {
@@ -290,6 +292,30 @@ void Mario::Update(DWORD dt, vector<LPGameObject> *coObjects)
 					}
 					koopa->state = KOOPA_STATE_DIE_DISAPPER;
 				}
+				else if (dynamic_cast<ParaGoomba *>(e->obj)) // if e->obj is ParaGoomba 
+				{
+					ParaGoomba *paraGoomba = dynamic_cast<ParaGoomba *>(e->obj);
+
+					if (this->nx > 0) {
+						paraGoomba->nx = 1;
+					}
+					else {
+						paraGoomba->nx = -1;
+					}
+					paraGoomba->state = PARA_GOOMBA_STATE_DIE_DISAPPER;
+				}
+				else if (dynamic_cast<ParaKoopa *>(e->obj)) // if e->obj is ParaKoopa 
+				{
+					ParaKoopa *paraKoopa = dynamic_cast<ParaKoopa *>(e->obj);
+
+					if (this->nx > 0) {
+						paraKoopa->nx = 1;
+					}
+					else {
+						paraKoopa->nx = -1;
+					}
+					paraKoopa->state = PARA_KOOPA_STATE_DIE_DISAPPER;
+				}
 			}
 			else
 			{
@@ -422,6 +448,132 @@ void Mario::Update(DWORD dt, vector<LPGameObject> *coObjects)
 						}
 						else
 							SetState(MARIO_STATE_DIE);
+					}
+				}
+				else if (dynamic_cast<ParaGoomba *>(e->obj)) // if e->obj is ParaGoomba 
+				{
+					ParaGoomba *paraGoomba = dynamic_cast<ParaGoomba *>(e->obj);
+
+					// jump on top >> kill Goomba and deflect a bit 
+					if (e->ny < 0)
+					{
+
+						if (paraGoomba->GetState() == PARA_GOOMBA_STATE_WALKING_WING)
+						{
+							paraGoomba->SetState(PARA_GOOMBA_STATE_WALKING);
+							vy = -MARIO_JUMP_DEFLECT_SPEED;
+						}
+						else if (paraGoomba->GetState() == PARA_GOOMBA_STATE_WALKING)
+						{
+							paraGoomba->SetState(PARA_GOOMBA_STATE_DIE);
+							paraGoomba->setTimeDie(GetTickCount());
+							vy = -MARIO_JUMP_DEFLECT_SPEED;
+						}
+					}
+					else if (e->nx != 0)
+					{
+						if (untouchable == 0)
+						{
+							if (paraGoomba->GetState() != PARA_GOOMBA_STATE_DIE)
+							{
+								if (level > MARIO_LEVEL_SMALL)
+								{
+									level--;
+									unableReadyFly();
+									StartUntouchable();
+								}
+								else
+									SetState(MARIO_STATE_DIE);
+							}
+						}
+					}
+				}
+				else if (dynamic_cast<ParaKoopa *>(e->obj)) // if e->obj is ParaKoopa 
+				{
+					ParaKoopa *paraKoopa = dynamic_cast<ParaKoopa *>(e->obj);
+
+					if (paraKoopa->state != PARA_KOOPA_STATE_DIE_DISAPPER)
+					{
+						// jump on top >> kill Koopa
+						if (e->ny < 0)
+						{
+							if (paraKoopa->GetState() == PARA_KOOPA_STATE_WALKING_WING)
+							{
+								paraKoopa->SetState(PARA_KOOPA_STATE_WALKING);
+								vy = -MARIO_JUMP_DEFLECT_SPEED;
+							}
+							else if (paraKoopa->GetState() == PARA_KOOPA_STATE_WALKING)
+							{
+								paraKoopa->SetState(PARA_KOOPA_STATE_DIE);
+								vy = -MARIO_JUMP_DEFLECT_SPEED;
+							}
+						}
+						else if (e->nx > 0) // collision right to left
+						{
+							// Koopa die
+							if (paraKoopa->GetState() == PARA_KOOPA_STATE_DIE)
+							{
+								// Hold koopa
+								if (this->hold == hold)
+								{
+									paraKoopa->SetState(PARA_KOOPA_STATE_HOLDING);
+									this->koopaHold = paraKoopa;
+								}
+								else
+								{
+									// Hit Koopa
+									//this->SetState(MARIO_STATE_HIT);
+									paraKoopa->SetState(PARA_KOOPA_STATE_THROWING_LEFT);
+								}
+							}
+							else
+							{
+								// koopa live
+								if (untouchable == 0)
+								{
+									if (level > MARIO_LEVEL_SMALL)
+									{
+										level--;
+										unableReadyFly();
+										StartUntouchable();
+									}
+									else
+										SetState(MARIO_STATE_DIE);
+								}
+							}
+						}
+						else if (e->nx < 0) // collision left->right
+						{
+							if (paraKoopa->GetState() == PARA_KOOPA_STATE_DIE)
+							{
+								// Hold koopa
+								if (this->hold == true)
+								{
+									paraKoopa->SetState(PARA_KOOPA_STATE_HOLDING);
+									this->koopaHold = paraKoopa;
+								}
+								else
+								{
+									//this->SetState(MARIO_STATE_HIT);
+									paraKoopa->SetState(PARA_KOOPA_STATE_THROWING_RIGHT);
+								}
+
+							}
+							else
+							{
+								if (untouchable == 0)
+								{
+									if (level > MARIO_LEVEL_SMALL)
+									{
+										level--;
+										unableReadyFly();
+										StartUntouchable();
+									}
+									else
+										SetState(MARIO_STATE_DIE);
+								}
+							}
+						}
 					}
 				}
 			}

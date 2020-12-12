@@ -6,6 +6,8 @@
 #include "PlayScene.h"
 #include "Game.h"
 #include "Goomba.h"
+#include "ParaGoomba.h"
+#include "ParaKoopa.h"
 
 
 
@@ -113,16 +115,31 @@ void Koopa::Update(DWORD dt, vector<LPGameObject> *coObjects)
 					vx = -vx;
 				}*/
 			}
+			else if (dynamic_cast<ParaKoopa *>(e->obj) && (this->state == KOOPA_STATE_THROWING_LEFT || this->state == KOOPA_STATE_THROWING_RIGHT)) {
+				ParaKoopa *paraKoopa = dynamic_cast<ParaKoopa *>(e->obj);
+				if (paraKoopa->state == PARA_KOOPA_STATE_WALKING || paraKoopa->state == PARA_KOOPA_STATE_WALKING_WING) {
+					if (this->nx > 0) {
+						paraKoopa->nx = 1;
+					}
+					else {
+						paraKoopa->nx = -1;
+					}
+					paraKoopa->state = PARA_KOOPA_STATE_DIE_DISAPPER;
+				}
+				/*else {
+					vx = -vx;
+				}*/
+			}
 			else if (dynamic_cast<Goomba *>(e->obj) && (this->state == KOOPA_STATE_THROWING_LEFT || this->state == KOOPA_STATE_THROWING_RIGHT)) {
 				Goomba *goomba = dynamic_cast<Goomba *>(e->obj);
 				if (goomba->state == GOOMBA_STATE_WALKING) {
-					/*if (this->nx > 0) {
-						goomba->nx = 1;
-					}
-					else {
-						goomba->nx = -1;
-					}*/
 					goomba->state = GOOMBA_STATE_DIE_DISAPPER;
+				}
+			}
+			else if (dynamic_cast<ParaGoomba *>(e->obj) && (this->state == KOOPA_STATE_THROWING_LEFT || this->state == KOOPA_STATE_THROWING_RIGHT)) {
+				ParaGoomba *paraGoomba = dynamic_cast<ParaGoomba *>(e->obj);
+				if (paraGoomba->state != PARA_GOOMBA_STATE_DIE) {
+					paraGoomba->state = PARA_GOOMBA_STATE_DIE_DISAPPER;
 				}
 			}
 			else if (nx != 0)
@@ -178,7 +195,8 @@ void Koopa::SetState(int state)
 		nx = 1;
 		break;
 	case KOOPA_STATE_WALKING:
-		vx = KOOPA_WALKING_SPEED;
+		vx = -KOOPA_WALKING_SPEED;
+		vy = 0;
 		break;
 	case KOOPA_STATE_HOLDING:
 		vx = 0;
@@ -197,6 +215,8 @@ void Koopa::SetState(int state)
 }
 Koopa::Koopa()
 {
+	nx = -1;
 	SetState(KOOPA_STATE_WALKING);
 	vy = KOOPA_GRAVITY;
+
 }
