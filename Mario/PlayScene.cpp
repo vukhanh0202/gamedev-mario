@@ -19,6 +19,7 @@
 #include "Portal.h"
 #include "Coin.h"
 #include "Point.h"
+#include "VenusFire.h"
 
 
 using namespace std;
@@ -57,6 +58,7 @@ PlayScene::PlayScene(int id, LPCWSTR filePath) :
 #define OBJECT_TYPE_SWITCH_MAP	15
 #define OBJECT_TYPE_COIN	16
 #define OBJECT_TYPE_HUD_POINT	17
+#define OBJECT_TYPE_VENUS_FIRE	18
 
 #define HUD_HEIGHT	53
 
@@ -334,6 +336,7 @@ void PlayScene::_ParseSection_OBJECTS(string line)
 			break;
 		case OBJECT_TYPE_COIN: obj = new Coin(); break;
 		case OBJECT_TYPE_HUD_POINT: obj = new Point(x,y); player->addPoint((Point*)obj); break;
+		case OBJECT_TYPE_VENUS_FIRE: obj = new VenusFire(x, y); break;
 		default:
 			DebugOut(L"[ERR] Invalid object type: %d\n", object_type);
 			return;

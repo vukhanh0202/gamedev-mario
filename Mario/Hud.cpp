@@ -32,15 +32,15 @@ void Hud::Update(DWORD dt, vector<LPGameObject> *coObjects)
 		x = mario->x - (game->GetScreenWidth() / 2) + position_default_x;
 	}
 
-	if ((mario->y < game->GetScreenHeight() / 4 && mario->GetFly())
-		|| (mario->y <= game->GetScreenHeight() / 4 && mario->GetFall())
+	if ((mario->y < -game->GetScreenHeight() / 4 && mario->GetFly())
+		|| (mario->y <= -game->GetScreenHeight() / 4 && mario->GetFall())
 		|| (mario->y <= -game->GetScreenHeight() / 4)) {
-		if (y < 0) {
+		//if (y < 40) {
 			y = position_default_y - game->GetScreenHeight()*1.055;
-		}
-		else {
-			y = mario->y + (game->GetScreenHeight() / 2);
-		}
+		//}
+		//else {
+			//y = mario->y + (game->GetScreenHeight() / 2);
+		//}
 
 	}
 	if (mario->y > 0) {

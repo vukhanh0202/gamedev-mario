@@ -12,6 +12,8 @@
 70	textures\enemies-rolate.png	3	26	110
 80	textures\hud.png	255	0	255
 90	textures\blackBackground.png	10	10	10
+100	textures\enemies-3.png	255	255	255
+110	textures\enemies-3-rolate.png	255	255	255
 
 # id	left	top	right	bottom	texture_id
 [SPRITES]
@@ -344,6 +346,29 @@
 1200010	123	32	131	39	80
 
 
+#Venus fire
+#Venus Red
+#LEFT
+1300001	150	126	166	158	100
+1300002	167	126	183	158	100
+1300003	184	126	200	158	100
+1300004	201	126	217	158	100
+#Right
+1300005	256	126	272	158	110
+1300006	273	126	289	158	110
+1300007	222	126	238	158	110
+1300008	239	126	255	158	110
+#Left-Low
+1300009	150	126	166	158	100
+#Left-High
+1300010	184	126	200	158	100
+#Right-Low
+1300011	273	126	289	158	110
+#Right-High
+1300012	239	126	255	158	110
+
+
+
 # ani_id	sprite1_id	time1	sprite2_id	time2	...
 [ANIMATIONS]
 
@@ -642,12 +667,24 @@
 120009	1200009	100
 120010	1200010	100
 
+#venus fire
+130001	1300001	200	1300002	200
+130002	1300003	200	1300004	200
+130003	1300005	200	1300006	200
+130004	1300007	200	1300008	200
+130005	1300001	100
+130006	1300003	100
+130007	1300006	100
+130008	1300008	100
+
+
 #
 # id	ani1	ani2	ani3
 #
 [ANIMATION_SETS]
 # MARIO
 1	400	401	402	403	404	405	500	501	502	503	504	505	601	602	603	604	599	701	702	703	704	705	706	801	802	803	804	805	806	901	902	903	904	905	906	911	912	913	914	915	916	917	918	919	920	921	922	923	924	925	926	927	928	929	930	931	932	933	934
+
 # BRICK 
 2	61
 # QUESTION MARK BRICK 
@@ -774,11 +811,14 @@
 #hud point
 12001	120001	120002	120003	120004	120005	120006	120007	120008	120009	120010
 
+#Venus fire
+13001	130001	130002	130003	130004	130005	130006	130007	130008
+
 
 [OBJECTS]
 # type	x	y	ani_set_id	extra_settings per object type
 # type: 0 = Ground , 1 = Brick, 2 = Goomba, 3 = Koopa,4= Mario Fire, 5 = Box 
-#	7 = hudBackground, 8=hudSpeed, 16 = coin, 17 = hud point
+#	7 = hudBackground, 8=hudSpeed, 16 = coin, 17 = hud point, 18 = venus
 # type: -1 = Background, -2 = Mario
 
 
@@ -1061,6 +1101,8 @@
 1	2329	90	121
 1	2344	90	121
 
+#Venus
+18	357	145	13001
 #Ống cống dọc
 #-- Ống 1
 1	350	171	93
@@ -1702,7 +1744,7 @@
 16	1845	-115	11001
 
 # MARIO
--2	1350.0	-200	1
+-2	400.0	100	1
 
 # HUD need init after init MARIO
 #background-black-hud
