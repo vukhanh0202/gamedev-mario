@@ -12,6 +12,7 @@
 #include "ParaKoopa.h"
 #include "VenusFire.h"
 #include "Pihanra.h"
+#include "Bonus.h"
 
 Mario::Mario(float x, float y) : GameObject()
 {
@@ -262,8 +263,27 @@ void Mario::Update(DWORD dt, vector<LPGameObject> *coObjects)
 				hudPointList.at(0)->SetState(point % 10);
 				hudPointList.at(1)->SetState(point / 10);
 			}
+			else if (dynamic_cast<Bonus *>(e->obj))
+			{
+				Bonus *bonus = dynamic_cast<Bonus *>(e->obj);
+				bonus->disable = true;
+
+				if (level < MARIO_LEVEL_SUPER_BIG) {
+					y -= MARIO_SMALL_BBOX_HEIGHT;
+					level++;
+					unableReadyFly();
+				}
+				
+			}
 			else {
-				if (ny != 0) vy = 0;
+				if (ny != 0) {
+					vy = 0;
+					if (dynamic_cast<BrickQuestion *>(e->obj) && nx == 0 && ny > 0)
+					{
+						BrickQuestion *brickQuestionCoin = dynamic_cast<BrickQuestion *>(e->obj);
+						brickQuestionCoin->SetState(BRICK_STATE_EMPTY);
+					}
+				}
 			}
 			// Handle mario attack monster
 			if (attack == true)

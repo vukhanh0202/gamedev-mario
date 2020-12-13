@@ -1,7 +1,6 @@
 #include "Goomba.h"
 
 
-
 void Goomba::GetBoundingBox(float &left, float &top, float &right, float &bottom)
 {
 	if (state == GOOMBA_STATE_DIE_DISAPPER) {

@@ -1,42 +1,164 @@
-﻿  Mario.cpp
+﻿  Background.cpp
   c:\program files (x86)\microsoft directx sdk (june 2010)\include\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
 d:\uit\semester-1-2021\game\mario\mario\mario\game.h(11): warning C4005: 'DIRECTINPUT_VERSION': macro redefinition
   c:\program files (x86)\microsoft directx sdk (june 2010)\include\dinput.h(42): note: see previous definition of 'DIRECTINPUT_VERSION'
-d:\uit\semester-1-2021\game\mario\mario\mario\mario.cpp(57): warning C4805: '==': unsafe mix of type 'boolean' and type 'bool' in operation
-d:\uit\semester-1-2021\game\mario\mario\mario\mario.cpp(72): warning C4018: '<': signed/unsigned mismatch
-d:\uit\semester-1-2021\game\mario\mario\mario\mario.cpp(82): warning C4805: '==': unsafe mix of type 'boolean' and type 'bool' in operation
-d:\uit\semester-1-2021\game\mario\mario\mario\mario.cpp(86): warning C4805: '==': unsafe mix of type 'boolean' and type 'bool' in operation
-d:\uit\semester-1-2021\game\mario\mario\mario\mario.cpp(88): warning C4805: '==': unsafe mix of type 'boolean' and type 'bool' in operation
-d:\uit\semester-1-2021\game\mario\mario\mario\mario.cpp(123): warning C4805: '==': unsafe mix of type 'boolean' and type 'bool' in operation
-d:\uit\semester-1-2021\game\mario\mario\mario\mario.cpp(269): warning C4805: '==': unsafe mix of type 'boolean' and type 'bool' in operation
-d:\uit\semester-1-2021\game\mario\mario\mario\mario.cpp(421): warning C4805: '==': unsafe mix of type 'boolean' and type 'bool' in operation
-d:\uit\semester-1-2021\game\mario\mario\mario\mario.cpp(562): warning C4805: '==': unsafe mix of type 'boolean' and type 'bool' in operation
-d:\uit\semester-1-2021\game\mario\mario\mario\mario.cpp(623): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-d:\uit\semester-1-2021\game\mario\mario\mario\mario.cpp(634): warning C4805: '==': unsafe mix of type 'boolean' and type 'bool' in operation
-d:\uit\semester-1-2021\game\mario\mario\mario\mario.cpp(656): warning C4805: '==': unsafe mix of type 'boolean' and type 'bool' in operation
-d:\uit\semester-1-2021\game\mario\mario\mario\mario.cpp(708): warning C4805: '==': unsafe mix of type 'boolean' and type 'bool' in operation
-d:\uit\semester-1-2021\game\mario\mario\mario\mario.cpp(730): warning C4805: '==': unsafe mix of type 'boolean' and type 'bool' in operation
-d:\uit\semester-1-2021\game\mario\mario\mario\mario.cpp(767): warning C4805: '==': unsafe mix of type 'boolean' and type 'bool' in operation
-d:\uit\semester-1-2021\game\mario\mario\mario\mario.cpp(777): warning C4805: '==': unsafe mix of type 'boolean' and type 'bool' in operation
-d:\uit\semester-1-2021\game\mario\mario\mario\mario.cpp(799): warning C4805: '==': unsafe mix of type 'boolean' and type 'bool' in operation
-d:\uit\semester-1-2021\game\mario\mario\mario\mario.cpp(810): warning C4805: '==': unsafe mix of type 'boolean' and type 'bool' in operation
-d:\uit\semester-1-2021\game\mario\mario\mario\mario.cpp(820): warning C4805: '==': unsafe mix of type 'boolean' and type 'bool' in operation
-d:\uit\semester-1-2021\game\mario\mario\mario\mario.cpp(822): warning C4805: '==': unsafe mix of type 'boolean' and type 'bool' in operation
-d:\uit\semester-1-2021\game\mario\mario\mario\mario.cpp(844): warning C4805: '==': unsafe mix of type 'boolean' and type 'bool' in operation
-d:\uit\semester-1-2021\game\mario\mario\mario\mario.cpp(891): warning C4805: '==': unsafe mix of type 'boolean' and type 'bool' in operation
-d:\uit\semester-1-2021\game\mario\mario\mario\mario.cpp(913): warning C4805: '==': unsafe mix of type 'boolean' and type 'bool' in operation
-d:\uit\semester-1-2021\game\mario\mario\mario\mario.cpp(924): warning C4805: '==': unsafe mix of type 'boolean' and type 'bool' in operation
-d:\uit\semester-1-2021\game\mario\mario\mario\mario.cpp(977): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-d:\uit\semester-1-2021\game\mario\mario\mario\mario.cpp(988): warning C4805: '==': unsafe mix of type 'boolean' and type 'bool' in operation
-d:\uit\semester-1-2021\game\mario\mario\mario\mario.cpp(1001): warning C4805: '==': unsafe mix of type 'boolean' and type 'bool' in operation
-d:\uit\semester-1-2021\game\mario\mario\mario\mario.cpp(1023): warning C4805: '==': unsafe mix of type 'boolean' and type 'bool' in operation
-d:\uit\semester-1-2021\game\mario\mario\mario\mario.cpp(1076): warning C4805: '==': unsafe mix of type 'boolean' and type 'bool' in operation
-d:\uit\semester-1-2021\game\mario\mario\mario\mario.cpp(1086): warning C4805: '==': unsafe mix of type 'boolean' and type 'bool' in operation
-d:\uit\semester-1-2021\game\mario\mario\mario\mario.cpp(1105): warning C4805: '==': unsafe mix of type 'boolean' and type 'bool' in operation
-d:\uit\semester-1-2021\game\mario\mario\mario\mario.cpp(1123): warning C4805: '==': unsafe mix of type 'boolean' and type 'bool' in operation
-d:\uit\semester-1-2021\game\mario\mario\mario\mario.cpp(1137): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-d:\uit\semester-1-2021\game\mario\mario\mario\mario.cpp(1138): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-d:\uit\semester-1-2021\game\mario\mario\mario\mario.cpp(1139): warning C4805: '==': unsafe mix of type 'boolean' and type 'bool' in operation
-d:\uit\semester-1-2021\game\mario\mario\mario\mario.cpp(1141): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-d:\uit\semester-1-2021\game\mario\mario\mario\mario.cpp(1144): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+d:\uit\semester-1-2021\game\mario\mario\mario\background.cpp(9): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+d:\uit\semester-1-2021\game\mario\mario\mario\background.cpp(24): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+d:\uit\semester-1-2021\game\mario\mario\mario\background.cpp(47): warning C4805: '==': unsafe mix of type 'boolean' and type 'bool' in operation
+d:\uit\semester-1-2021\game\mario\mario\mario\background.cpp(49): warning C4805: '==': unsafe mix of type 'boolean' and type 'bool' in operation
+  Brick.cpp
+d:\uit\semester-1-2021\game\mario\mario\mario\brick.h(15): warning C4005: 'PARA_GOOMBA_STATE_DIE_DISAPPER': macro redefinition
+  d:\uit\semester-1-2021\game\mario\mario\mario\brick.h(14): note: see previous definition of 'PARA_GOOMBA_STATE_DIE_DISAPPER'
+  c:\program files (x86)\microsoft directx sdk (june 2010)\include\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
+d:\uit\semester-1-2021\game\mario\mario\mario\game.h(11): warning C4005: 'DIRECTINPUT_VERSION': macro redefinition
+  c:\program files (x86)\microsoft directx sdk (june 2010)\include\dinput.h(42): note: see previous definition of 'DIRECTINPUT_VERSION'
+d:\uit\semester-1-2021\game\mario\mario\mario\brick.cpp(9): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+d:\uit\semester-1-2021\game\mario\mario\mario\brick.cpp(14): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+d:\uit\semester-1-2021\game\mario\mario\mario\brick.cpp(15): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+d:\uit\semester-1-2021\game\mario\mario\mario\brick.cpp(16): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+d:\uit\semester-1-2021\game\mario\mario\mario\brick.cpp(17): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+d:\uit\semester-1-2021\game\mario\mario\mario\brick.cpp(27): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+  Game.cpp
+  c:\program files (x86)\microsoft directx sdk (june 2010)\include\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
+d:\uit\semester-1-2021\game\mario\mario\mario\game.h(11): warning C4005: 'DIRECTINPUT_VERSION': macro redefinition
+  c:\program files (x86)\microsoft directx sdk (june 2010)\include\dinput.h(42): note: see previous definition of 'DIRECTINPUT_VERSION'
+d:\uit\semester-1-2021\game\mario\mario\mario\game.cpp(280): warning C4305: '=': truncation from '__int64' to 'float'
+d:\uit\semester-1-2021\game\mario\mario\mario\game.cpp(281): warning C4305: '=': truncation from '__int64' to 'float'
+d:\uit\semester-1-2021\game\mario\mario\mario\game.cpp(291): warning C4305: '=': truncation from '__int64' to 'float'
+d:\uit\semester-1-2021\game\mario\mario\mario\game.cpp(292): warning C4305: '=': truncation from '__int64' to 'float'
+  GameObject.cpp
+  c:\program files (x86)\microsoft directx sdk (june 2010)\include\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
+d:\uit\semester-1-2021\game\mario\mario\mario\game.h(11): warning C4005: 'DIRECTINPUT_VERSION': macro redefinition
+  c:\program files (x86)\microsoft directx sdk (june 2010)\include\dinput.h(42): note: see previous definition of 'DIRECTINPUT_VERSION'
+d:\uit\semester-1-2021\game\mario\mario\mario\gameobject.cpp(54): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+d:\uit\semester-1-2021\game\mario\mario\mario\gameobject.cpp(55): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+d:\uit\semester-1-2021\game\mario\mario\mario\gameobject.cpp(58): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+d:\uit\semester-1-2021\game\mario\mario\mario\gameobject.cpp(59): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+d:\uit\semester-1-2021\game\mario\mario\mario\gameobject.cpp(75): warning C4244: 'argument': conversion from 'double' to 'FLOAT', possible loss of data
+d:\uit\semester-1-2021\game\mario\mario\mario\gameobject.cpp(88): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+  Hud.cpp
+  c:\program files (x86)\microsoft directx sdk (june 2010)\include\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
+d:\uit\semester-1-2021\game\mario\mario\mario\game.h(11): warning C4005: 'DIRECTINPUT_VERSION': macro redefinition
+  c:\program files (x86)\microsoft directx sdk (june 2010)\include\dinput.h(42): note: see previous definition of 'DIRECTINPUT_VERSION'
+d:\uit\semester-1-2021\game\mario\mario\mario\hud.cpp(10): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+  Koopa.cpp
+d:\uit\semester-1-2021\game\mario\mario\mario\brick.h(15): warning C4005: 'PARA_GOOMBA_STATE_DIE_DISAPPER': macro redefinition
+  d:\uit\semester-1-2021\game\mario\mario\mario\brick.h(14): note: see previous definition of 'PARA_GOOMBA_STATE_DIE_DISAPPER'
+  c:\program files (x86)\microsoft directx sdk (june 2010)\include\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
+d:\uit\semester-1-2021\game\mario\mario\mario\game.h(11): warning C4005: 'DIRECTINPUT_VERSION': macro redefinition
+  c:\program files (x86)\microsoft directx sdk (june 2010)\include\dinput.h(42): note: see previous definition of 'DIRECTINPUT_VERSION'
+d:\uit\semester-1-2021\game\mario\mario\mario\paragoomba.h(17): warning C4005: 'PARA_GOOMBA_STATE_DIE_DISAPPER': macro redefinition
+  d:\uit\semester-1-2021\game\mario\mario\mario\brick.h(15): note: see previous definition of 'PARA_GOOMBA_STATE_DIE_DISAPPER'
+d:\uit\semester-1-2021\game\mario\mario\mario\koopa.cpp(20): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+d:\uit\semester-1-2021\game\mario\mario\mario\koopa.cpp(21): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+d:\uit\semester-1-2021\game\mario\mario\mario\koopa.cpp(22): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+d:\uit\semester-1-2021\game\mario\mario\mario\koopa.cpp(25): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+d:\uit\semester-1-2021\game\mario\mario\mario\koopa.cpp(27): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+d:\uit\semester-1-2021\game\mario\mario\mario\koopa.cpp(178): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+  Mario.cpp
+d:\uit\semester-1-2021\game\mario\mario\mario\brick.h(15): warning C4005: 'PARA_GOOMBA_STATE_DIE_DISAPPER': macro redefinition
+  d:\uit\semester-1-2021\game\mario\mario\mario\brick.h(14): note: see previous definition of 'PARA_GOOMBA_STATE_DIE_DISAPPER'
+  c:\program files (x86)\microsoft directx sdk (june 2010)\include\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
+d:\uit\semester-1-2021\game\mario\mario\mario\game.h(11): warning C4005: 'DIRECTINPUT_VERSION': macro redefinition
+  c:\program files (x86)\microsoft directx sdk (june 2010)\include\dinput.h(42): note: see previous definition of 'DIRECTINPUT_VERSION'
+d:\uit\semester-1-2021\game\mario\mario\mario\paragoomba.h(17): warning C4005: 'PARA_GOOMBA_STATE_DIE_DISAPPER': macro redefinition
+  d:\uit\semester-1-2021\game\mario\mario\mario\brick.h(15): note: see previous definition of 'PARA_GOOMBA_STATE_DIE_DISAPPER'
+d:\uit\semester-1-2021\game\mario\mario\mario\mario.cpp(58): warning C4805: '==': unsafe mix of type 'boolean' and type 'bool' in operation
+d:\uit\semester-1-2021\game\mario\mario\mario\mario.cpp(73): warning C4018: '<': signed/unsigned mismatch
+d:\uit\semester-1-2021\game\mario\mario\mario\mario.cpp(83): warning C4805: '==': unsafe mix of type 'boolean' and type 'bool' in operation
+d:\uit\semester-1-2021\game\mario\mario\mario\mario.cpp(87): warning C4805: '==': unsafe mix of type 'boolean' and type 'bool' in operation
+d:\uit\semester-1-2021\game\mario\mario\mario\mario.cpp(89): warning C4805: '==': unsafe mix of type 'boolean' and type 'bool' in operation
+d:\uit\semester-1-2021\game\mario\mario\mario\mario.cpp(124): warning C4805: '==': unsafe mix of type 'boolean' and type 'bool' in operation
+d:\uit\semester-1-2021\game\mario\mario\mario\mario.cpp(289): warning C4805: '==': unsafe mix of type 'boolean' and type 'bool' in operation
+d:\uit\semester-1-2021\game\mario\mario\mario\mario.cpp(441): warning C4805: '==': unsafe mix of type 'boolean' and type 'bool' in operation
+d:\uit\semester-1-2021\game\mario\mario\mario\mario.cpp(582): warning C4805: '==': unsafe mix of type 'boolean' and type 'bool' in operation
+d:\uit\semester-1-2021\game\mario\mario\mario\mario.cpp(662): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+d:\uit\semester-1-2021\game\mario\mario\mario\mario.cpp(673): warning C4805: '==': unsafe mix of type 'boolean' and type 'bool' in operation
+d:\uit\semester-1-2021\game\mario\mario\mario\mario.cpp(695): warning C4805: '==': unsafe mix of type 'boolean' and type 'bool' in operation
+d:\uit\semester-1-2021\game\mario\mario\mario\mario.cpp(747): warning C4805: '==': unsafe mix of type 'boolean' and type 'bool' in operation
+d:\uit\semester-1-2021\game\mario\mario\mario\mario.cpp(769): warning C4805: '==': unsafe mix of type 'boolean' and type 'bool' in operation
+d:\uit\semester-1-2021\game\mario\mario\mario\mario.cpp(806): warning C4805: '==': unsafe mix of type 'boolean' and type 'bool' in operation
+d:\uit\semester-1-2021\game\mario\mario\mario\mario.cpp(816): warning C4805: '==': unsafe mix of type 'boolean' and type 'bool' in operation
+d:\uit\semester-1-2021\game\mario\mario\mario\mario.cpp(838): warning C4805: '==': unsafe mix of type 'boolean' and type 'bool' in operation
+d:\uit\semester-1-2021\game\mario\mario\mario\mario.cpp(849): warning C4805: '==': unsafe mix of type 'boolean' and type 'bool' in operation
+d:\uit\semester-1-2021\game\mario\mario\mario\mario.cpp(859): warning C4805: '==': unsafe mix of type 'boolean' and type 'bool' in operation
+d:\uit\semester-1-2021\game\mario\mario\mario\mario.cpp(861): warning C4805: '==': unsafe mix of type 'boolean' and type 'bool' in operation
+d:\uit\semester-1-2021\game\mario\mario\mario\mario.cpp(883): warning C4805: '==': unsafe mix of type 'boolean' and type 'bool' in operation
+d:\uit\semester-1-2021\game\mario\mario\mario\mario.cpp(930): warning C4805: '==': unsafe mix of type 'boolean' and type 'bool' in operation
+d:\uit\semester-1-2021\game\mario\mario\mario\mario.cpp(952): warning C4805: '==': unsafe mix of type 'boolean' and type 'bool' in operation
+d:\uit\semester-1-2021\game\mario\mario\mario\mario.cpp(963): warning C4805: '==': unsafe mix of type 'boolean' and type 'bool' in operation
+d:\uit\semester-1-2021\game\mario\mario\mario\mario.cpp(1016): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+d:\uit\semester-1-2021\game\mario\mario\mario\mario.cpp(1027): warning C4805: '==': unsafe mix of type 'boolean' and type 'bool' in operation
+d:\uit\semester-1-2021\game\mario\mario\mario\mario.cpp(1040): warning C4805: '==': unsafe mix of type 'boolean' and type 'bool' in operation
+d:\uit\semester-1-2021\game\mario\mario\mario\mario.cpp(1062): warning C4805: '==': unsafe mix of type 'boolean' and type 'bool' in operation
+d:\uit\semester-1-2021\game\mario\mario\mario\mario.cpp(1115): warning C4805: '==': unsafe mix of type 'boolean' and type 'bool' in operation
+d:\uit\semester-1-2021\game\mario\mario\mario\mario.cpp(1125): warning C4805: '==': unsafe mix of type 'boolean' and type 'bool' in operation
+d:\uit\semester-1-2021\game\mario\mario\mario\mario.cpp(1144): warning C4805: '==': unsafe mix of type 'boolean' and type 'bool' in operation
+d:\uit\semester-1-2021\game\mario\mario\mario\mario.cpp(1162): warning C4805: '==': unsafe mix of type 'boolean' and type 'bool' in operation
+d:\uit\semester-1-2021\game\mario\mario\mario\mario.cpp(1176): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+d:\uit\semester-1-2021\game\mario\mario\mario\mario.cpp(1177): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+d:\uit\semester-1-2021\game\mario\mario\mario\mario.cpp(1178): warning C4805: '==': unsafe mix of type 'boolean' and type 'bool' in operation
+d:\uit\semester-1-2021\game\mario\mario\mario\mario.cpp(1180): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+d:\uit\semester-1-2021\game\mario\mario\mario\mario.cpp(1183): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+  ParaKoopa.cpp
+d:\uit\semester-1-2021\game\mario\mario\mario\brick.h(15): warning C4005: 'PARA_GOOMBA_STATE_DIE_DISAPPER': macro redefinition
+  d:\uit\semester-1-2021\game\mario\mario\mario\brick.h(14): note: see previous definition of 'PARA_GOOMBA_STATE_DIE_DISAPPER'
+  c:\program files (x86)\microsoft directx sdk (june 2010)\include\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
+d:\uit\semester-1-2021\game\mario\mario\mario\game.h(11): warning C4005: 'DIRECTINPUT_VERSION': macro redefinition
+  c:\program files (x86)\microsoft directx sdk (june 2010)\include\dinput.h(42): note: see previous definition of 'DIRECTINPUT_VERSION'
+d:\uit\semester-1-2021\game\mario\mario\mario\paragoomba.h(17): warning C4005: 'PARA_GOOMBA_STATE_DIE_DISAPPER': macro redefinition
+  d:\uit\semester-1-2021\game\mario\mario\mario\brick.h(15): note: see previous definition of 'PARA_GOOMBA_STATE_DIE_DISAPPER'
+d:\uit\semester-1-2021\game\mario\mario\mario\parakoopa.cpp(19): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+d:\uit\semester-1-2021\game\mario\mario\mario\parakoopa.cpp(20): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+d:\uit\semester-1-2021\game\mario\mario\mario\parakoopa.cpp(21): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+d:\uit\semester-1-2021\game\mario\mario\mario\parakoopa.cpp(24): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+d:\uit\semester-1-2021\game\mario\mario\mario\parakoopa.cpp(26): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+d:\uit\semester-1-2021\game\mario\mario\mario\parakoopa.cpp(28): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+d:\uit\semester-1-2021\game\mario\mario\mario\parakoopa.cpp(193): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+  PlayScene.cpp
+  c:\program files (x86)\microsoft directx sdk (june 2010)\include\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
+d:\uit\semester-1-2021\game\mario\mario\mario\game.h(11): warning C4005: 'DIRECTINPUT_VERSION': macro redefinition
+  c:\program files (x86)\microsoft directx sdk (june 2010)\include\dinput.h(42): note: see previous definition of 'DIRECTINPUT_VERSION'
+d:\uit\semester-1-2021\game\mario\mario\mario\brick.h(15): warning C4005: 'PARA_GOOMBA_STATE_DIE_DISAPPER': macro redefinition
+  d:\uit\semester-1-2021\game\mario\mario\mario\brick.h(14): note: see previous definition of 'PARA_GOOMBA_STATE_DIE_DISAPPER'
+d:\uit\semester-1-2021\game\mario\mario\mario\paragoomba.h(17): warning C4005: 'PARA_GOOMBA_STATE_DIE_DISAPPER': macro redefinition
+  d:\uit\semester-1-2021\game\mario\mario\mario\brick.h(15): note: see previous definition of 'PARA_GOOMBA_STATE_DIE_DISAPPER'
+d:\uit\semester-1-2021\game\mario\mario\mario\playscene.cpp(55): warning C4005: 'OBJECT_TYPE_HUD_SPEED': macro redefinition
+  d:\uit\semester-1-2021\game\mario\mario\mario\hud.h(7): note: see previous definition of 'OBJECT_TYPE_HUD_SPEED'
+d:\uit\semester-1-2021\game\mario\mario\mario\playscene.cpp(138): warning C4018: '<': signed/unsigned mismatch
+d:\uit\semester-1-2021\game\mario\mario\mario\playscene.cpp(160): warning C4018: '<': signed/unsigned mismatch
+d:\uit\semester-1-2021\game\mario\mario\mario\playscene.cpp(213): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+d:\uit\semester-1-2021\game\mario\mario\mario\playscene.cpp(218): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+d:\uit\semester-1-2021\game\mario\mario\mario\playscene.cpp(226): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+d:\uit\semester-1-2021\game\mario\mario\mario\playscene.cpp(231): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+d:\uit\semester-1-2021\game\mario\mario\mario\playscene.cpp(305): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+d:\uit\semester-1-2021\game\mario\mario\mario\playscene.cpp(343): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+d:\uit\semester-1-2021\game\mario\mario\mario\playscene.cpp(544): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+d:\uit\semester-1-2021\game\mario\mario\mario\playscene.cpp(545): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+d:\uit\semester-1-2021\game\mario\mario\mario\playscene.cpp(551): warning C4018: '<': signed/unsigned mismatch
+d:\uit\semester-1-2021\game\mario\mario\mario\playscene.cpp(563): warning C4018: '<': signed/unsigned mismatch
+  Sprite.cpp
+  c:\program files (x86)\microsoft directx sdk (june 2010)\include\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
+d:\uit\semester-1-2021\game\mario\mario\mario\game.h(11): warning C4005: 'DIRECTINPUT_VERSION': macro redefinition
+  c:\program files (x86)\microsoft directx sdk (june 2010)\include\dinput.h(42): note: see previous definition of 'DIRECTINPUT_VERSION'
+  Texture.cpp
+  c:\program files (x86)\microsoft directx sdk (june 2010)\include\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
+d:\uit\semester-1-2021\game\mario\mario\mario\game.h(11): warning C4005: 'DIRECTINPUT_VERSION': macro redefinition
+  c:\program files (x86)\microsoft directx sdk (june 2010)\include\dinput.h(42): note: see previous definition of 'DIRECTINPUT_VERSION'
+  VenusFire.cpp
+  c:\program files (x86)\microsoft directx sdk (june 2010)\include\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
+d:\uit\semester-1-2021\game\mario\mario\mario\game.h(11): warning C4005: 'DIRECTINPUT_VERSION': macro redefinition
+  c:\program files (x86)\microsoft directx sdk (june 2010)\include\dinput.h(42): note: see previous definition of 'DIRECTINPUT_VERSION'
+d:\uit\semester-1-2021\game\mario\mario\mario\venusfire.cpp(48): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+d:\uit\semester-1-2021\game\mario\mario\mario\venusfire.cpp(53): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+d:\uit\semester-1-2021\game\mario\mario\mario\venusfire.cpp(54): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+d:\uit\semester-1-2021\game\mario\mario\mario\venusfire.cpp(55): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+d:\uit\semester-1-2021\game\mario\mario\mario\venusfire.cpp(56): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+  main.cpp
+  c:\program files (x86)\microsoft directx sdk (june 2010)\include\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
+d:\uit\semester-1-2021\game\mario\mario\mario\game.h(11): warning C4005: 'DIRECTINPUT_VERSION': macro redefinition
+  c:\program files (x86)\microsoft directx sdk (june 2010)\include\dinput.h(42): note: see previous definition of 'DIRECTINPUT_VERSION'
+d:\uit\semester-1-2021\game\mario\mario\mario\brick.h(15): warning C4005: 'PARA_GOOMBA_STATE_DIE_DISAPPER': macro redefinition
+  d:\uit\semester-1-2021\game\mario\mario\mario\brick.h(14): note: see previous definition of 'PARA_GOOMBA_STATE_DIE_DISAPPER'
+  Generating Code...
   Mario.vcxproj -> D:\UIT\Semester-1-2021\Game\Mario\Mario\Debug\Mario.exe

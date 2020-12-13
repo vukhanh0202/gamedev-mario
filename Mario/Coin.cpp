@@ -14,4 +14,17 @@ void Coin::GetBoundingBox(float &l, float &t, float &r, float &b)
 	r = x + COIN_BBOX_WIDTH;
 	b = y + COIN_BBOX_HEIGHT;
 }
+void Coin::Update(DWORD dt, vector<LPGameObject> *coObjects)
+{
+	if (state == COIN_STATE_EARN) {
+		vy += COIN_GRAVITY * dt;
+		// Calculate dx, dy 
+		GameObject::Update(dt);
 
+		x += dx;
+		y += dy;
+		if (this->y > this->position_default_y) {
+			this->disable = true;
+		}
+	}
+}

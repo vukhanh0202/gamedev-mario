@@ -142,6 +142,14 @@ void Koopa::Update(DWORD dt, vector<LPGameObject> *coObjects)
 					paraGoomba->state = PARA_GOOMBA_STATE_DIE_DISAPPER;
 				}
 			}
+			else if (dynamic_cast<BrickQuestion *>(e->obj) && (this->state == KOOPA_STATE_THROWING_LEFT || this->state == KOOPA_STATE_THROWING_RIGHT)) {
+				if (nx != 0)
+				{
+					BrickQuestion *brickQuestion = dynamic_cast<BrickQuestion *>(e->obj);
+					brickQuestion->SetState(BRICK_STATE_EMPTY);
+					vx = -vx;
+				}
+			}
 			else if (nx != 0)
 			{
 				vx = -vx;

@@ -24,6 +24,7 @@
 #include "ParaGoomba.h"
 #include "ParaKoopa.h"
 #include "Pihanra.h"
+#include "Bonus.h"
 
 using namespace std;
 
@@ -66,6 +67,9 @@ PlayScene::PlayScene(int id, LPCWSTR filePath) :
 #define OBJECT_TYPE_PARA_GOOMBA	20
 #define OBJECT_TYPE_PARA_KOOPA	21
 #define OBJECT_TYPE_PIHANRA	22
+#define OBJECT_TYPE_BRICK_QUESTION_COIN	23
+#define OBJECT_TYPE_BRICK_QUESTION_BONUS	24
+#define OBJECT_TYPE_BONUS		25  // Mushroom red, leaf
 
 #define HUD_HEIGHT	53
 
@@ -347,6 +351,8 @@ void PlayScene::_ParseSection_OBJECTS(string line)
 		case OBJECT_TYPE_PARA_GOOMBA: obj = new ParaGoomba(); break;
 		case OBJECT_TYPE_PARA_KOOPA: obj = new ParaKoopa(); break;
 		case OBJECT_TYPE_PIHANRA: obj = new Pihanra(x, y); break;
+		case OBJECT_TYPE_BRICK_QUESTION_COIN: obj = new BrickQuestionCoin(); break;
+		case OBJECT_TYPE_BRICK_QUESTION_BONUS: obj = new BrickQuestionBonus(); break;
 		default:
 			DebugOut(L"[ERR] Invalid object type: %d\n", object_type);
 			return;
@@ -485,11 +491,15 @@ void PlayScene::Update(DWORD dt)
 					objects.erase(objects.begin() + i);
 					delete obj;
 				}
+				else if (dynamic_cast<Bonus *>(objects[i])) {
+					objects.erase(objects.begin() + i);
+					delete obj;
+				}
 			}
-			else if (objects[i]->x >= player->x - game->GetScreenWidth() && 
-				objects[i]->x <= player->x + game->GetScreenWidth() &&
-				objects[i]->y >= player->y - game->GetScreenHeight() && 
-				objects[i]->y <= player->y + game->GetScreenHeight()) 
+			else if (objects[i]->x >= player->x - game->GetScreenWidth() / 1.5 &&
+				objects[i]->x <= player->x + game->GetScreenWidth() / 1.5 &&
+				objects[i]->y >= player->y - game->GetScreenHeight() / 1.5 &&
+				objects[i]->y <= player->y + game->GetScreenHeight() / 1.5)
 			{
 				objects[i]->Update(dt, &coObjects);
 			}
