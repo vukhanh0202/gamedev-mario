@@ -106,7 +106,6 @@ void VenusFire::Update(DWORD dt, vector<LPGameObject> *coObjects)
 
 	if (this->y > this->position_default_y && vy != 0) {
 		lastAppearTime = GetTickCount();
-		DebugOut(L"1\n");
 	}
 
 	if (GetTickCount() - lastAppearTime > VENUS_FIRE_TIME_WAIT && lastAppearTime != 0
@@ -115,7 +114,6 @@ void VenusFire::Update(DWORD dt, vector<LPGameObject> *coObjects)
 	}
 	else if ((GetTickCount() - lastAppearTime < VENUS_FIRE_TIME_WAIT) && this->y > this->position_default_y - VENUS_FIRE_BBOX_HEIGHT) {
 		vy = 0;
-		DebugOut(L"3\n");
 	}
 
 	
@@ -138,8 +136,4 @@ void VenusFire::Update(DWORD dt, vector<LPGameObject> *coObjects)
 	x += dx;
 	y += dy;
 }
-void VenusFire::SetState(int state)
-{
-	GameObject::SetState(state);
 
-}

@@ -140,6 +140,7 @@
     <ClCompile Include="Koopa.cpp" />
     <ClCompile Include="ParaGoomba.cpp" />
     <ClCompile Include="ParaKoopa.cpp" />
+    <ClCompile Include="Pihanra.cpp" />
     <ClCompile Include="PlayScene.cpp" />
     <ClCompile Include="Point.cpp" />
     <ClCompile Include="Portal.cpp" />
@@ -167,6 +168,7 @@
     <ClInclude Include="Koopa.h" />
     <ClInclude Include="ParaGoomba.h" />
     <ClInclude Include="ParaKoopa.h" />
+    <ClInclude Include="Pihanra.h" />
     <ClInclude Include="PlayScene.h" />
     <ClInclude Include="Point.h" />
     <ClInclude Include="Portal.h" />

@@ -10,6 +10,8 @@
 #include "FireEnemy.h"
 #include "ParaGoomba.h"
 #include "ParaKoopa.h"
+#include "VenusFire.h"
+#include "Pihanra.h"
 
 Mario::Mario(float x, float y) : GameObject()
 {
@@ -316,6 +318,16 @@ void Mario::Update(DWORD dt, vector<LPGameObject> *coObjects)
 					}
 					paraKoopa->state = PARA_KOOPA_STATE_DIE_DISAPPER;
 				}
+				else if (dynamic_cast<VenusFire *>(e->obj)) {
+					VenusFire *venusFire = dynamic_cast<VenusFire *>(e->obj);
+
+					venusFire->disable = true;
+				}
+				else if (dynamic_cast<Pihanra *>(e->obj)) {
+					Pihanra *pihanra = dynamic_cast<Pihanra *>(e->obj);
+
+					pihanra->disable = true;
+				}
 			}
 			else
 			{
@@ -573,6 +585,44 @@ void Mario::Update(DWORD dt, vector<LPGameObject> *coObjects)
 										SetState(MARIO_STATE_DIE);
 								}
 							}
+						}
+					}
+				}
+				else if (dynamic_cast<VenusFire *>(e->obj)) // if e->obj is VenusFire 
+				{
+					VenusFire *venusFire = dynamic_cast<VenusFire *>(e->obj);
+
+					if (e->nx != 0)
+					{
+						if (untouchable == 0)
+						{
+							if (level > MARIO_LEVEL_SMALL)
+							{
+								level--;
+								unableReadyFly();
+								StartUntouchable();
+							}
+							else
+								SetState(MARIO_STATE_DIE);
+						}
+					}
+				}
+				else if (dynamic_cast<Pihanra *>(e->obj)) // if e->obj is Pihanra 
+				{
+					Pihanra *pihanra = dynamic_cast<Pihanra *>(e->obj);
+
+					if (e->nx != 0)
+					{
+						if (untouchable == 0)
+						{
+							if (level > MARIO_LEVEL_SMALL)
+							{
+								level--;
+								unableReadyFly();
+								StartUntouchable();
+							}
+							else
+								SetState(MARIO_STATE_DIE);
 						}
 					}
 				}

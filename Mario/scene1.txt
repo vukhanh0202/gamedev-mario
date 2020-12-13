@@ -387,7 +387,9 @@
 1500007	279	249	295	276	130
 1500008	262	249	278	276	130
 
-
+#Piranha
+1600001	113	100	129	131	100
+1600002	131	99	147	131	100
 
 # ani_id	sprite1_id	time1	sprite2_id	time2	...
 [ANIMATIONS]
@@ -707,6 +709,10 @@
 150001	1500001	100	1500002	100	1500003	100	1500004	100
 150002	1500005	100	1500006	100	1500007	100	1500008	100
 
+
+#Pihanra
+160001	1600001	200	1600002	200
+
 #
 # id	ani1	ani2	ani3
 #
@@ -849,11 +855,15 @@
 # Para Koopas 
 # Green
 15001	150001	150002	1501	1502	1503	1504	1505
+
+#Pihanra
+16001	160001	160002	
+
 [OBJECTS]
 # type	x	y	ani_set_id	extra_settings per object type
 # type: 0 = Ground , 1 = Brick, 2 = Goomba, 3 = Koopa,4= Mario Fire, 5 = Box 
 #	7 = hudBackground, 8=hudSpeed, 16 = coin, 17 = hud point, 18 = venus
-#	19 = FireEnemy, 20 = Para goomba , 21 = Para Koopa
+#	19 = FireEnemy, 20 = Para goomba , 21 = Para Koopa, 22 = Pihanra
 # type: -1 = Background, -2 = Mario
 
 
@@ -1134,6 +1144,9 @@
 #Venus
 18	357	145	13001
 18	1937	145	13001
+
+#Pihanra
+22	1862	165	16001
 #Ống cống dọc
 #-- Ống 1
 1	350	171	93
@@ -1774,7 +1787,7 @@
 16	1845	-115	11001
 
 # MARIO
--2	1200.0	100	1
+-2	1850.0	100	1
 
 # HUD need init after init MARIO
 #background-black-hud

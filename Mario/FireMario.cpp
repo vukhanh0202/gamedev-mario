@@ -6,6 +6,7 @@
 #include "VenusFire.h"
 #include "ParaGoomba.h"
 #include "ParaKoopa.h"
+#include "Pihanra.h"
 
 void FireMario::Render()
 {
@@ -91,6 +92,12 @@ void FireMario::Update(DWORD dt, vector<LPGameObject> *coObjects)
 				VenusFire *venusFire = dynamic_cast<VenusFire *>(e->obj);
 
 				venusFire->disable = true;
+				this->disable = true;
+			}
+			else if (dynamic_cast<Pihanra *>(e->obj)) {
+				Pihanra *pihanra = dynamic_cast<Pihanra *>(e->obj);
+
+				pihanra->disable = true;
 				this->disable = true;
 			}
 			else if (dynamic_cast<ParaGoomba *>(e->obj)) {

@@ -23,7 +23,7 @@
 #include "FireEnemy.h"
 #include "ParaGoomba.h"
 #include "ParaKoopa.h"
-
+#include "Pihanra.h"
 
 using namespace std;
 
@@ -65,6 +65,7 @@ PlayScene::PlayScene(int id, LPCWSTR filePath) :
 #define OBJECT_TYPE_FIRE_ENEMY	19
 #define OBJECT_TYPE_PARA_GOOMBA	20
 #define OBJECT_TYPE_PARA_KOOPA	21
+#define OBJECT_TYPE_PIHANRA	22
 
 #define HUD_HEIGHT	53
 
@@ -345,6 +346,7 @@ void PlayScene::_ParseSection_OBJECTS(string line)
 		case OBJECT_TYPE_VENUS_FIRE: obj = new VenusFire(x, y); break;
 		case OBJECT_TYPE_PARA_GOOMBA: obj = new ParaGoomba(); break;
 		case OBJECT_TYPE_PARA_KOOPA: obj = new ParaKoopa(); break;
+		case OBJECT_TYPE_PIHANRA: obj = new Pihanra(x, y); break;
 		default:
 			DebugOut(L"[ERR] Invalid object type: %d\n", object_type);
 			return;
