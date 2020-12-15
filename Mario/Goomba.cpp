@@ -39,10 +39,6 @@ void Goomba::Update(DWORD dt, vector<LPGameObject> *coObjects)
 	if (state != GOOMBA_STATE_DIE_DISAPPER)
 		CalcPotentialCollisions(coObjects, coEvents);
 
-	if (x <= 0) {
-		vx = -vx;
-		x = 5;
-	}
 	// No collision occured, proceed normally
 	if (coEvents.size() == 0)
 	{

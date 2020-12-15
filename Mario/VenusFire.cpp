@@ -132,7 +132,6 @@ void VenusFire::Update(DWORD dt, vector<LPGameObject> *coObjects)
 
 	// Calculate dx, dy 
 	GameObject::Update(dt);
-
 	x += dx;
 	y += dy;
 }

@@ -225,12 +225,12 @@ void Mario::Update(DWORD dt, vector<LPGameObject> *coObjects)
 		FilterCollision(coEvents, coEventsResult, min_tx, min_ty, nx, ny, rdx, rdy);
 
 		// how to push back Mario if collides with a moving objects, what if Mario is pushed this way into another object?
-		//if (rdx != 0 && rdx!=dx)
-		//	x += nx*abs(rdx); 
+		if (rdx != 0 && rdx != dx)
+			x += nx * abs(rdx);
 
 		// block every object first!
 		x += min_tx * dx + nx * 0.4f;
-		y += min_ty * dy + ny * 0.4f;
+		//y += min_ty * dy + ny * 0.4f;
 
 
 		if (nx != 0) vx = 0;
@@ -273,7 +273,7 @@ void Mario::Update(DWORD dt, vector<LPGameObject> *coObjects)
 					level++;
 					unableReadyFly();
 				}
-				
+
 			}
 			else {
 				if (ny != 0) {
@@ -340,12 +340,10 @@ void Mario::Update(DWORD dt, vector<LPGameObject> *coObjects)
 				}
 				else if (dynamic_cast<VenusFire *>(e->obj)) {
 					VenusFire *venusFire = dynamic_cast<VenusFire *>(e->obj);
-
 					venusFire->disable = true;
 				}
 				else if (dynamic_cast<Pihanra *>(e->obj)) {
 					Pihanra *pihanra = dynamic_cast<Pihanra *>(e->obj);
-
 					pihanra->disable = true;
 				}
 			}
@@ -365,7 +363,7 @@ void Mario::Update(DWORD dt, vector<LPGameObject> *coObjects)
 							vy = -MARIO_JUMP_DEFLECT_SPEED;
 						}
 					}
-					else if (e->nx != 0)
+					else if (e->nx != 0 || e->ny > 0)
 					{
 						if (untouchable == 0)
 						{
@@ -465,6 +463,19 @@ void Mario::Update(DWORD dt, vector<LPGameObject> *coObjects)
 								}
 							}
 						}
+						else if (e->ny > 0) {
+							if (untouchable == 0)
+							{
+								if (level > MARIO_LEVEL_SMALL)
+								{
+									level--;
+									unableReadyFly();
+									StartUntouchable();
+								}
+								else
+									SetState(MARIO_STATE_DIE);
+							}
+						}
 					}
 				}
 				else if (dynamic_cast<FireEnemy *>(e->obj)) // if e->obj is fireEnemy
@@ -502,7 +513,7 @@ void Mario::Update(DWORD dt, vector<LPGameObject> *coObjects)
 							vy = -MARIO_JUMP_DEFLECT_SPEED;
 						}
 					}
-					else if (e->nx != 0)
+					else if (e->nx != 0 || e->ny > 0)
 					{
 						if (untouchable == 0)
 						{
@@ -606,44 +617,49 @@ void Mario::Update(DWORD dt, vector<LPGameObject> *coObjects)
 								}
 							}
 						}
+						else if (e->ny > 0) {
+							if (untouchable == 0)
+							{
+								if (level > MARIO_LEVEL_SMALL)
+								{
+									level--;
+									unableReadyFly();
+									StartUntouchable();
+								}
+								else
+									SetState(MARIO_STATE_DIE);
+							}
+						}
 					}
 				}
 				else if (dynamic_cast<VenusFire *>(e->obj)) // if e->obj is VenusFire 
 				{
 					VenusFire *venusFire = dynamic_cast<VenusFire *>(e->obj);
-
-					if (e->nx != 0)
+					if (untouchable == 0)
 					{
-						if (untouchable == 0)
+						if (level > MARIO_LEVEL_SMALL)
 						{
-							if (level > MARIO_LEVEL_SMALL)
-							{
-								level--;
-								unableReadyFly();
-								StartUntouchable();
-							}
-							else
-								SetState(MARIO_STATE_DIE);
+							level--;
+							unableReadyFly();
+							StartUntouchable();
 						}
+						else
+							SetState(MARIO_STATE_DIE);
 					}
 				}
 				else if (dynamic_cast<Pihanra *>(e->obj)) // if e->obj is Pihanra 
 				{
 					Pihanra *pihanra = dynamic_cast<Pihanra *>(e->obj);
-
-					if (e->nx != 0)
+					if (untouchable == 0)
 					{
-						if (untouchable == 0)
+						if (level > MARIO_LEVEL_SMALL)
 						{
-							if (level > MARIO_LEVEL_SMALL)
-							{
-								level--;
-								unableReadyFly();
-								StartUntouchable();
-							}
-							else
-								SetState(MARIO_STATE_DIE);
+							level--;
+							unableReadyFly();
+							StartUntouchable();
 						}
+						else
+							SetState(MARIO_STATE_DIE);
 					}
 				}
 			}

@@ -7,6 +7,7 @@
 #define OBJECT_TYPE_HUD_SPEED		9
 
 #define POSITION_DEFAULT	50
+#define HUD_BOXX_HEIGHT		20
 #define MAX_SPEED_QUANTITY	7
 
 
@@ -29,7 +30,9 @@ public:
 
 class HudSpeed : public Hud {
 public:
-	HudSpeed(double position_default_x, double position_default_y) :Hud(position_default_x, position_default_y) {}
+	HudSpeed(double position_default_x, double position_default_y) :Hud(position_default_x, position_default_y) {
+		this->position_default_x = position_default_x; this->position_default_y = position_default_y;
+	}
 
 };
 

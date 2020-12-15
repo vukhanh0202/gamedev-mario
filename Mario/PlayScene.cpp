@@ -84,6 +84,10 @@ PlayScene::PlayScene(int id, LPCWSTR filePath) :
 #define SCENE_1_COORDINATES_X		55
 #define SCENE_1_COORDINATES_Y		0
 
+
+
+#define HEIGHT_INVALIED		1000
+
 #define MAX_SCENE_LINE 1024
 
 void PlayScene::_ParseSection_TEXTURES(string line)
@@ -463,7 +467,7 @@ void PlayScene::Update(DWORD dt)
 		vector<LPGameObject> coObjects;
 		for (size_t i = 0; i < objects.size(); i++)
 		{
-			if (objects[i]->disable == false && objects[i]->y <= 300
+			if (objects[i]->disable == false && objects[i]->y <= HEIGHT_INVALIED
 				&& objects[i]->GetTypeObject() != OBJECT_TYPE_BACKGROUND
 				&& objects[i]->GetTypeObject() != OBJECT_TYPE_HUD
 				&& objects[i]->GetTypeObject() != OBJECT_TYPE_HUD_POINT
@@ -475,7 +479,7 @@ void PlayScene::Update(DWORD dt)
 
 		for (size_t i = 0; i < objects.size(); i++)
 		{
-			if (objects[i]->disable || (!dynamic_cast<Mario *>(objects[i]) && objects[i]->y > 300))
+			if (objects[i]->disable || (!dynamic_cast<Mario *>(objects[i]) && objects[i]->y > HEIGHT_INVALIED))
 			{
 				LPGameObject obj = objects[i];
 				if (dynamic_cast<FireMario *>(objects[i])) {
@@ -506,7 +510,8 @@ void PlayScene::Update(DWORD dt)
 			else if (objects[i]->GetTypeObject() == OBJECT_TYPE_HUD_SPEED
 				|| objects[i]->GetTypeObject() == OBJECT_TYPE_HUD_BACKGROUND
 				|| objects[i]->GetTypeObject() == OBJECT_TYPE_HUD
-				|| objects[i]->GetTypeObject() == OBJECT_TYPE_HUD_POINT) {
+				|| objects[i]->GetTypeObject() == OBJECT_TYPE_HUD_POINT
+				|| objects[i]->GetTypeObject() == OBJECT_TYPE_GROUND) {
 				objects[i]->Update(dt, &coObjects);
 			}
 		}
@@ -542,7 +547,11 @@ void PlayScene::Update(DWORD dt)
 			|| (player->y <= game->GetScreenHeight() / 4 && player->GetFall())
 			|| (player->y <= -game->GetScreenHeight() / 4))
 			Game::GetInstance()->SetCamPosition((int)cx, (int)cy /*cy*/);
+		else if (player->y > 200) {
+			Game::GetInstance()->SetCamPosition((int)cx, (int)cy /*cy*/);
+		}
 		else Game::GetInstance()->SetCamPosition((int)cx, (int)20.0f /*cy*/);
+		
 	}
 }
 

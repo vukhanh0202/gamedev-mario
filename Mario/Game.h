@@ -63,7 +63,8 @@ public:
 	LPScene GetCurrentScene() { return scenes[current_scene]; }
 	void SwitchScene(int scene_id);
 
-	void SetCamPosition(float x, float y) { cam_x = x; cam_y = y; }
+	void SetCamPosition(double x, double y) { cam_x = x; cam_y = y; }
+	void GetCamPosition(double &x, double &y) { x = this->cam_x; y = this->cam_y; }
 
 	/*
 		Algorithm SweptAABB handling collision

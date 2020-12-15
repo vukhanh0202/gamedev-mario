@@ -68,10 +68,10 @@ void ParaKoopa::Update(DWORD dt, vector<LPGameObject> *coObjects)
 
 		// block every object first!
 		x += min_tx * dx + nx * 0.4f;
-		if (state == PARA_KOOPA_STATE_WALKING || state == PARA_KOOPA_STATE_WALKING_WING)
+		/*if (state == PARA_KOOPA_STATE_WALKING || state == PARA_KOOPA_STATE_WALKING_WING)
 		{
 			y += min_ty * dy + ny * 0.4f;
-		}
+		}*/
 
 		if (GetState() == PARA_KOOPA_STATE_HOLDING)
 		{

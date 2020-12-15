@@ -63,10 +63,10 @@ void Koopa::Update(DWORD dt, vector<LPGameObject> *coObjects)
 
 		// block every object first!
 		x += min_tx * dx + nx * 0.4f;
-		if (state == KOOPA_STATE_WALKING)
+		/*if (state == KOOPA_STATE_WALKING)
 		{
 			y += min_ty * dy + ny * 0.4f;
-		}
+		}*/
 
 		if (GetState() == KOOPA_STATE_HOLDING)
 		{
