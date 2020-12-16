@@ -97,6 +97,11 @@
 #define MARIO_ANI_SUPER_BIG_ATTACK_RIGHT		57
 #define MARIO_ANI_SUPER_BIG_ATTACK_LEFT			58
 
+#define MARIO_ANI_BIG_FALL_DRAIN				59
+#define MARIO_ANI_SMALL_FALL_DRAIN				60
+#define MARIO_ANI_SUPER_BIG_FALL_DRAIN			61
+#define MARIO_ANI_FIRE_FALL_DRAIN				62
+
 #define	MARIO_LEVEL_SWITCH_MAP		0
 #define	MARIO_LEVEL_SMALL			1
 #define	MARIO_LEVEL_BIG				2
@@ -154,6 +159,9 @@ class Mario : public GameObject
 	boolean restrain; // Restrain mario fall
 	boolean attack; // Mario swing attack
 
+	boolean fallDrain;
+	boolean noAction;
+
 	DWORD untouchable_start;
 
 	float start_x;			// initial position of Mario at scene
@@ -200,6 +208,11 @@ public:
 	void StartUntouchable() { untouchable = 1; untouchable_start = GetTickCount(); }
 	void addHudSpeed(HudSpeed* hudSpeed) { this->hudSpeedList.push_back(hudSpeed); }
 	void addPoint(Point* point) { this->hudPointList.push_back(point); }
+	boolean getFallDrain() { return this->fallDrain; }
+	void setFallDrain(boolean fallDrain) { this->fallDrain = fallDrain; }
+
+	boolean getNoAction() { return this->noAction; }
+	void setNoAction(boolean noAction) { this->noAction = noAction; }
 	void unableReadyFly();
 	int GetTypeObject() {
 		return OBJECT_TYPE_MARIO;
@@ -214,5 +227,6 @@ public:
 	virtual void GetBoundingBox(float &left, float &top, float &right, float &bottom);
 	boolean GetHolding() { return this->hold; }
 	int GetLevel() { return this->level; }
+	int GetHeightDrainFall();
 };
 

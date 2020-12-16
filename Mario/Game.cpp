@@ -392,8 +392,7 @@ void Game::Load(LPCWSTR gameFile)
 }
 
 void Game::SwitchScene(int scene_id)
-{
-	DebugOut(L"[INFO] Switching to scene %d\n", scene_id);
+{	DebugOut(L"[INFO] Switching to scene %d\n", scene_id);
 
 	scenes[current_scene]->Unload();;
 

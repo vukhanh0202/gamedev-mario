@@ -25,6 +25,7 @@
 #include "ParaKoopa.h"
 #include "Pihanra.h"
 #include "Bonus.h"
+#include "FallDrain.h"
 
 using namespace std;
 
@@ -70,6 +71,9 @@ PlayScene::PlayScene(int id, LPCWSTR filePath) :
 #define OBJECT_TYPE_BRICK_QUESTION_COIN	23
 #define OBJECT_TYPE_BRICK_QUESTION_BONUS	24
 #define OBJECT_TYPE_BONUS		25  // Mushroom red, leaf
+#define OBJECT_TYPE_FALL_DRAIN_MAP_1_1		26  
+#define OBJECT_TYPE_END_MAP_1_1				27 
+
 
 #define HUD_HEIGHT	53
 
@@ -87,6 +91,8 @@ PlayScene::PlayScene(int id, LPCWSTR filePath) :
 
 
 #define HEIGHT_INVALIED		1000
+#define UNDER_WORLD		220
+#define CAM_UNDER_WORLD		255
 
 #define MAX_SCENE_LINE 1024
 
@@ -303,7 +309,7 @@ void PlayScene::_ParseSection_OBJECTS(string line)
 			{
 				DebugOut(L"[ERROR] MARIO object was created before!\n");
 				obj = player;
-				//return;
+				return;
 			}
 			else {
 				obj = new Mario(x, y);
@@ -357,6 +363,8 @@ void PlayScene::_ParseSection_OBJECTS(string line)
 		case OBJECT_TYPE_PIHANRA: obj = new Pihanra(x, y); break;
 		case OBJECT_TYPE_BRICK_QUESTION_COIN: obj = new BrickQuestionCoin(); break;
 		case OBJECT_TYPE_BRICK_QUESTION_BONUS: obj = new BrickQuestionBonus(); break;
+		case OBJECT_TYPE_FALL_DRAIN_MAP_1_1: obj = new FallDrainMap11(x, y); break;
+		case OBJECT_TYPE_END_MAP_1_1: obj = new EndMap11(x, y); break;
 		default:
 			DebugOut(L"[ERR] Invalid object type: %d\n", object_type);
 			return;
@@ -462,6 +470,7 @@ void PlayScene::Update(DWORD dt)
 				player->y = game->GetScreenHeight() - MARIO_SWITCH_MAP_HEIGHT - HUD_HEIGHT;
 			}
 		}
+		Game::GetInstance()->SetCamPosition((int)0, (int)0);
 	}
 	else {
 		vector<LPGameObject> coObjects;
@@ -502,8 +511,8 @@ void PlayScene::Update(DWORD dt)
 			}
 			else if (objects[i]->x >= player->x - game->GetScreenWidth() / 1.5 &&
 				objects[i]->x <= player->x + game->GetScreenWidth() / 1.5 &&
-				objects[i]->y >= player->y - game->GetScreenHeight() / 1.5 &&
-				objects[i]->y <= player->y + game->GetScreenHeight() / 1.5)
+				objects[i]->y >= player->y - game->GetScreenHeight()  &&
+				objects[i]->y <= player->y + game->GetScreenHeight())
 			{
 				objects[i]->Update(dt, &coObjects);
 			}
@@ -511,46 +520,49 @@ void PlayScene::Update(DWORD dt)
 				|| objects[i]->GetTypeObject() == OBJECT_TYPE_HUD_BACKGROUND
 				|| objects[i]->GetTypeObject() == OBJECT_TYPE_HUD
 				|| objects[i]->GetTypeObject() == OBJECT_TYPE_HUD_POINT
-				|| objects[i]->GetTypeObject() == OBJECT_TYPE_GROUND) {
+				|| objects[i]->GetTypeObject() == OBJECT_TYPE_GROUND
+				|| objects[i]->GetTypeObject() == OBJECT_TYPE_FALL_DRAIN_MAP_1_1
+				|| objects[i]->GetTypeObject() == OBJECT_TYPE_END_MAP_1_1) {
 				objects[i]->Update(dt, &coObjects);
 			}
 		}
 
 		// Update camera to follow mario
-		double cx, cy;
-		player->GetPosition(cx, cy);
+		if (player != NULL) {
+			double cx, cy;
+			player->GetPosition(cx, cy);
 
-		cx -= game->GetScreenWidth() / 2;
-		cy -= game->GetScreenHeight() / 2;
+			cx -= game->GetScreenWidth() / 2;
+			cy -= game->GetScreenHeight() / 2;
 
 
-		// Keep mario not overcome screen
-		if (player->x < 5) {
-			player->x = 5;
+			// Keep mario not overcome screen
+			if (player->x < 5) {
+				player->x = 5;
+			}
+			//else if (player->x > 2862) {
+			//	player->x = 2862;
+			//}// Overcome end map
+
+			// Mario in head map
+			if (player->x < (game->GetScreenWidth() / 2)) {
+				cx = 0;
+			}
+			else if (player->x > END_MAP_1_1_POSITION_OUT_X - (game->GetScreenWidth() / 2)) {
+				cx = (double)END_MAP_1_1_POSITION_OUT_X - (game->GetScreenWidth());
+			}// Mario in tail map
+			if (player->y < MARIO_LIMIT_FLY + (game->GetScreenHeight() / 1.2f))
+				cy = MARIO_LIMIT_FLY;
+
+			if ((player->y < game->GetScreenHeight() / 4 && player->GetFly())
+				|| (player->y <= game->GetScreenHeight() / 4 && player->GetFall())
+				|| (player->y <= -game->GetScreenHeight() / 4))
+				Game::GetInstance()->SetCamPosition((int)cx, (int)cy /*cy*/);
+			else if (player->y > UNDER_WORLD && player->GetState() != MARIO_STATE_DIE) {
+				Game::GetInstance()->SetCamPosition((int)cx, (int)CAM_UNDER_WORLD /*cy*/);
+			}
+			else Game::GetInstance()->SetCamPosition((int)cx, (int)20.0f /*cy*/);
 		}
-		else if (player->x > 2862) {
-			player->x = 2862;
-		}// Overcome end map
-
-		// Mario in head map
-		if (player->x < (game->GetScreenWidth() / 2)) {
-			cx = 0;
-		}
-		else if (player->x > 2880 - (game->GetScreenWidth())) {
-			cx = (double)2880 - (game->GetScreenWidth());
-		}// Mario in tail map
-
-		else if (player->y < MARIO_LIMIT_FLY + (game->GetScreenHeight() / 1.2f))
-			cy = MARIO_LIMIT_FLY;
-
-		if ((player->y < game->GetScreenHeight() / 4 && player->GetFly())
-			|| (player->y <= game->GetScreenHeight() / 4 && player->GetFall())
-			|| (player->y <= -game->GetScreenHeight() / 4))
-			Game::GetInstance()->SetCamPosition((int)cx, (int)cy /*cy*/);
-		else if (player->y > 200) {
-			Game::GetInstance()->SetCamPosition((int)cx, (int)cy /*cy*/);
-		}
-		else Game::GetInstance()->SetCamPosition((int)cx, (int)20.0f /*cy*/);
 		
 	}
 }
@@ -622,51 +634,53 @@ void PlaySceneKeyHandler::OnKeyDown(int KeyCode)
 		}
 	}
 	else {
-		if (mario->GetLevel() == MARIO_LEVEL_SWITCH_MAP) {
-			switch (KeyCode)
-			{
-			case DIK_A:
-				double x, y;
-				mario->GetPosition(x, y);
-				if (abs(x - SCENE_1_COORDINATES_X) < SPACE_ENOUGH_SWITCH_MAP && abs(y - SCENE_1_COORDINATES_Y) < SPACE_ENOUGH_SWITCH_MAP) {
-					Portal *p = new Portal(SCENE_1);
-					Game::GetInstance()->SwitchScene(p->GetSceneId());
-				}
-				break;
-			}
-		}
-		else {
-			switch (KeyCode)
-			{
-			case DIK_SPACE:
-			{
-				if (!mario->GetFly() && !mario->GetFall())
-					mario->SetState(MARIO_STATE_JUMP);
-				else if (mario->GetFall())
+		if (!mario->getFallDrain() && !mario->getNoAction()) {
+			if (mario->GetLevel() == MARIO_LEVEL_SWITCH_MAP) {
+				switch (KeyCode)
 				{
-					mario->SetRestrain(true);
+				case DIK_A:
+					double x, y;
+					mario->GetPosition(x, y);
+					if (abs(x - SCENE_1_COORDINATES_X) < SPACE_ENOUGH_SWITCH_MAP && abs(y - SCENE_1_COORDINATES_Y) < SPACE_ENOUGH_SWITCH_MAP) {
+						Portal *p = new Portal(SCENE_1);
+						Game::GetInstance()->SwitchScene(p->GetSceneId());
+					}
+					break;
 				}
 			}
-			break;
-			case DIK_P:
-				mario->Reset();
+			else {
+				switch (KeyCode)
+				{
+				case DIK_SPACE:
+				{
+					if (!mario->GetFly() && !mario->GetFall())
+						mario->SetState(MARIO_STATE_JUMP);
+					else if (mario->GetFall())
+					{
+						mario->SetRestrain(true);
+					}
+				}
 				break;
-			case DIK_Z:
-				mario->UpLevel();
-				break;
-			case DIK_X:
-				mario->DownLevel();
-				break;
-			case DIK_W:
-				mario->SetState(MARIO_STATE_HIT);
-				break;
-			case DIK_S:
-				mario->SetShot(true);
-				mario->SetHolding(false);
-				break;
-			case DIK_D:
-				mario->SetAttack(true);
-				break;
+				case DIK_P:
+					mario->Reset();
+					break;
+				case DIK_Z:
+					mario->UpLevel();
+					break;
+				case DIK_X:
+					mario->DownLevel();
+					break;
+				case DIK_W:
+					mario->SetState(MARIO_STATE_HIT);
+					break;
+				case DIK_S:
+					mario->SetShot(true);
+					mario->SetHolding(false);
+					break;
+				case DIK_D:
+					mario->SetAttack(true);
+					break;
+				}
 			}
 		}
 	}
@@ -676,44 +690,42 @@ void PlaySceneKeyHandler::OnKeyUp(int KeyCode)
 	//DebugOut(L"[INFO] KeyDown: %d\n", KeyCode);
 
 	Mario *mario = ((PlayScene*)scene)->GetPlayer();
-	if (mario == NULL) {
-
-	}
+	if (mario == NULL) {}
 	else {
-		switch (KeyCode)
-		{
-		case DIK_DOWN:
-			mario->SetState(MARIO_STATE_IDLE);
-			break;
-		case DIK_Q:
-			mario->SetHolding(false);
-			break;
-		case DIK_A:
-			mario->SetFastSpeed(false);
-			break;
-		case DIK_SPACE:
-		{
-			if (mario->GetFly())
+		if (!mario->getFallDrain() && !mario->getNoAction()) {
+			switch (KeyCode)
 			{
-				mario->SetFall(true);
-				mario->SetFly(false);
-				mario->SetReadyFly(false);
-			}
-			if (mario->GetRestrain())
+			case DIK_DOWN:
+				mario->SetState(MARIO_STATE_IDLE);
+				break;
+			case DIK_Q:
+				mario->SetHolding(false);
+				break;
+			case DIK_A:
+				mario->SetFastSpeed(false);
+				break;
+			case DIK_SPACE:
 			{
-				mario->SetRestrain(false);
+				if (mario->GetFly())
+				{
+					mario->SetFall(true);
+					mario->SetFly(false);
+					mario->SetReadyFly(false);
+				}
+				if (mario->GetRestrain())
+				{
+					mario->SetRestrain(false);
+				}
 			}
-		}
-		case DIK_S:
-			mario->SetShot(false);
-			break;
-		case DIK_D:
-			mario->SetAttack(false);
-			break;
+			case DIK_S:
+				mario->SetShot(false);
+				break;
+			case DIK_D:
+				mario->SetAttack(false);
+				break;
+			}
 		}
 	}
-
-
 }
 
 void PlaySceneKeyHandler::KeyState(BYTE *states)
@@ -723,51 +735,53 @@ void PlaySceneKeyHandler::KeyState(BYTE *states)
 	if (mario == NULL) return;
 	// disable control key when Mario die 
 	if (mario->GetState() == MARIO_STATE_DIE) return;
+	if (!mario->getFallDrain() && !mario->getNoAction()) {
+		if (game->IsKeyDown(DIK_Q))
+		{
+			mario->SetHolding(true);
+		}
+		if (game->IsKeyDown(DIK_A))
+		{
+			if (mario->GetFly() == false) {
+				mario->SetFastSpeed(true);
+			}
+		}
+		if (game->IsKeyDown(DIK_SPACE) && mario->GetReadyFly() && !mario->GetFall())
+		{
+			mario->SetFly(true);
+			mario->SetFastSpeed(false);
+		}
+		if (game->IsKeyDown(DIK_RIGHT))
+			mario->SetState(MARIO_STATE_WALKING_RIGHT);
+		else if (game->IsKeyDown(DIK_LEFT))
+			mario->SetState(MARIO_STATE_WALKING_LEFT);
+		else if (game->IsKeyDown(DIK_DOWN))
+		{
+			if (mario->GetLevel() == MARIO_LEVEL_SWITCH_MAP) {
+				mario->SetState(MARIO_STATE_WALKING_DOWN);
+			}
+			else {
+				if (mario->nx < 0)
+				{
+					mario->SetState(MARIO_STATE_SITTING_LEFT);
+				}
+				else
+				{
+					mario->SetState(MARIO_STATE_SITTING_RIGHT);
+				}
+			}
+		}
+		else if (game->IsKeyDown(DIK_UP))
+		{
+			if (mario->GetLevel() == MARIO_LEVEL_SWITCH_MAP) {
+				mario->SetState(MARIO_STATE_WALKING_UP);
+			}
+		}
+		else
+		{
+			mario->SetState(MARIO_STATE_IDLE);
+		}
+	}
 
-	if (game->IsKeyDown(DIK_Q))
-	{
-		mario->SetHolding(true);
-	}
-	if (game->IsKeyDown(DIK_A))
-	{
-		if (mario->GetFly() == false) {
-			mario->SetFastSpeed(true);
-		}
-	}
-	if (game->IsKeyDown(DIK_SPACE) && mario->GetReadyFly() && !mario->GetFall())
-	{
-		mario->SetFly(true);
-		mario->SetFastSpeed(false);
-	}
-	if (game->IsKeyDown(DIK_RIGHT))
-		mario->SetState(MARIO_STATE_WALKING_RIGHT);
-	else if (game->IsKeyDown(DIK_LEFT))
-		mario->SetState(MARIO_STATE_WALKING_LEFT);
-	else if (game->IsKeyDown(DIK_DOWN))
-	{
-		if (mario->GetLevel() == MARIO_LEVEL_SWITCH_MAP) {
-			mario->SetState(MARIO_STATE_WALKING_DOWN);
-		}
-		else {
-			if (mario->nx < 0)
-			{
-				mario->SetState(MARIO_STATE_SITTING_LEFT);
-			}
-			else
-			{
-				mario->SetState(MARIO_STATE_SITTING_RIGHT);
-			}
-		}
-	}
-	else if (game->IsKeyDown(DIK_UP))
-	{
-		if (mario->GetLevel() == MARIO_LEVEL_SWITCH_MAP) {
-			mario->SetState(MARIO_STATE_WALKING_UP);
-		}
-	}
-	else
-	{
-		mario->SetState(MARIO_STATE_IDLE);
-	}
 }
 

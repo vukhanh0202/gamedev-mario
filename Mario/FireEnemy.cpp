@@ -52,7 +52,6 @@ void FireEnemy::Update(DWORD dt, vector<LPGameObject> *coObjects)
 
 			if (dynamic_cast<Boxs *>(e->obj)) // if e->obj is Box
 			{
-				
 			}
 			else// if (nx != 0)
 			{

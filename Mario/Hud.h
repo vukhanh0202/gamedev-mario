@@ -2,6 +2,7 @@
 #include "GameObject.h"
 
 
+
 #define OBJECT_TYPE_HUD		7
 #define OBJECT_TYPE_HUD_BACKGROUND		8
 #define OBJECT_TYPE_HUD_SPEED		9
@@ -9,6 +10,8 @@
 #define POSITION_DEFAULT	50
 #define HUD_BOXX_HEIGHT		20
 #define MAX_SPEED_QUANTITY	7
+
+#define END_MAP_1_1_POSITION_OUT_X			2880
 
 
 class Hud : public GameObject

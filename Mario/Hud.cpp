@@ -32,6 +32,10 @@ void Hud::Update(DWORD dt, vector<LPGameObject> *coObjects)
 	if (mario->x < (game->GetScreenWidth() / 2)) {
 		x = position_default_x;
 	}
+	else if (mario->x > END_MAP_1_1_POSITION_OUT_X - (game->GetScreenWidth() / 2)) {
+		int width = game->GetScreenWidth();
+		x = END_MAP_1_1_POSITION_OUT_X - width + position_default_x;
+	}
 	else {
 		x = mario->x - (game->GetScreenWidth() / 2) + position_default_x;
 	}
