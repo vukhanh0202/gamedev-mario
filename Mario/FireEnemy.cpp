@@ -1,5 +1,7 @@
 #include "FireEnemy.h"
 #include "Box.h"
+#include "Mario.h"
+#include <algorithm>
 
 void FireEnemy::Render()
 {
@@ -21,6 +23,9 @@ void FireEnemy::GetBoundingBox(float &l, float &t, float &r, float &b)
 }
 void FireEnemy::Update(DWORD dt, vector<LPGameObject> *coObjects)
 {
+	if (GetTickCount() - timeAppear > TIME_FIRE_ENEMY_EXIST) {
+		disable = true;
+	}
 	// Calculate dx, dy 
 	GameObject::Update(dt);
 
@@ -85,4 +90,27 @@ void FireEnemy::SetState(int state)
 		nx = 0;
 		break;
 	}
+}
+
+void FireEnemy::CalcPotentialCollisions(vector<LPGameObject>* coObjects, vector<LPCollisionEvent>& coEvents)
+{
+
+	for (UINT i = 0; i < coObjects->size(); i++)
+	{
+		LPCollisionEvent e = SweptAABBEx(coObjects->at(i));
+		if (dynamic_cast<Mario*>(coObjects->at(i)))
+		{
+			Mario *mario = dynamic_cast<Mario *>(e->obj);
+			if (mario->getUntouchable() != 0)
+				continue;
+		}
+
+		if (e->t > 0 && e->t <= 1.0f)
+			coEvents.push_back(e);
+		else
+			delete e;
+	}
+
+	std::sort(coEvents.begin(), coEvents.end(), CollisionEvent::compare);
+
 }

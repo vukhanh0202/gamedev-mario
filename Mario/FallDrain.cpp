@@ -40,14 +40,16 @@ void FallDrainMap11::Update(DWORD dt, vector<LPGameObject> *coObjects)
 		if (mario->y > this->positionInY) {
 			mario->setFallDrain(false);
 			this->marioIn = false;
-			this->isEmpty = true;
+			this->isEmpty = false;
 		}
 	}
-	if (abs(mario->y - this->positionOutY) < DISTANCE_SWAP && abs(mario->x - this->positionOutX) < DISTANCE_SWAP && marioOut == false) {
+	if (abs(mario->y - this->positionOutY) < DISTANCE_SWAP && abs(mario->x - this->positionOutX) < DISTANCE_SWAP 
+		&& marioOut == false && !mario->GetFly()) {
 		mario->setFallDrain(true);
 		this->marioOut = true;
 	}
 	if (this->marioOut) {
+		mario->setFallDrain(true);
 		int heightMario = mario->GetHeightDrainFall();
 		if (mario->y + heightMario < this->positionOutY && mario->y > positionEndY + 1) {
 			mario->SetPosition(this->positionEndX, positionEndY);
@@ -57,7 +59,8 @@ void FallDrainMap11::Update(DWORD dt, vector<LPGameObject> *coObjects)
 		if (mario->y + heightMario < this->positionEndY) {
 			mario->setFallDrain(false);
 			this->marioOut = false;
-			this->isEmpty = true;
+			this->isEmpty = false;
+			mario->setInTunnel(false);
 		}
 	}
 
@@ -89,6 +92,7 @@ void FallDrainMap11::Update(DWORD dt, vector<LPGameObject> *coObjects)
 				{
 					mario->setFallDrain(true);
 					this->marioIn = true;
+					mario->setInTunnel(true);
 				}
 			}
 		}
@@ -110,14 +114,19 @@ void EndMap11::Update(DWORD dt, vector<LPGameObject> *coObjects)
 
 	// Calculate dx, dy 
 	GameObject::Update(dt);
-	if (mario->x > positionStartX && !this->marioIn) {
+	if (mario->x > positionStartX) {
 		mario->setNoAction(true);
 		this->marioIn = true;
 		if (mario->state != MARIO_STATE_WALKING_RIGHT) {
 			mario->SetState(MARIO_STATE_WALKING_RIGHT);
-			mario->SetReadyFly(true);
 		}
-		mario->SetSpeed(0.15f, 0);
+		if (!mario->GetFly() && !mario->GetFall()) {
+			mario->SetState(MARIO_STATE_WALKING_RIGHT);
+			mario->SetSpeed(0.1f, 0.0f);
+		}
+		else {
+			mario->SetSpeed(0.0f, 0.2f);
+		}
 	}
 	if (mario->x > positionEndX) {
 		Portal *p = new Portal(SCENE_MAP_SWITCH);

@@ -4,6 +4,7 @@
 #include "Koopa.h"
 #include "Hud.h"
 #include "Point.h"
+#include <algorithm>
 
 #define MARIO_WALKING_SPEED		0.1f 
 #define MARIO_WALKING_SPEED_FAST		0.15f 
@@ -119,7 +120,7 @@
 #define MARIO_SMALL_BBOX_HEIGHT			15
 
 
-#define MARIO_SUPER_BIG_BBOX_WIDTH			21
+#define MARIO_SUPER_BIG_BBOX_WIDTH			19
 #define MARIO_SUPER_BIG_BBOX_WIDTH_HOLDING	35
 #define MARIO_SUPER_BIG_BBOX_HEIGHT			28
 #define MARIO_SUPER_BIG_BBOX_HEIGHT_SITTING	18
@@ -140,6 +141,11 @@
 
 #define OBJECT_TYPE_MARIO	-2
 
+#define UNDER_WORLD		220
+
+#define TIME_PLAY		300
+
+
 
 class Mario : public GameObject
 {
@@ -148,6 +154,9 @@ class Mario : public GameObject
 	int ny; // Determine sit or not
 	int power; // Determine Mario ready for fly (power = 5 mario can fly)
 	int point; // point when mario earn gold
+	int time; // point when mario earn gold
+	int countTime;
+	int score;
 
 	boolean hold; // Hold koopa
 	boolean hit;
@@ -161,6 +170,7 @@ class Mario : public GameObject
 
 	boolean fallDrain;
 	boolean noAction;
+	boolean inTunnel;
 
 	DWORD untouchable_start;
 
@@ -177,6 +187,8 @@ class Mario : public GameObject
 	vector<HudSpeed*> hudSpeedList;
 
 	vector<Point*> hudPointList;
+	vector<Point*> hudTimeList;
+	vector<Point*> hudScoreList;
 
 public:
 	/*Mario() : GameObject()
@@ -188,6 +200,7 @@ public:
 	void setLastJumpTime(DWORD lastJumpTime) { this->lastJumpTime = lastJumpTime; }
 	Mario(float x = 0.0f, float y = 0.0f);
 
+	int getUntouchable() { return this->untouchable; }
 	virtual void Update(DWORD dt, vector<LPGameObject> *colliable_objects = NULL);
 	void Render();
 	void SetState(int state);
@@ -208,8 +221,12 @@ public:
 	void StartUntouchable() { untouchable = 1; untouchable_start = GetTickCount(); }
 	void addHudSpeed(HudSpeed* hudSpeed) { this->hudSpeedList.push_back(hudSpeed); }
 	void addPoint(Point* point) { this->hudPointList.push_back(point); }
+	void addTime(Point* time) { this->hudTimeList.push_back(time); }
+	void addScore(Point* score) { this->hudScoreList.push_back(score); }
 	boolean getFallDrain() { return this->fallDrain; }
 	void setFallDrain(boolean fallDrain) { this->fallDrain = fallDrain; }
+	boolean getInTunnel() { return this->inTunnel; }
+	void setInTunnel(boolean inTunnel) { this->inTunnel = inTunnel; }
 
 	boolean getNoAction() { return this->noAction; }
 	void setNoAction(boolean noAction) { this->noAction = noAction; }
@@ -217,8 +234,16 @@ public:
 	int GetTypeObject() {
 		return OBJECT_TYPE_MARIO;
 	}
-	
 
+	void FilterCollision(
+		vector<LPCollisionEvent> &coEvents,
+		vector<LPCollisionEvent> &coEventsResult,
+		float &min_tx,
+		float &min_ty,
+		float &nx,
+		float &ny,
+		float &rdx,
+		float &rdy);
 
 	void Reset();
 	void UpLevel();

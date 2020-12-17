@@ -26,3 +26,4 @@ public:
 		return OBJECT_TYPE_POINT;
 	}
 };
+

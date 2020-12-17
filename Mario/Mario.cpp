@@ -15,6 +15,8 @@
 #include "Bonus.h"
 #include "Portal.h"
 
+using namespace std;
+
 Mario::Mario(float x, float y) : GameObject()
 {
 	level = MARIO_LEVEL_SUPER_BIG;
@@ -40,11 +42,30 @@ Mario::Mario(float x, float y) : GameObject()
 	point = 0;
 	fallDrain = false;
 	noAction = false;
+	inTunnel = false;
+	countTime = 0;
+	time = TIME_PLAY;
+	untouchable = 0;
 }
 
 void Mario::Update(DWORD dt, vector<LPGameObject> *coObjects)
 {
+	// Time count 
+	countTime += dt;
+	time = TIME_PLAY - countTime / 1000;
+	int tempTime = time;
+	for (int i = 0; i < 3; i++) {
+		hudTimeList.at(i)->SetState(tempTime % 10);
+		tempTime /= 10;
+	}
+	if (time <= 0 && state != MARIO_STATE_DIE) {
+		SetState(MARIO_STATE_DIE);
+	}
+
 	if (!fallDrain && !noAction) {
+		if (y > UNDER_WORLD && !inTunnel && state != MARIO_STATE_DIE) {
+			SetState(MARIO_STATE_DIE);
+		}
 		// Calculate dx, dy 
 		GameObject::Update(dt);
 
@@ -212,10 +233,6 @@ void Mario::Update(DWORD dt, vector<LPGameObject> *coObjects)
 		{
 			x += dx;
 			y += dy;
-			/*if (fall == false && vy > 0)
-			{
-				fall = true;
-			}*/
 		}
 		else
 		{
@@ -286,6 +303,7 @@ void Mario::Update(DWORD dt, vector<LPGameObject> *coObjects)
 						{
 							BrickQuestion *brickQuestionCoin = dynamic_cast<BrickQuestion *>(e->obj);
 							brickQuestionCoin->SetState(BRICK_STATE_EMPTY);
+							brickQuestionCoin->SetSpeed(0, -BRICK_DEFLECT_SPEED);
 						}
 					}
 				}
@@ -674,7 +692,40 @@ void Mario::Update(DWORD dt, vector<LPGameObject> *coObjects)
 	}
 	else {
 		GameObject::Update(dt);
-		x += dx;
+
+		vector<LPCollisionEvent> coEvents;
+		vector<LPCollisionEvent> coEventsResult;
+
+		coEvents.clear();
+
+		float min_tx, min_ty, nx = 0, ny;
+		float rdx = 0;
+		float rdy = 0;
+
+		// TODO: This is a very ugly designed function!!!!
+		FilterCollision(coEvents, coEventsResult, min_tx, min_ty, nx, ny, rdx, rdy);
+		x += min_tx * dx + nx * 0.4f;
+		if (level != MARIO_LEVEL_SWITCH_MAP) {
+			vy += MARIO_GRAVITY * dt;
+		}
+		// turn off collision when die 
+		if (state != MARIO_STATE_DIE)
+			CalcPotentialCollisions(coObjects, coEvents);
+		if (coEvents.size() != 0)
+		{
+			fall = false;
+			readyFly = false;
+			fly = false;
+			y += dy;
+			x += dx;
+		}
+		else {
+			x += dx;
+			y += dy;
+		}
+
+		// clean up collision events
+		for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];
 	}
 }
 
@@ -894,7 +945,7 @@ void Mario::Render()
 							ani = MARIO_ANI_SUPER_BIG_FLY_LEFT;
 						}
 					}
-					else if (fall == true && ny <0) {
+					else if (fall == true && ny < 0) {
 						if (restrain == true) {
 							if (nx > 0)
 							{
@@ -1244,6 +1295,8 @@ void Mario::Reset()
 	SetPosition(start_x, start_y);
 	SetSpeed(0, 0);
 	unableReadyFly();
+	time = TIME_PLAY;
+	countTime = 0;
 }
 
 void Mario::UpLevel()
@@ -1279,6 +1332,82 @@ int Mario::GetHeightDrainFall()
 		return MARIO_FIRE_BBOX_HEIGHT;
 	}
 }
+void Mario::FilterCollision(
+	vector<LPCollisionEvent> &coEvents,
+	vector<LPCollisionEvent> &coEventsResult,
+	float &min_tx, float &min_ty,
+	float &nx, float &ny, float &rdx, float &rdy)
+{
+	min_tx = 1.0f;
+	min_ty = 1.0f;
+	int min_ix = -1;
+	int min_iy = -1;
+
+	nx = 0.0f;
+	ny = 0.0f;
+
+	coEventsResult.clear();
+
+	for (UINT i = 0; i < coEvents.size(); i++)
+	{
+		LPCollisionEvent c = coEvents[i];
+
+		if (c->t < min_tx && c->nx != 0) {
+			min_tx = c->t; nx = c->nx; min_ix = i; rdx = c->dx;
+		}
+
+		if (c->t < min_ty  && c->ny != 0) {
+			min_ty = c->t; ny = c->ny; min_iy = i; rdy = c->dy;
+		}
+		if (untouchable != 0) {
+			if (dynamic_cast<FireEnemy*>(c->obj))
+			{
+				nx = 0;
+				ny = 0;
+			}
+			if (dynamic_cast<Goomba*>(c->obj))
+			{
+				nx = 0;
+				ny = 0;
+			}
+			if (dynamic_cast<Koopa*>(c->obj))
+			{
+				nx = 0;
+				ny = 0;
+			}
+			if (dynamic_cast<ParaGoomba*>(c->obj))
+			{
+				nx = 0;
+				ny = 0;
+			}
+			if (dynamic_cast<ParaKoopa*>(c->obj))
+			{
+				nx = 0;
+				ny = 0;
+			}
+			if (dynamic_cast<Pihanra*>(c->obj))
+			{
+				nx = 0;
+				ny = 0;
+			}
+			if (dynamic_cast<Goomba*>(c->obj))
+			{
+				nx = 0;
+				ny = 0;
+			}
+			if (dynamic_cast<VenusFire*>(c->obj))
+			{
+				nx = 0;
+				ny = 0;
+			}
+		}
+
+	}
+
+	if (min_ix >= 0) coEventsResult.push_back(coEvents[min_ix]);
+	if (min_iy >= 0) coEventsResult.push_back(coEvents[min_iy]);
+}
+
 
 
 

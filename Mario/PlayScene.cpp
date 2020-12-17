@@ -26,6 +26,7 @@
 #include "Pihanra.h"
 #include "Bonus.h"
 #include "FallDrain.h"
+#include "Mario.h"
 
 using namespace std;
 
@@ -73,6 +74,8 @@ PlayScene::PlayScene(int id, LPCWSTR filePath) :
 #define OBJECT_TYPE_BONUS		25  // Mushroom red, leaf
 #define OBJECT_TYPE_FALL_DRAIN_MAP_1_1		26  
 #define OBJECT_TYPE_END_MAP_1_1				27 
+#define OBJECT_TYPE_HUD_TIME				28
+#define OBJECT_TYPE_HUD_SCORE				29
 
 
 #define HUD_HEIGHT	53
@@ -91,7 +94,6 @@ PlayScene::PlayScene(int id, LPCWSTR filePath) :
 
 
 #define HEIGHT_INVALIED		1000
-#define UNDER_WORLD		220
 #define CAM_UNDER_WORLD		255
 
 #define MAX_SCENE_LINE 1024
@@ -357,12 +359,14 @@ void PlayScene::_ParseSection_OBJECTS(string line)
 			break;
 		case OBJECT_TYPE_COIN: obj = new Coin(); break;
 		case OBJECT_TYPE_HUD_POINT: obj = new Point(x, y); player->addPoint((Point*)obj); break;
+		case OBJECT_TYPE_HUD_TIME: obj = new Point(x, y); player->addTime((Point*)obj); break;
+		case OBJECT_TYPE_HUD_SCORE: obj = new Point(x, y); player->addScore((Point*)obj); break;
 		case OBJECT_TYPE_VENUS_FIRE: obj = new VenusFire(x, y); break;
 		case OBJECT_TYPE_PARA_GOOMBA: obj = new ParaGoomba(); break;
 		case OBJECT_TYPE_PARA_KOOPA: obj = new ParaKoopa(); break;
 		case OBJECT_TYPE_PIHANRA: obj = new Pihanra(x, y); break;
-		case OBJECT_TYPE_BRICK_QUESTION_COIN: obj = new BrickQuestionCoin(); break;
-		case OBJECT_TYPE_BRICK_QUESTION_BONUS: obj = new BrickQuestionBonus(); break;
+		case OBJECT_TYPE_BRICK_QUESTION_COIN: obj = new BrickQuestionCoin(x,y); break;
+		case OBJECT_TYPE_BRICK_QUESTION_BONUS: obj = new BrickQuestionBonus(x,y); break;
 		case OBJECT_TYPE_FALL_DRAIN_MAP_1_1: obj = new FallDrainMap11(x, y); break;
 		case OBJECT_TYPE_END_MAP_1_1: obj = new EndMap11(x, y); break;
 		default:
@@ -521,6 +525,7 @@ void PlayScene::Update(DWORD dt)
 				|| objects[i]->GetTypeObject() == OBJECT_TYPE_HUD
 				|| objects[i]->GetTypeObject() == OBJECT_TYPE_HUD_POINT
 				|| objects[i]->GetTypeObject() == OBJECT_TYPE_GROUND
+				|| objects[i]->GetTypeObject() == OBJECT_TYPE_FIRE_MARIO
 				|| objects[i]->GetTypeObject() == OBJECT_TYPE_FALL_DRAIN_MAP_1_1
 				|| objects[i]->GetTypeObject() == OBJECT_TYPE_END_MAP_1_1) {
 				objects[i]->Update(dt, &coObjects);
@@ -557,11 +562,11 @@ void PlayScene::Update(DWORD dt)
 			if ((player->y < game->GetScreenHeight() / 4 && player->GetFly())
 				|| (player->y <= game->GetScreenHeight() / 4 && player->GetFall())
 				|| (player->y <= -game->GetScreenHeight() / 4))
-				Game::GetInstance()->SetCamPosition((int)cx, (int)cy /*cy*/);
-			else if (player->y > UNDER_WORLD && player->GetState() != MARIO_STATE_DIE) {
-				Game::GetInstance()->SetCamPosition((int)cx, (int)CAM_UNDER_WORLD /*cy*/);
+				Game::GetInstance()->SetCamPosition((int)cx, (int)cy);
+			else if (player->y > UNDER_WORLD && player->GetState() != MARIO_STATE_DIE && player->getInTunnel()) {
+				Game::GetInstance()->SetCamPosition((int)cx, (int)CAM_UNDER_WORLD );
 			}
-			else Game::GetInstance()->SetCamPosition((int)cx, (int)20.0f /*cy*/);
+			else Game::GetInstance()->SetCamPosition((int)cx, (int)20.0f);
 		}
 		
 	}
@@ -761,13 +766,15 @@ void PlaySceneKeyHandler::KeyState(BYTE *states)
 				mario->SetState(MARIO_STATE_WALKING_DOWN);
 			}
 			else {
-				if (mario->nx < 0)
-				{
-					mario->SetState(MARIO_STATE_SITTING_LEFT);
-				}
-				else
-				{
-					mario->SetState(MARIO_STATE_SITTING_RIGHT);
+				if (!mario->GetFly()) {
+					if (mario->nx < 0)
+					{
+						mario->SetState(MARIO_STATE_SITTING_LEFT);
+					}
+					else
+					{
+						mario->SetState(MARIO_STATE_SITTING_RIGHT);
+					}
 				}
 			}
 		}

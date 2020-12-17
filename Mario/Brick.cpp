@@ -29,7 +29,19 @@ void BrickQuestion::Render()
 
 void BrickQuestionCoin::Update(DWORD dt, vector<LPGameObject> *coObjects)
 {
+	GameObject::Update(dt);
+
+	if (this->y < positionDefaultY) {
+		vy = BRICK_DEFLECT_SPEED;
+	}
+	else {
+		vy = 0;
+	}
+	y += dy;
+	if (y > positionDefaultY) y = positionDefaultY;
+
 	if (this->isEmpty == false && state == BRICK_STATE_EMPTY) {
+
 		Game *game = Game::GetInstance();
 		LPScene scene = Game::GetInstance()->GetCurrentScene();
 
@@ -47,6 +59,18 @@ void BrickQuestionCoin::Update(DWORD dt, vector<LPGameObject> *coObjects)
 }
 void BrickQuestionBonus::Update(DWORD dt, vector<LPGameObject> *coObjects)
 {
+
+	GameObject::Update(dt);
+
+	if (this->y < positionDefaultY) {
+		vy = BRICK_DEFLECT_SPEED;
+	}
+	else {
+		vy = 0;
+	}
+	y += dy;
+	if (y > positionDefaultY) y = positionDefaultY;
+
 	if (this->isEmpty == false && state == BRICK_STATE_EMPTY) {
 		Game *game = Game::GetInstance();
 		LPScene scene = Game::GetInstance()->GetCurrentScene();
@@ -54,7 +78,7 @@ void BrickQuestionBonus::Update(DWORD dt, vector<LPGameObject> *coObjects)
 
 		GameObject *bonus = new Bonus();
 		bonus->SetPosition(this->x + BRICK_BBOX_WIDTH / 2, this->y - BONUS_BBOX_HEIGHT);
-		if (nx > 0) {
+		if (mario->nx > 0) {
 			bonus->nx = 1;
 		}
 		else {

@@ -19,16 +19,19 @@
 
 #define OBJECT_TYPE_FIRE_ENEMY	19
 
+#define TIME_FIRE_ENEMY_EXIST	3000
+
 
 class FireEnemy : public GameObject
 {
-
+	DWORD timeAppear;
 public:
-
+	FireEnemy() { timeAppear = GetTickCount(); }
 	virtual void Render();
 	virtual void Update(DWORD dt, vector<LPGameObject> *coObjects);
 	virtual void GetBoundingBox(float &l, float &t, float &r, float &b);
 	virtual void SetState(int state);
+	void CalcPotentialCollisions(vector<LPGameObject> *coObjects, vector<LPCollisionEvent> &coEvents);
 
 	int GetTypeObject() {
 		return OBJECT_TYPE_FIRE_ENEMY;

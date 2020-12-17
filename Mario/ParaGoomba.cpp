@@ -1,4 +1,6 @@
 #include "ParaGoomba.h"
+#include "Mario.h"
+#include <algorithm>
 
 void ParaGoomba::GetBoundingBox(float &left, float &top, float &right, float &bottom)
 {
@@ -127,5 +129,27 @@ void ParaGoomba::SetState(int state)
 		}
 		break;
 	}
+}
+void ParaGoomba::CalcPotentialCollisions(vector<LPGameObject>* coObjects, vector<LPCollisionEvent>& coEvents)
+{
+
+	for (UINT i = 0; i < coObjects->size(); i++)
+	{
+		LPCollisionEvent e = SweptAABBEx(coObjects->at(i));
+		if (dynamic_cast<Mario*>(coObjects->at(i)))
+		{
+			Mario *mario = dynamic_cast<Mario *>(e->obj);
+			if (mario->getUntouchable() != 0)
+				continue;
+		}
+
+		if (e->t > 0 && e->t <= 1.0f)
+			coEvents.push_back(e);
+		else
+			delete e;
+	}
+
+	std::sort(coEvents.begin(), coEvents.end(), CollisionEvent::compare);
+
 }
 

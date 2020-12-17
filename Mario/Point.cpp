@@ -26,6 +26,5 @@ void Point::GetBoundingBox(float &l, float &t, float &r, float &b)
 	t = 0;
 	r = 0;
 	b = 0;
-
 }
 

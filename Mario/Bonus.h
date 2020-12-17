@@ -10,7 +10,7 @@
 #define BONUS_ANI_MUSHROOM_RED	0
 #define BONUS_ANI_LEAF			1
 
-#define BONUS_SPEED		0.05f
+#define BONUS_SPEED		0.03f
 #define BONUS_GRAVITY			0.001f
 #define BONUS_GRAVITY_LEAF		0.0002f
 #define BONUS_SPEED_LEAF		0.0015f

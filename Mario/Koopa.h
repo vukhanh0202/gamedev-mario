@@ -44,6 +44,7 @@ public:
 	virtual void GetBoundingBox(float &left, float &top, float &right, float &bottom);
 	virtual void Update(DWORD dt, vector<LPGameObject> *coObjects);
 	virtual void Render();
+	void CalcPotentialCollisions(vector<LPGameObject> *coObjects, vector<LPCollisionEvent> &coEvents);
 	int GetTypeObject() {
 		return OBJECT_TYPE_KOOPA;
 	}

@@ -18,6 +18,8 @@
 #define OBJECT_TYPE_BRICK_QUESTION_COIN	23
 #define OBJECT_TYPE_BRICK_QUESTION_BONUS 24
 
+#define BRICK_DEFLECT_SPEED 0.1f
+
 class Brick : public GameObject
 {
 public:
@@ -31,9 +33,12 @@ class BrickQuestion : public Brick
 {
 protected:
 	boolean isEmpty;
+	double positionDefaultX, positionDefaultY;
 public:
-	BrickQuestion() : Brick() {
+	BrickQuestion(double positionDefaultX, double positionDefaultY) : Brick() {
 		isEmpty = false;
+		this->positionDefaultX = positionDefaultX;
+		this->positionDefaultY = positionDefaultY;
 	}
 	virtual void Render();
 };
@@ -41,6 +46,8 @@ public:
 class BrickQuestionCoin : public BrickQuestion
 {
 public:
+	BrickQuestionCoin(double positionDefaultX, double positionDefaultY) : BrickQuestion(positionDefaultX, positionDefaultY) {
+	}
 	virtual void Update(DWORD dt, vector<LPGameObject> *coObjects);
 	int GetTypeObject() {
 		return OBJECT_TYPE_BRICK_QUESTION_COIN;
@@ -50,6 +57,8 @@ public:
 class BrickQuestionBonus : public BrickQuestion
 {
 public:
+	BrickQuestionBonus(double positionDefaultX, double positionDefaultY) : BrickQuestion(positionDefaultX, positionDefaultY) {
+	}
 	virtual void Update(DWORD dt, vector<LPGameObject> *coObjects);
 	int GetTypeObject() {
 		return OBJECT_TYPE_BRICK_QUESTION_BONUS;

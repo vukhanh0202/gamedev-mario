@@ -33,6 +33,8 @@ public:
 	virtual void Update(DWORD dt, vector<LPGameObject> *coObjects);
 	virtual void Render();
 	virtual void SetState(int state);
+	void CalcPotentialCollisions(vector<LPGameObject> *coObjects, vector<LPCollisionEvent> &coEvents);
+
 	void setTimeDie(DWORD timeDie) { this->timeDie = timeDie; }
 	int GetTypeObject() {
 		return OBJECT_TYPE_GOOMBA;

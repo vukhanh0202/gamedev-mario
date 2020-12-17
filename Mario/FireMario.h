@@ -24,13 +24,15 @@
 
 #define OBJECT_TYPE_FIRE_MARIO	4
 
+#define TIME_FIRE_EXIST	3000
+
 
 class FireMario : public GameObject
 {
-
+	DWORD timeAppear;
 public:
 	static int count;
-	FireMario() { count++;}
+	FireMario() { count++; timeAppear = GetTickCount(); }
 
 	virtual void Render();
 	virtual void Update(DWORD dt, vector<LPGameObject> *coObjects);

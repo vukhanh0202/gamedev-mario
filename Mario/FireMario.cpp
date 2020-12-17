@@ -28,6 +28,9 @@ void FireMario::GetBoundingBox(float &l, float &t, float &r, float &b)
 }
 void FireMario::Update(DWORD dt, vector<LPGameObject> *coObjects)
 {
+	if (GetTickCount() - timeAppear > TIME_FIRE_EXIST) {
+		disable = true;
+	}
 	// Calculate dx, dy 
 	GameObject::Update(dt);
 
