@@ -359,8 +359,6 @@ void PlayScene::_ParseSection_OBJECTS(string line)
 			break;
 		case OBJECT_TYPE_COIN: obj = new Coin(); break;
 		case OBJECT_TYPE_HUD_POINT: obj = new Point(x, y); player->addPoint((Point*)obj); break;
-		case OBJECT_TYPE_HUD_TIME: obj = new Point(x, y); player->addTime((Point*)obj); break;
-		case OBJECT_TYPE_HUD_SCORE: obj = new Point(x, y); player->addScore((Point*)obj); break;
 		case OBJECT_TYPE_VENUS_FIRE: obj = new VenusFire(x, y); break;
 		case OBJECT_TYPE_PARA_GOOMBA: obj = new ParaGoomba(); break;
 		case OBJECT_TYPE_PARA_KOOPA: obj = new ParaKoopa(); break;
@@ -369,6 +367,9 @@ void PlayScene::_ParseSection_OBJECTS(string line)
 		case OBJECT_TYPE_BRICK_QUESTION_BONUS: obj = new BrickQuestionBonus(x,y); break;
 		case OBJECT_TYPE_FALL_DRAIN_MAP_1_1: obj = new FallDrainMap11(x, y); break;
 		case OBJECT_TYPE_END_MAP_1_1: obj = new EndMap11(x, y); break;
+		case OBJECT_TYPE_HUD_TIME: obj = new Point(x, y); player->addTime((Point*)obj); break;
+		case OBJECT_TYPE_HUD_SCORE: obj = new Point(x, y); player->addScore((Point*)obj); break;
+
 		default:
 			DebugOut(L"[ERR] Invalid object type: %d\n", object_type);
 			return;

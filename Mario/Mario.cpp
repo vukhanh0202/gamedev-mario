@@ -46,6 +46,7 @@ Mario::Mario(float x, float y) : GameObject()
 	countTime = 0;
 	time = TIME_PLAY;
 	untouchable = 0;
+	score = 0;
 }
 
 void Mario::Update(DWORD dt, vector<LPGameObject> *coObjects)
@@ -61,6 +62,14 @@ void Mario::Update(DWORD dt, vector<LPGameObject> *coObjects)
 	if (time <= 0 && state != MARIO_STATE_DIE) {
 		SetState(MARIO_STATE_DIE);
 	}
+
+	// Count score
+	int tempScore = score;
+	for (int i = 0; i < 7; i++) {
+		hudScoreList.at(i)->SetState(tempScore % 10);
+		tempScore /= 10;
+	}
+
 
 	if (!fallDrain && !noAction) {
 		if (y > UNDER_WORLD && !inTunnel && state != MARIO_STATE_DIE) {
@@ -280,6 +289,7 @@ void Mario::Update(DWORD dt, vector<LPGameObject> *coObjects)
 					Coin *coin = dynamic_cast<Coin *>(e->obj);
 					coin->disable = true;
 					point++;
+					score += SCORE_PLUS / 2;
 					if (point >= 100) point = 0;
 					hudPointList.at(0)->SetState(point % 10);
 					hudPointList.at(1)->SetState(point / 10);
@@ -293,6 +303,9 @@ void Mario::Update(DWORD dt, vector<LPGameObject> *coObjects)
 						y -= MARIO_SMALL_BBOX_HEIGHT;
 						level++;
 						unableReadyFly();
+					}
+					else {
+						score += (SCORE_PLUS * 10);
 					}
 
 				}

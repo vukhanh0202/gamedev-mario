@@ -144,6 +144,7 @@
 #define UNDER_WORLD		220
 
 #define TIME_PLAY		300
+#define SCORE_PLUS		100
 
 
 
@@ -227,6 +228,8 @@ public:
 	void setFallDrain(boolean fallDrain) { this->fallDrain = fallDrain; }
 	boolean getInTunnel() { return this->inTunnel; }
 	void setInTunnel(boolean inTunnel) { this->inTunnel = inTunnel; }
+	int getScore() { return this->score; }
+	void setScore(int score) { this->score = score; }
 
 	boolean getNoAction() { return this->noAction; }
 	void setNoAction(boolean noAction) { this->noAction = noAction; }

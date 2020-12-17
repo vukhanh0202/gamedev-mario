@@ -44,6 +44,7 @@ void BrickQuestionCoin::Update(DWORD dt, vector<LPGameObject> *coObjects)
 
 		Game *game = Game::GetInstance();
 		LPScene scene = Game::GetInstance()->GetCurrentScene();
+		Mario *mario = ((PlayScene*)scene)->GetPlayer();
 
 		GameObject *coin = new Coin(this->x + BRICK_BBOX_WIDTH / 2, this->y - COIN_BBOX_WIDTH);
 		coin->SetPosition(this->x + BRICK_BBOX_WIDTH / 4, this->y - COIN_BBOX_WIDTH);
@@ -54,6 +55,7 @@ void BrickQuestionCoin::Update(DWORD dt, vector<LPGameObject> *coObjects)
 		coin->SetAnimationSet(ani_set);
 
 		((PlayScene*)scene)->pushObject(coin);
+		mario->setScore(mario->getScore() + SCORE_PLUS);
 		isEmpty = true;
 	}
 }
