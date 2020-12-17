@@ -70,6 +70,8 @@ void Mario::Update(DWORD dt, vector<LPGameObject> *coObjects)
 		tempScore /= 10;
 	}
 
+	
+
 
 	if (!fallDrain && !noAction) {
 		if (y > UNDER_WORLD && !inTunnel && state != MARIO_STATE_DIE) {
@@ -235,6 +237,11 @@ void Mario::Update(DWORD dt, vector<LPGameObject> *coObjects)
 			bullet->SetAnimationSet(ani_set);
 			((PlayScene*)scene)->pushObject(bullet);
 			SetShot(false);
+		}
+
+		// Handle Attack
+		if (attack == true && GetTickCount() - lastAttack > TIME_PER_ONE_ATTACK) {
+			attack = false;
 		}
 
 		// No collision occured, proceed normally

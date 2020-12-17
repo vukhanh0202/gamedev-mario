@@ -145,6 +145,7 @@
 
 #define TIME_PLAY		300
 #define SCORE_PLUS		100
+#define TIME_PER_ONE_ATTACK		400
 
 
 
@@ -179,6 +180,7 @@ class Mario : public GameObject
 	float start_y;
 
 	DWORD lastJumpTime;
+	DWORD lastAttack;
 	boolean isCollision; // Check object is collision?
 
 	//FireMario *bullet;
@@ -218,6 +220,7 @@ public:
 	void SetRestrain(boolean restrain) { this->restrain = restrain; }
 	boolean GetRestrain() { return this->restrain; }
 	void SetAttack(boolean attack) { this->attack = attack; }
+	boolean getAttack() { return this->attack; }
 	void SetLevel(int l) { level = l; unableReadyFly(); }
 	void StartUntouchable() { untouchable = 1; untouchable_start = GetTickCount(); }
 	void addHudSpeed(HudSpeed* hudSpeed) { this->hudSpeedList.push_back(hudSpeed); }
@@ -230,6 +233,7 @@ public:
 	void setInTunnel(boolean inTunnel) { this->inTunnel = inTunnel; }
 	int getScore() { return this->score; }
 	void setScore(int score) { this->score = score; }
+	void setLastAttack(DWORD lastAttack) { this->lastAttack = lastAttack; }
 
 	boolean getNoAction() { return this->noAction; }
 	void setNoAction(boolean noAction) { this->noAction = noAction; }
