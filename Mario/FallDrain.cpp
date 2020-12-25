@@ -40,7 +40,7 @@ void FallDrainMap11::Update(DWORD dt, vector<LPGameObject> *coObjects)
 		if (mario->y > this->positionInY) {
 			mario->setFallDrain(false);
 			this->marioIn = false;
-			this->isEmpty = false;
+			this->isEmpty = true;
 		}
 	}
 	if (abs(mario->y - this->positionOutY) < DISTANCE_SWAP && abs(mario->x - this->positionOutX) < DISTANCE_SWAP 
@@ -59,7 +59,7 @@ void FallDrainMap11::Update(DWORD dt, vector<LPGameObject> *coObjects)
 		if (mario->y + heightMario < this->positionEndY) {
 			mario->setFallDrain(false);
 			this->marioOut = false;
-			this->isEmpty = false;
+			this->isEmpty = true;
 			mario->setInTunnel(false);
 		}
 	}
@@ -68,7 +68,6 @@ void FallDrainMap11::Update(DWORD dt, vector<LPGameObject> *coObjects)
 	vector<LPCollisionEvent> coEventsResult;
 
 	coEvents.clear();	
-
 
 	CalcPotentialCollisions(coObjects, coEvents);
 
@@ -80,7 +79,6 @@ void FallDrainMap11::Update(DWORD dt, vector<LPGameObject> *coObjects)
 		float rdy = 0;
 		//// TODO: This is a very ugly designed function!!!!
 		FilterCollision(coEvents, coEventsResult, min_tx, min_ty, nx, ny, rdx, rdy);
-
 
 		for (UINT i = 0; i < coEventsResult.size(); i++)
 		{

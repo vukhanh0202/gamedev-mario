@@ -47,38 +47,41 @@ Mario::Mario(float x, float y) : GameObject()
 	time = TIME_PLAY;
 	untouchable = 0;
 	score = 0;
+	isCollision = false;
 }
 
 void Mario::Update(DWORD dt, vector<LPGameObject> *coObjects)
 {
-	// Time count 
-	countTime += dt;
-	time = TIME_PLAY - countTime / 1000;
-	int tempTime = time;
-	for (int i = 0; i < 3; i++) {
-		hudTimeList.at(i)->SetState(tempTime % 10);
-		tempTime /= 10;
+	if (state == MARIO_STATE_DIE)return;
+	if (level != MARIO_LEVEL_SWITCH_MAP) {
+		// Time count 
+		countTime += dt;
+		time = TIME_PLAY - countTime / 1000;
+		int tempTime = time;
+		for (int i = 0; i < 3; i++) {
+			hudTimeList.at(i)->SetState(tempTime % 10);
+			tempTime /= 10;
+		}
+		if (time <= 0 && state != MARIO_STATE_DIE) {
+			SetState(MARIO_STATE_DIE);
+		}
+
+		// Count score
+		int tempScore = score;
+		for (int i = 0; i < 7; i++) {
+			hudScoreList.at(i)->SetState(tempScore % 10);
+			tempScore /= 10;
+		}
 	}
-	if (time <= 0 && state != MARIO_STATE_DIE) {
-		SetState(MARIO_STATE_DIE);
-	}
 
-	// Count score
-	int tempScore = score;
-	for (int i = 0; i < 7; i++) {
-		hudScoreList.at(i)->SetState(tempScore % 10);
-		tempScore /= 10;
-	}
-
-	
-
-
+	// Calculate dx, dy 
+	GameObject::Update(dt);
 	if (!fallDrain && !noAction) {
+		
 		if (y > UNDER_WORLD && !inTunnel && state != MARIO_STATE_DIE) {
 			SetState(MARIO_STATE_DIE);
 		}
-		// Calculate dx, dy 
-		GameObject::Update(dt);
+		
 
 		if (level == MARIO_LEVEL_SUPER_BIG && hold == false)
 		{
@@ -131,7 +134,7 @@ void Mario::Update(DWORD dt, vector<LPGameObject> *coObjects)
 				}
 			}
 			else {
-				if (vy > 0 && y < 0 && GetTickCount() - lastJumpTime >500) fall = true;
+				if (vy > 0 && y < 0 && GetTickCount64() - lastJumpTime >500) fall = true;
 				vy += MARIO_GRAVITY * dt;
 			}
 		}
@@ -150,7 +153,7 @@ void Mario::Update(DWORD dt, vector<LPGameObject> *coObjects)
 			CalcPotentialCollisions(coObjects, coEvents);
 
 		// reset untouchable timer if untouchable time has passed
-		if (GetTickCount() - untouchable_start > MARIO_UNTOUCHABLE_TIME)
+		if (GetTickCount64() - untouchable_start > MARIO_UNTOUCHABLE_TIME)
 		{
 			untouchable_start = 0;
 			untouchable = 0;
@@ -216,7 +219,7 @@ void Mario::Update(DWORD dt, vector<LPGameObject> *coObjects)
 		}
 
 		// Handle mario shot bullet
-		if (shot && level == MARIO_LEVEL_FIRE && FireMario::count < FIRE_MARIO_MAX_ITEM)
+		if (shot && level == MARIO_LEVEL_FIRE && FireMario::count < FIRE_MARIO_MAX_ITEM && vx ==0)
 		{
 			Game *game = Game::GetInstance();
 			LPScene scene = Game::GetInstance()->GetCurrentScene();
@@ -240,7 +243,7 @@ void Mario::Update(DWORD dt, vector<LPGameObject> *coObjects)
 		}
 
 		// Handle Attack
-		if (attack == true && GetTickCount() - lastAttack > TIME_PER_ONE_ATTACK) {
+		if (attack == true && GetTickCount64() - lastAttack > TIME_PER_ONE_ATTACK) {
 			attack = false;
 		}
 
@@ -401,7 +404,7 @@ void Mario::Update(DWORD dt, vector<LPGameObject> *coObjects)
 							if (goomba->GetState() != GOOMBA_STATE_DIE)
 							{
 								goomba->SetState(GOOMBA_STATE_DIE);
-								goomba->setTimeDie(GetTickCount());
+								goomba->setTimeDie(GetTickCount64());
 								vy = -MARIO_JUMP_DEFLECT_SPEED;
 							}
 						}
@@ -427,7 +430,7 @@ void Mario::Update(DWORD dt, vector<LPGameObject> *coObjects)
 					else if (dynamic_cast<Koopa *>(e->obj)) // if e->obj is Koopa 
 					{
 						Koopa *koopa = dynamic_cast<Koopa *>(e->obj);
-
+						this->isCollisionKoopa = true;
 						if (koopa->state != KOOPA_STATE_DIE_DISAPPER)
 						{
 							// jump on top >> kill Koopa
@@ -551,7 +554,7 @@ void Mario::Update(DWORD dt, vector<LPGameObject> *coObjects)
 							else if (paraGoomba->GetState() == PARA_GOOMBA_STATE_WALKING)
 							{
 								paraGoomba->SetState(PARA_GOOMBA_STATE_DIE);
-								paraGoomba->setTimeDie(GetTickCount());
+								paraGoomba->setTimeDie(GetTickCount64());
 								vy = -MARIO_JUMP_DEFLECT_SPEED;
 							}
 						}
@@ -711,8 +714,6 @@ void Mario::Update(DWORD dt, vector<LPGameObject> *coObjects)
 		for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];
 	}
 	else {
-		GameObject::Update(dt);
-
 		vector<LPCollisionEvent> coEvents;
 		vector<LPCollisionEvent> coEventsResult;
 
@@ -736,12 +737,12 @@ void Mario::Update(DWORD dt, vector<LPGameObject> *coObjects)
 			fall = false;
 			readyFly = false;
 			fly = false;
-			y += dy;
-			x += dx;
 		}
 		else {
-			x += dx;
-			y += dy;
+			if (noAction) {
+				x += dx;
+				y += dy;
+			}
 		}
 
 		// clean up collision events
@@ -1068,7 +1069,7 @@ void Mario::Render()
 							ani = MARIO_ANI_FIRE_HIT_LEFT;
 						}
 					}
-					else if (shot == true) {
+					else if (shot == true && fast == false) {
 						if (nx > 0)
 						{
 							ani = MARIO_ANI_FIRE_SHOT_RIGHT;
@@ -1165,11 +1166,11 @@ void Mario::SetState(int state)
 		break;
 	case MARIO_STATE_JUMP:
 		if (ny == -1) {
-			DWORD t = GetTickCount() - lastJumpTime;
+			DWORD t = GetTickCount64() - lastJumpTime;
 			// 0.5s sleep when mario jump
 			if (t > 500 && isCollision == true)
 			{
-				lastJumpTime = GetTickCount();
+				lastJumpTime = GetTickCount64();
 				isCollision = false;
 				vy = -MARIO_JUMP_SPEED_Y;
 				ny = -1;
@@ -1340,7 +1341,7 @@ void Mario::DownLevel()
 int Mario::GetHeightDrainFall()
 {
 	if (level == MARIO_SMALL_BBOX_HEIGHT) {
-		return MARIO_ANI_SMALL_FALL_DRAIN;
+		return MARIO_SMALL_BBOX_HEIGHT;
 	}
 	else if (level == MARIO_LEVEL_BIG) {
 		return MARIO_BIG_BBOX_HEIGHT;

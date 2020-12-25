@@ -68,9 +68,9 @@ void Bonus::Update(DWORD dt, vector<LPGameObject> *coObjects)
 		for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];
 	}
 	else if (state == BONUS_STATE_LEAF) {
-		if (GetTickCount() - lastReverseSpeed > 500) {
+		if (GetTickCount64() - lastReverseSpeed > 500) {
 			vx = vx > 0 ? -BONUS_SPEED_LEAF : BONUS_SPEED_LEAF;
-			lastReverseSpeed = GetTickCount();
+			lastReverseSpeed = GetTickCount64();
 		}
 		else {
 			if (vx > 0) {

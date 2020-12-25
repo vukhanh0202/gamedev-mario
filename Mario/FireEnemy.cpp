@@ -23,7 +23,7 @@ void FireEnemy::GetBoundingBox(float &l, float &t, float &r, float &b)
 }
 void FireEnemy::Update(DWORD dt, vector<LPGameObject> *coObjects)
 {
-	if (GetTickCount() - timeAppear > TIME_FIRE_ENEMY_EXIST) {
+	if (GetTickCount64() - timeAppear > TIME_FIRE_ENEMY_EXIST) {
 		disable = true;
 	}
 	// Calculate dx, dy 

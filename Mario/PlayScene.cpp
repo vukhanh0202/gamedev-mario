@@ -679,11 +679,10 @@ void PlaySceneKeyHandler::OnKeyDown(int KeyCode)
 				case DIK_A:
 					if (mario->GetLevel() == MARIO_LEVEL_FIRE) {
 						mario->SetShot(true);
-						mario->SetHolding(false);
 					}
 					else if (mario->GetLevel() == MARIO_LEVEL_SUPER_BIG && !mario->getAttack()) {
 						mario->SetAttack(true);
-						mario->setLastAttack(GetTickCount());
+						mario->setLastAttack(GetTickCount64());
 					}
 					break;
 				
@@ -700,6 +699,7 @@ void PlaySceneKeyHandler::OnKeyUp(int KeyCode)
 	Mario *mario = ((PlayScene*)scene)->GetPlayer();
 	if (mario == NULL) {}
 	else {
+		if (mario->GetState() == MARIO_STATE_DIE) return;
 		if (!mario->getFallDrain() && !mario->getNoAction()) {
 			switch (KeyCode)
 			{
@@ -713,6 +713,7 @@ void PlaySceneKeyHandler::OnKeyUp(int KeyCode)
 				mario->SetFastSpeed(false);
 				mario->SetShot(false);
 				mario->SetHolding(false);
+				mario->isCollisionKoopa = false;
 				break;
 			case DIK_S:
 				if (mario->GetFly())
@@ -743,10 +744,11 @@ void PlaySceneKeyHandler::KeyState(BYTE *states)
 	if (!mario->getFallDrain() && !mario->getNoAction()) {
 		if (game->IsKeyDown(DIK_A))
 		{
-			if (mario->getAttack() == false || mario->GetLevel() != MARIO_LEVEL_SUPER_BIG) {
-				if (mario->GetFly() == false) {
-					mario->SetFastSpeed(true);
-				}
+			if (mario->GetFly() == false) {
+				mario->SetFastSpeed(true);
+			}
+			if (mario->isCollisionKoopa == true) {
+				
 				mario->SetHolding(true);
 			}
 
@@ -793,7 +795,7 @@ void PlaySceneKeyHandler::KeyState(BYTE *states)
 		if (game->IsKeyDown(DIK_Q)) {
 			if (mario->GetLevel() == MARIO_LEVEL_SUPER_BIG) {
 				mario->SetAttack(true);
-				mario->setLastAttack(GetTickCount());
+				mario->setLastAttack(GetTickCount64());
 			}
 		}
 	}

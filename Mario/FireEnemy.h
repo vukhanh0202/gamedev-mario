@@ -26,7 +26,7 @@ class FireEnemy : public GameObject
 {
 	DWORD timeAppear;
 public:
-	FireEnemy() { timeAppear = GetTickCount(); }
+	FireEnemy() { timeAppear = GetTickCount64(); }
 	virtual void Render();
 	virtual void Update(DWORD dt, vector<LPGameObject> *coObjects);
 	virtual void GetBoundingBox(float &l, float &t, float &r, float &b);

@@ -63,7 +63,7 @@ void VenusFire::Update(DWORD dt, vector<LPGameObject> *coObjects)
 	Mario *mario = ((PlayScene*)scene)->GetPlayer();
 
 	if (this->y <= this->position_default_y - VENUS_FIRE_BBOX_HEIGHT && !fire) {
-		lastFireTime = GetTickCount();
+		lastFireTime = GetTickCount64();
 		fire = true;
 		GameObject *fireEnemy = new FireEnemy();
 		if (this->nx > 0)
@@ -96,7 +96,7 @@ void VenusFire::Update(DWORD dt, vector<LPGameObject> *coObjects)
 		fireEnemy->SetAnimationSet(ani_set);
 		((PlayScene*)scene)->pushObject(fireEnemy);
 	}
-	else if (fire && GetTickCount() - lastFireTime > VENUS_FIRE_TIME_FIRE) {
+	else if (fire && GetTickCount64() - lastFireTime > VENUS_FIRE_TIME_FIRE) {
 		fire = false;
 		vy = VENUS_FIRE_SPEED;
 	}
@@ -105,14 +105,14 @@ void VenusFire::Update(DWORD dt, vector<LPGameObject> *coObjects)
 	}
 
 	if (this->y > this->position_default_y && vy != 0) {
-		lastAppearTime = GetTickCount();
+		lastAppearTime = GetTickCount64();
 	}
 
-	if (GetTickCount() - lastAppearTime > VENUS_FIRE_TIME_WAIT && lastAppearTime != 0
+	if (GetTickCount64() - lastAppearTime > VENUS_FIRE_TIME_WAIT && lastAppearTime != 0
 		&& this->y > this->position_default_y - VENUS_FIRE_BBOX_HEIGHT && vy == 0) {
 		vy = -VENUS_FIRE_SPEED;
 	}
-	else if ((GetTickCount() - lastAppearTime < VENUS_FIRE_TIME_WAIT) && this->y > this->position_default_y - VENUS_FIRE_BBOX_HEIGHT) {
+	else if ((GetTickCount64() - lastAppearTime < VENUS_FIRE_TIME_WAIT) && this->y > this->position_default_y - VENUS_FIRE_BBOX_HEIGHT) {
 		vy = 0;
 	}
 

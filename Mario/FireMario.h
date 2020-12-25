@@ -32,7 +32,7 @@ class FireMario : public GameObject
 	DWORD timeAppear;
 public:
 	static int count;
-	FireMario() { count++; timeAppear = GetTickCount(); }
+	FireMario() { count++; timeAppear = GetTickCount64(); }
 
 	virtual void Render();
 	virtual void Update(DWORD dt, vector<LPGameObject> *coObjects);

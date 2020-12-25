@@ -31,9 +31,9 @@ void ParaKoopa::GetBoundingBox(float &left, float &top, float &right, float &bot
 
 void ParaKoopa::Update(DWORD dt, vector<LPGameObject> *coObjects)
 {
-	if (GetTickCount() - timeJump >= PARA_KOOPA_TIME_JUMP && state == PARA_KOOPA_STATE_WALKING_WING ) {
+	if (GetTickCount64() - timeJump >= PARA_KOOPA_TIME_JUMP && state == PARA_KOOPA_STATE_WALKING_WING ) {
 		vy = -PARA_KOOPA_JUMP;
-		timeJump = GetTickCount();
+		timeJump = GetTickCount64();
 	}
 	// Calculate dx, dy 
 	GameObject::Update(dt);

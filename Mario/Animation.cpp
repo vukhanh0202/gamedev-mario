@@ -22,7 +22,7 @@ void Animation::Add(int spriteId, DWORD time)
 */
 void Animation::Render(float x, float y, int alpha)
 {
-	DWORD now = GetTickCount();
+	DWORD now = GetTickCount64();
 	if (currentFrame == -1)
 	{
 		currentFrame = 0;

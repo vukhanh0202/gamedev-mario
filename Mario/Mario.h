@@ -194,6 +194,7 @@ class Mario : public GameObject
 	vector<Point*> hudScoreList;
 
 public:
+	boolean isCollisionKoopa;
 	/*Mario() : GameObject()
 	{
 		level = MARIO_LEVEL_BIG;
@@ -222,7 +223,7 @@ public:
 	void SetAttack(boolean attack) { this->attack = attack; }
 	boolean getAttack() { return this->attack; }
 	void SetLevel(int l) { level = l; unableReadyFly(); }
-	void StartUntouchable() { untouchable = 1; untouchable_start = GetTickCount(); }
+	void StartUntouchable() { untouchable = 1; untouchable_start = GetTickCount64(); }
 	void addHudSpeed(HudSpeed* hudSpeed) { this->hudSpeedList.push_back(hudSpeed); }
 	void addPoint(Point* point) { this->hudPointList.push_back(point); }
 	void addTime(Point* time) { this->hudTimeList.push_back(time); }

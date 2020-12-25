@@ -21,27 +21,27 @@ void Pihanra::Update(DWORD dt, vector<LPGameObject> *coObjects)
 {
 	// Down
 	if (this->y < this->position_default_y - PIHANRA_BBOX_HEIGHT && vy != 0) {
-		lastFireTime = GetTickCount();
+		lastFireTime = GetTickCount64();
 	}
 
-	if (GetTickCount() - lastFireTime > PIHANRA_TIME_FIRE && lastFireTime != 0
+	if (GetTickCount64() - lastFireTime > PIHANRA_TIME_FIRE && lastFireTime != 0
 		&& this->y < this->position_default_y - PIHANRA_BBOX_HEIGHT && vy == 0) {
 		vy = PIHANRA_SPEED;
 	}
-	else if ((GetTickCount() - lastFireTime < PIHANRA_TIME_FIRE) && this->y < this->position_default_y - PIHANRA_BBOX_HEIGHT) {
+	else if ((GetTickCount64() - lastFireTime < PIHANRA_TIME_FIRE) && this->y < this->position_default_y - PIHANRA_BBOX_HEIGHT) {
 		vy = 0;
 	}
 
 	// Up
 	if (this->y > this->position_default_y && vy != 0) {
-		lastAppearTime = GetTickCount();
+		lastAppearTime = GetTickCount64();
 	}
 
-	if (GetTickCount() - lastAppearTime > PIHANRA_TIME_WAIT && lastAppearTime != 0
+	if (GetTickCount64() - lastAppearTime > PIHANRA_TIME_WAIT && lastAppearTime != 0
 		&& this->y > this->position_default_y - PIHANRA_BBOX_HEIGHT && vy == 0) {
 		vy = -PIHANRA_SPEED;
 	}
-	else if ((GetTickCount() - lastAppearTime < PIHANRA_TIME_WAIT) && this->y > this->position_default_y - PIHANRA_BBOX_HEIGHT) {
+	else if ((GetTickCount64() - lastAppearTime < PIHANRA_TIME_WAIT) && this->y > this->position_default_y - PIHANRA_BBOX_HEIGHT) {
 		vy = 0;
 	}
 	// Calculate dx, dy 

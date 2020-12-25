@@ -28,9 +28,9 @@ void ParaGoomba::Update(DWORD dt, vector<LPGameObject> *coObjects)
 {
 	vy += PARA_GOOMBA_GRAVITY * dt;
 
-	if (GetTickCount() - timeJump >= PARA_GOOMBA_TIME_JUMP && state == PARA_GOOMBA_STATE_WALKING_WING && timeJump != 0) {
+	if (GetTickCount64() - timeJump >= PARA_GOOMBA_TIME_JUMP && state == PARA_GOOMBA_STATE_WALKING_WING && timeJump != 0) {
 		vy = -PARA_GOOMBA_JUMP;
-		timeJump = GetTickCount();
+		timeJump = GetTickCount64();
 	}
 
 
@@ -42,7 +42,7 @@ void ParaGoomba::Update(DWORD dt, vector<LPGameObject> *coObjects)
 
 	coEvents.clear();
 	if (state == PARA_GOOMBA_STATE_DIE) {
-		if (GetTickCount() - timeDie >= PARA_GOOMBA_TIME_DISAPPEAR) {
+		if (GetTickCount64() - timeDie >= PARA_GOOMBA_TIME_DISAPPEAR) {
 			disable = true;
 		}
 	}
@@ -60,7 +60,7 @@ void ParaGoomba::Update(DWORD dt, vector<LPGameObject> *coObjects)
 	else
 	{
 		if (timeJump == 0) {
-			timeJump = GetTickCount();
+			timeJump = GetTickCount64();
 		}
 		float min_tx, min_ty, nx = 0, ny = 0;
 		float rdx = 0;

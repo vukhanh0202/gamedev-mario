@@ -33,7 +33,7 @@ void Goomba::Update(DWORD dt, vector<LPGameObject> *coObjects)
 
 	coEvents.clear();
 	if (state == GOOMBA_STATE_DIE) {
-		if (GetTickCount() - timeDie >= GOOMBA_TIME_DISAPPEAR) {
+		if (GetTickCount64() - timeDie >= GOOMBA_TIME_DISAPPEAR) {
 			disable = true;
 		}
 	}
