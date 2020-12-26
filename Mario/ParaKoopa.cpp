@@ -7,6 +7,7 @@
 #include "Game.h"
 #include "Goomba.h"
 #include "ParaGoomba.h"
+#include "BrickGlass.h"
 
 
 
@@ -159,6 +160,14 @@ void ParaKoopa::Update(DWORD dt, vector<LPGameObject> *coObjects)
 				ParaGoomba *paraGoomba = dynamic_cast<ParaGoomba *>(e->obj);
 				if (paraGoomba->state != PARA_GOOMBA_STATE_DIE) {
 					paraGoomba->state = PARA_GOOMBA_STATE_DIE_DISAPPER;
+				}
+			}
+			else if (dynamic_cast<BrickGlass *>(e->obj) && (this->state == KOOPA_STATE_THROWING_LEFT || this->state == KOOPA_STATE_THROWING_RIGHT)) {
+				if (nx != 0)
+				{
+					BrickGlass *brickGlass = dynamic_cast<BrickGlass *>(e->obj);
+					brickGlass->disable = true;
+					vx = -vx;
 				}
 			}
 			else if (nx != 0)

@@ -3,6 +3,7 @@
 #include "PlayScene.h"
 #include "Coin.h"
 #include "Bonus.h"
+#include "Button.h"
 
 void Brick::Render()
 {
@@ -61,7 +62,6 @@ void BrickQuestionCoin::Update(DWORD dt, vector<LPGameObject> *coObjects)
 }
 void BrickQuestionBonus::Update(DWORD dt, vector<LPGameObject> *coObjects)
 {
-
 	GameObject::Update(dt);
 
 	if (this->y < positionDefaultY) {
@@ -98,6 +98,29 @@ void BrickQuestionBonus::Update(DWORD dt, vector<LPGameObject> *coObjects)
 		bonus->SetAnimationSet(ani_set);
 
 		((PlayScene*)scene)->pushObject(bonus);
+		isEmpty = true;
+	}
+}
+
+void BrickButton::Update(DWORD dt, vector<LPGameObject> *coObjects)
+{
+	GameObject::Update(dt);
+
+	if (y > positionDefaultY) y = positionDefaultY;
+
+	if (this->isEmpty == false && state == BRICK_STATE_EMPTY) {
+		Game *game = Game::GetInstance();
+		LPScene scene = Game::GetInstance()->GetCurrentScene();
+		Mario *mario = ((PlayScene*)scene)->GetPlayer();
+
+		GameObject *button = new Button(x,y);
+		button->SetPosition(this->x , this->y - BONUS_BBOX_HEIGHT);
+		
+		LPAnimation_Set ani_set = AnimationSets::GetInstance()->Get(BUTTON_ANIMATION_SET_ID);
+
+		button->SetAnimationSet(ani_set);
+		
+		((PlayScene*)scene)->pushObject(button);
 		isEmpty = true;
 	}
 }

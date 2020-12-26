@@ -27,6 +27,8 @@
 #include "Bonus.h"
 #include "FallDrain.h"
 #include "Mario.h"
+#include "BrickGlass.h"
+#include "Special.h"
 
 using namespace std;
 
@@ -35,6 +37,8 @@ PlayScene::PlayScene(int id, LPCWSTR filePath) :
 {
 	key_handler = new PlaySceneKeyHandler(this);
 	mergeObject = false;
+	currentSpecial = 0;
+	timeChangeSpecial = GetTickCount64();
 }
 
 #define SCENE_SECTION_UNKNOWN -1
@@ -62,7 +66,7 @@ PlayScene::PlayScene(int id, LPCWSTR filePath) :
 #define OBJECT_TYPE_BACKGROUND_MOTION_LOGO_NUMBER	13
 #define OBJECT_TYPE_BACKGROUND_MOTION_LOGO_ARROW	14
 #define OBJECT_TYPE_SWITCH_MAP	15
-#define OBJECT_TYPE_COIN	16
+#define OBJECT_TYPE_COIN		16
 #define OBJECT_TYPE_HUD_POINT	17
 #define OBJECT_TYPE_VENUS_FIRE	18
 #define OBJECT_TYPE_FIRE_ENEMY	19
@@ -76,6 +80,9 @@ PlayScene::PlayScene(int id, LPCWSTR filePath) :
 #define OBJECT_TYPE_END_MAP_1_1				27 
 #define OBJECT_TYPE_HUD_TIME				28
 #define OBJECT_TYPE_HUD_SCORE				29
+#define OBJECT_TYPE_BRICK_GLASS				30
+#define OBJECT_TYPE_BRICK_BUTTON			31
+#define OBJECT_TYPE_SPECIAL					32
 
 
 #define HUD_HEIGHT	53
@@ -92,7 +99,7 @@ PlayScene::PlayScene(int id, LPCWSTR filePath) :
 #define SCENE_1_COORDINATES_Y		0
 
 
-
+#define START_SCREEN		5
 #define HEIGHT_INVALIED		1000
 #define CAM_UNDER_WORLD		255
 
@@ -369,6 +376,9 @@ void PlayScene::_ParseSection_OBJECTS(string line)
 		case OBJECT_TYPE_END_MAP_1_1: obj = new EndMap11(x, y); break;
 		case OBJECT_TYPE_HUD_TIME: obj = new Point(x, y); player->addTime((Point*)obj); break;
 		case OBJECT_TYPE_HUD_SCORE: obj = new Point(x, y); player->addScore((Point*)obj); break;
+		case OBJECT_TYPE_BRICK_GLASS: obj = new BrickGlass(); break;
+		case OBJECT_TYPE_BRICK_BUTTON: obj = new BrickButton(x, y); break;
+		case OBJECT_TYPE_SPECIAL: obj = new Special(x, y); this->gifts.push_back((Special*)obj); break;
 
 		default:
 			DebugOut(L"[ERR] Invalid object type: %d\n", object_type);
@@ -484,10 +494,29 @@ void PlayScene::Update(DWORD dt)
 			if (objects[i]->disable == false && objects[i]->y <= HEIGHT_INVALIED
 				&& objects[i]->GetTypeObject() != OBJECT_TYPE_BACKGROUND
 				&& objects[i]->GetTypeObject() != OBJECT_TYPE_HUD
-				&& objects[i]->GetTypeObject() != OBJECT_TYPE_HUD_POINT
-				)
+				&& objects[i]->GetTypeObject() != OBJECT_TYPE_HUD_POINT)
 			{
 				coObjects.push_back(objects[i]);
+			}
+		}
+		//Gift
+		if (player->reward == NULL) {
+			for (size_t i = 0; i < gifts.size(); i++)
+			{
+				gifts[i]->SetPosition(gifts[i]->position_default_x, gifts[i]->position_default_y);
+				if (GetTickCount64() - timeChangeSpecial > 100) {
+					timeChangeSpecial = GetTickCount64();
+					currentSpecial++;
+					if (currentSpecial == gifts.size()) {
+						currentSpecial = 0;
+					}
+				}
+				if (i != currentSpecial) {
+					gifts[i]->disable = true;
+				}
+				else {
+					gifts[i]->disable = false;
+				}
 			}
 		}
 
@@ -501,10 +530,10 @@ void PlayScene::Update(DWORD dt)
 					objects.erase(objects.begin() + i);
 					delete obj;
 				}
-				else if (dynamic_cast<Coin *>(objects[i])) {
+				/*else if (dynamic_cast<Coin *>(objects[i])) {
 					objects.erase(objects.begin() + i);
 					delete obj;
-				}
+				}*/
 				else if (dynamic_cast<FireEnemy *>(objects[i])) {
 					objects.erase(objects.begin() + i);
 					delete obj;
@@ -543,12 +572,13 @@ void PlayScene::Update(DWORD dt)
 
 
 			// Keep mario not overcome screen
-			if (player->x < 5) {
-				player->x = 5;
+			if (player->x < START_SCREEN) {
+				player->x = START_SCREEN;
 			}
-			//else if (player->x > 2862) {
-			//	player->x = 2862;
-			//}// Overcome end map
+			// Keep mario not overcome screen
+			if (player->x > END_MAP_1_1_POSITION_OUT_X - 20 && player->reward == NULL) {
+				player->x = END_MAP_1_1_POSITION_OUT_X - 20;
+			}
 
 			// Mario in head map
 			if (player->x < (game->GetScreenWidth() / 2)) {
@@ -685,7 +715,7 @@ void PlaySceneKeyHandler::OnKeyDown(int KeyCode)
 						mario->setLastAttack(GetTickCount64());
 					}
 					break;
-				
+
 				}
 
 			}
@@ -748,7 +778,7 @@ void PlaySceneKeyHandler::KeyState(BYTE *states)
 				mario->SetFastSpeed(true);
 			}
 			if (mario->isCollisionKoopa == true) {
-				
+
 				mario->SetHolding(true);
 			}
 

@@ -14,6 +14,7 @@
 #include "Pihanra.h"
 #include "Bonus.h"
 #include "Portal.h"
+#include "BrickGlass.h"
 
 using namespace std;
 
@@ -48,11 +49,12 @@ Mario::Mario(float x, float y) : GameObject()
 	untouchable = 0;
 	score = 0;
 	isCollision = false;
+	reward = NULL;
 }
 
 void Mario::Update(DWORD dt, vector<LPGameObject> *coObjects)
 {
-	if (state == MARIO_STATE_DIE)return;
+	//if (state == MARIO_STATE_DIE) return;
 	if (level != MARIO_LEVEL_SWITCH_MAP) {
 		// Time count 
 		countTime += dt;
@@ -77,11 +79,10 @@ void Mario::Update(DWORD dt, vector<LPGameObject> *coObjects)
 	// Calculate dx, dy 
 	GameObject::Update(dt);
 	if (!fallDrain && !noAction) {
-		
+
 		if (y > UNDER_WORLD && !inTunnel && state != MARIO_STATE_DIE) {
 			SetState(MARIO_STATE_DIE);
 		}
-		
 
 		if (level == MARIO_LEVEL_SUPER_BIG && hold == false)
 		{
@@ -219,7 +220,7 @@ void Mario::Update(DWORD dt, vector<LPGameObject> *coObjects)
 		}
 
 		// Handle mario shot bullet
-		if (shot && level == MARIO_LEVEL_FIRE && FireMario::count < FIRE_MARIO_MAX_ITEM && vx ==0)
+		if (shot && level == MARIO_LEVEL_FIRE && FireMario::count < FIRE_MARIO_MAX_ITEM && vx == 0)
 		{
 			Game *game = Game::GetInstance();
 			LPScene scene = Game::GetInstance()->GetCurrentScene();
@@ -318,6 +319,39 @@ void Mario::Update(DWORD dt, vector<LPGameObject> *coObjects)
 						score += (SCORE_PLUS * 10);
 					}
 
+				}
+				else if (dynamic_cast<Button *>(e->obj))
+				{
+					Button *button = dynamic_cast<Button *>(e->obj);
+					if (button->GetState() != BUTTON_STATE_PRESS) {
+						Game *game = Game::GetInstance();
+						LPScene scene = Game::GetInstance()->GetCurrentScene();
+						vector<LPGameObject> objects = ((PlayScene*)scene)->getObjects();
+						for (size_t i = 0; i < objects.size(); i++)
+						{
+							if (objects[i]->disable == false && objects[i]->GetTypeObject() == OBJECT_TYPE_BRICK_GLASS)
+							{
+								GameObject *coin = new Coin(objects[i]->x, objects[i]->y);
+								coin->SetPosition(objects[i]->x, objects[i]->y);
+
+								LPAnimation_Set ani_set = AnimationSets::GetInstance()->Get(COIN_ANIMATION_SET_ID);
+
+								coin->SetAnimationSet(ani_set);
+
+								((PlayScene*)scene)->pushObject(coin);
+
+								objects[i]->disable = true;
+							}
+						}
+						button->SetState(BUTTON_STATE_PRESS);
+						button->SetPosition(button->x, button->y + BUTTON_BBOX_HEIGHT - BUTTON_BBOX_HEIGHT_PRESS);
+					}
+				}
+				else if (dynamic_cast<Special *>(e->obj))
+				{
+					Special *special = dynamic_cast<Special *>(e->obj);
+					this->reward = special;
+					special->SetState(SPECIAL_STATE_REWARD);
 				}
 				else {
 					if (ny != 0) {

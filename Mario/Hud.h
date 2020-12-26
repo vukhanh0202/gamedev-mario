@@ -11,7 +11,7 @@
 #define HUD_BOXX_HEIGHT		20
 #define MAX_SPEED_QUANTITY	7
 
-#define END_MAP_1_1_POSITION_OUT_X			2880
+#define END_MAP_1_1_POSITION_OUT_X			2896
 
 
 class Hud : public GameObject
@@ -36,6 +36,5 @@ public:
 	HudSpeed(double position_default_x, double position_default_y) :Hud(position_default_x, position_default_y) {
 		this->position_default_x = position_default_x; this->position_default_y = position_default_y;
 	}
-
 };
 

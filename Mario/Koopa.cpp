@@ -8,6 +8,8 @@
 #include "Goomba.h"
 #include "ParaGoomba.h"
 #include "ParaKoopa.h"
+#include "BrickGlass.h"
+#include "Coin.h"
 
 
 
@@ -147,6 +149,16 @@ void Koopa::Update(DWORD dt, vector<LPGameObject> *coObjects)
 				{
 					BrickQuestion *brickQuestion = dynamic_cast<BrickQuestion *>(e->obj);
 					brickQuestion->SetState(BRICK_STATE_EMPTY);
+					vx = -vx;
+				}
+			}
+			else if (dynamic_cast<BrickGlass *>(e->obj) && (this->state == KOOPA_STATE_THROWING_LEFT || this->state == KOOPA_STATE_THROWING_RIGHT)) {
+				if (nx != 0)
+				{
+					BrickGlass *brickGlass = dynamic_cast<BrickGlass *>(e->obj);
+					//double brickX, brickY;
+					//brickGlass->GetPosition(brickX, brickY);
+					brickGlass->disable=true;
 					vx = -vx;
 				}
 			}

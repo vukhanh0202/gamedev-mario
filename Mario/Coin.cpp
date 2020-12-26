@@ -16,10 +16,11 @@ void Coin::GetBoundingBox(float &l, float &t, float &r, float &b)
 }
 void Coin::Update(DWORD dt, vector<LPGameObject> *coObjects)
 {
+	GameObject::Update(dt);
+
 	if (state == COIN_STATE_EARN) {
 		vy += COIN_GRAVITY * dt;
 		// Calculate dx, dy 
-		GameObject::Update(dt);
 
 		x += dx;
 		y += dy;

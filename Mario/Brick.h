@@ -1,5 +1,6 @@
 #pragma once
 #include "GameObject.h"
+#include "BrickGlass.h"
 
 #define BRICK_BBOX_WIDTH  16
 #define BRICK_BBOX_HEIGHT 16
@@ -58,6 +59,17 @@ class BrickQuestionBonus : public BrickQuestion
 {
 public:
 	BrickQuestionBonus(double positionDefaultX, double positionDefaultY) : BrickQuestion(positionDefaultX, positionDefaultY) {
+	}
+	virtual void Update(DWORD dt, vector<LPGameObject> *coObjects);
+	int GetTypeObject() {
+		return OBJECT_TYPE_BRICK_QUESTION_BONUS;
+	}
+};
+
+class BrickButton : public BrickQuestion
+{
+public:
+	BrickButton(double positionDefaultX, double positionDefaultY) : BrickQuestion(positionDefaultX, positionDefaultY) {
 	}
 	virtual void Update(DWORD dt, vector<LPGameObject> *coObjects);
 	int GetTypeObject() {

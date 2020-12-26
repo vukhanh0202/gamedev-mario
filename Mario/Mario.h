@@ -5,11 +5,14 @@
 #include "Hud.h"
 #include "Point.h"
 #include <algorithm>
+#include "Button.h"
+#include "Special.h"
+
 
 #define MARIO_WALKING_SPEED		0.1f 
 #define MARIO_WALKING_SPEED_FAST		0.15f 
 
-#define MARIO_JUMP_SPEED_Y		0.45f
+#define MARIO_JUMP_SPEED_Y		0.5f
 #define MARIO_JUMP_DEFLECT_SPEED 0.2f
 #define MARIO_GRAVITY			0.002f
 #define MARIO_FLY				0.00005f
@@ -194,6 +197,7 @@ class Mario : public GameObject
 	vector<Point*> hudScoreList;
 
 public:
+	Special *reward;
 	boolean isCollisionKoopa;
 	/*Mario() : GameObject()
 	{

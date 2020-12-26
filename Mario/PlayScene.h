@@ -3,6 +3,7 @@
 #include "Mario.h"
 #include "GameObject.h"
 #include "BackGround.h"
+#include "Special.h"
 
 class PlayScene : public Scene
 {
@@ -14,6 +15,10 @@ protected:
 	vector<LPGameObject> objects;
 
 	BackGroundMotion *bgMotion;		// Start screen have background move
+
+	vector<Special*> gifts;
+	int currentSpecial;
+	DWORD timeChangeSpecial;
 
 	void _ParseSection_TEXTURES(string line);
 	void _ParseSection_SPRITES(string line);
