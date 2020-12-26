@@ -2189,7 +2189,7 @@ Nấm
 16	2282	275	11001
 #END Ground hầm
 # MARIO
--2	2700.0	0	1
+-2	100.0	0	1
 
 #Drain map 1-1
 #Ống end

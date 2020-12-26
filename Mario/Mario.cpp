@@ -384,14 +384,15 @@ void Mario::Update(DWORD dt, vector<LPGameObject> *coObjects)
 					else if (dynamic_cast<Koopa *>(e->obj)) // if e->obj is Koopa 
 					{
 						Koopa *koopa = dynamic_cast<Koopa *>(e->obj);
-
-						if (this->nx > 0) {
-							koopa->nx = 1;
+						if (koopa->GetState() != KOOPA_STATE_DIE) {
+							if (this->nx > 0) {
+								koopa->nx = 1;
+							}
+							else {
+								koopa->nx = -1;
+							}
+							koopa->state = KOOPA_STATE_DIE_DISAPPER;
 						}
-						else {
-							koopa->nx = -1;
-						}
-						koopa->state = KOOPA_STATE_DIE_DISAPPER;
 					}
 					else if (dynamic_cast<ParaGoomba *>(e->obj)) // if e->obj is ParaGoomba 
 					{
@@ -408,14 +409,15 @@ void Mario::Update(DWORD dt, vector<LPGameObject> *coObjects)
 					else if (dynamic_cast<ParaKoopa *>(e->obj)) // if e->obj is ParaKoopa 
 					{
 						ParaKoopa *paraKoopa = dynamic_cast<ParaKoopa *>(e->obj);
-
-						if (this->nx > 0) {
-							paraKoopa->nx = 1;
+						if (paraKoopa->GetState() != KOOPA_STATE_DIE) {
+							if (this->nx > 0) {
+								paraKoopa->nx = 1;
+							}
+							else {
+								paraKoopa->nx = -1;
+							}
+							paraKoopa->state = PARA_KOOPA_STATE_DIE_DISAPPER;
 						}
-						else {
-							paraKoopa->nx = -1;
-						}
-						paraKoopa->state = PARA_KOOPA_STATE_DIE_DISAPPER;
 					}
 					else if (dynamic_cast<VenusFire *>(e->obj)) {
 						VenusFire *venusFire = dynamic_cast<VenusFire *>(e->obj);
