@@ -143,6 +143,7 @@
     <ClCompile Include="Ground.cpp" />
     <ClCompile Include="Hud.cpp" />
     <ClCompile Include="Koopa.cpp" />
+    <ClCompile Include="Map.cpp" />
     <ClCompile Include="ParaGoomba.cpp" />
     <ClCompile Include="ParaKoopa.cpp" />
     <ClCompile Include="Pihanra.cpp" />
@@ -177,6 +178,7 @@
     <ClInclude Include="Ground.h" />
     <ClInclude Include="Hud.h" />
     <ClInclude Include="Koopa.h" />
+    <ClInclude Include="Map.h" />
     <ClInclude Include="ParaGoomba.h" />
     <ClInclude Include="ParaKoopa.h" />
     <ClInclude Include="Pihanra.h" />

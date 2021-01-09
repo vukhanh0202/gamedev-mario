@@ -55,32 +55,34 @@ Mario::Mario(float x, float y) : GameObject()
 void Mario::Update(DWORD dt, vector<LPGameObject> *coObjects)
 {
 	//if (state == MARIO_STATE_DIE) return;
-	if (level != MARIO_LEVEL_SWITCH_MAP) {
-		// Time count 
-		countTime += dt;
-		time = TIME_PLAY - countTime / 1000;
-		int tempTime = time;
-		for (int i = 0; i < 3; i++) {
-			hudTimeList.at(i)->SetState(tempTime % 10);
-			tempTime /= 10;
-		}
-		if (time <= 0 && state != MARIO_STATE_DIE) {
-			SetState(MARIO_STATE_DIE);
-		}
+	//if (level != MARIO_LEVEL_SWITCH_MAP) {
+	//	// Time count 
+	//	countTime += dt;
+	//	time = TIME_PLAY - countTime / 1000;
+	//	int tempTime = time;
+	//	for (int i = 0; i < 3; i++) {
+	//		hudTimeList.at(i)->SetState(tempTime % 10);
+	//		tempTime /= 10;
+	//	}
+	//	if (time <= 0 && state != MARIO_STATE_DIE) {
+	//		SetState(MARIO_STATE_DIE);
+	//	}
 
-		// Count score
-		int tempScore = score;
-		for (int i = 0; i < 7; i++) {
-			hudScoreList.at(i)->SetState(tempScore % 10);
-			tempScore /= 10;
-		}
-	}
+	//	// Count score
+	//	int tempScore = score;
+	//	for (int i = 0; i < 7; i++) {
+	//		hudScoreList.at(i)->SetState(tempScore % 10);
+	//		tempScore /= 10;
+	//	}
+	//}
 
 	// Calculate dx, dy 
+	Game *game = Game::GetInstance();
+	LPScene scene = Game::GetInstance()->GetCurrentScene();
 	GameObject::Update(dt);
 	if (!fallDrain && !noAction) {
 
-		if (y > UNDER_WORLD && !inTunnel && state != MARIO_STATE_DIE) {
+		if (y > UNDER_WORLD && !inTunnel && state != MARIO_STATE_DIE && ((PlayScene*)scene)->map==NULL) {
 			SetState(MARIO_STATE_DIE);
 		}
 

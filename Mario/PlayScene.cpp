@@ -28,7 +28,6 @@
 #include "FallDrain.h"
 #include "Mario.h"
 #include "BrickGlass.h"
-#include "Special.h"
 
 using namespace std;
 
@@ -39,6 +38,7 @@ PlayScene::PlayScene(int id, LPCWSTR filePath) :
 	mergeObject = false;
 	currentSpecial = 0;
 	timeChangeSpecial = GetTickCount64();
+	map = NULL;
 }
 
 #define SCENE_SECTION_UNKNOWN -1
@@ -47,6 +47,8 @@ PlayScene::PlayScene(int id, LPCWSTR filePath) :
 #define SCENE_SECTION_ANIMATIONS 4
 #define SCENE_SECTION_ANIMATION_SETS	5
 #define SCENE_SECTION_OBJECTS	6
+#define SCENE_SECTION_MAP				7
+
 
 #define OBJECT_TYPE_MARIO				-2
 #define OBJECT_TYPE_BACKGROUND			-1
@@ -395,6 +397,24 @@ void PlayScene::_ParseSection_OBJECTS(string line)
 		objects.push_back(obj);
 	}
 }
+void PlayScene::_ParseSection_MAP(string line)
+{
+	vector<string> tokens = split(line);
+
+	if (tokens.size() < 7) return; // skip invalid lines
+
+	int idTileSet = atoi(tokens[0].c_str());
+	int totalRowsTileSet = atoi(tokens[1].c_str());
+	int totalColumnsTileSet = atoi(tokens[2].c_str());
+	int totalRowsMap = atoi(tokens[3].c_str());
+	int totalColumnsMap = atoi(tokens[4].c_str());
+	int totalTiles = atoi(tokens[5].c_str());
+	wstring file_path = ToWSTR(tokens[6]);
+
+	map = new Map(idTileSet, totalRowsTileSet, totalColumnsTileSet, totalRowsMap, totalColumnsMap, totalTiles);
+	map->LoadMap(file_path.c_str());
+	map->ExtractTileFromTileSet();
+}
 void PlayScene::Load()
 {
 	DebugOut(L"[INFO] Start loading scene resources from : %s \n", sceneFilePath);
@@ -415,6 +435,7 @@ void PlayScene::Load()
 		if (line == "[SPRITES]") {
 			section = SCENE_SECTION_SPRITES; continue;
 		}
+		if (line == "[MAP]") { section = SCENE_SECTION_MAP; continue; }
 		if (line == "[ANIMATIONS]") {
 			section = SCENE_SECTION_ANIMATIONS; continue;
 		}
@@ -432,6 +453,7 @@ void PlayScene::Load()
 		switch (section)
 		{
 		case SCENE_SECTION_TEXTURES: _ParseSection_TEXTURES(line); break;
+		case SCENE_SECTION_MAP: _ParseSection_MAP(line); break;
 		case SCENE_SECTION_SPRITES: _ParseSection_SPRITES(line); break;
 		case SCENE_SECTION_ANIMATIONS: _ParseSection_ANIMATIONS(line); break;
 		case SCENE_SECTION_ANIMATION_SETS: _ParseSection_ANIMATION_SETS(line); break;
@@ -562,42 +584,65 @@ void PlayScene::Update(DWORD dt)
 			}
 		}
 
-		// Update camera to follow mario
-		if (player != NULL) {
+		if (map) {
 			double cx, cy;
 			player->GetPosition(cx, cy);
 
-			cx -= game->GetScreenWidth() / 2;
-			cy -= game->GetScreenHeight() / 2;
+			float ScreenWidth = game->GetScreenWidth();
+			float ScreenHeight = game->GetScreenHeight();
+			float MapWidth = map->GetMapWidth();
+			float MapHeight = map->GetMapHeight();
 
 
-			// Keep mario not overcome screen
-			if (player->x < START_SCREEN) {
-				player->x = START_SCREEN;
-			}
-			// Keep mario not overcome screen
-			if (player->x > END_MAP_1_1_POSITION_OUT_X - 20 && player->reward == NULL) {
-				player->x = END_MAP_1_1_POSITION_OUT_X - 20;
-			}
-
-			// Mario in head map
-			if (player->x < (game->GetScreenWidth() / 2)) {
+			if (map != nullptr && (cx > MapWidth - ScreenWidth / 2))
+				cx = MapWidth - ScreenWidth;
+			else if (cx < ScreenWidth / 2)
 				cx = 0;
-			}
-			else if (player->x > END_MAP_1_1_POSITION_OUT_X - (game->GetScreenWidth() / 2)) {
-				cx = (double)END_MAP_1_1_POSITION_OUT_X - (game->GetScreenWidth());
-			}// Mario in tail map
-			if (player->y < MARIO_LIMIT_FLY + (game->GetScreenHeight() / 1.2f))
-				cy = MARIO_LIMIT_FLY;
+			else
+				cx -= ScreenWidth / 2;
 
-			if ((player->y < game->GetScreenHeight() / 4 && player->GetFly())
-				|| (player->y <= game->GetScreenHeight() / 4 && player->GetFall())
-				|| (player->y <= -game->GetScreenHeight() / 4))
-				Game::GetInstance()->SetCamPosition((int)cx, (int)cy);
-			else if (player->y > UNDER_WORLD && player->GetState() != MARIO_STATE_DIE && player->getInTunnel()) {
-				Game::GetInstance()->SetCamPosition((int)cx, (int)CAM_UNDER_WORLD);
+
+			cy = -9;
+			Game::GetInstance()->SetCamPosition(round(cx), round(cy));
+		}
+		else {
+			// Update camera to follow mario
+			if (player != NULL) {
+				double cx, cy;
+				player->GetPosition(cx, cy);
+
+				cx -= game->GetScreenWidth() / 2;
+				cy -= game->GetScreenHeight() / 2;
+
+
+				// Keep mario not overcome screen
+				if (player->x < START_SCREEN) {
+					player->x = START_SCREEN;
+				}
+				// Keep mario not overcome screen
+				if (player->x > END_MAP_1_1_POSITION_OUT_X - 20 && player->reward == NULL) {
+					player->x = END_MAP_1_1_POSITION_OUT_X - 20;
+				}
+
+				// Mario in head map
+				if (player->x < (game->GetScreenWidth() / 2)) {
+					cx = 0;
+				}
+				else if (player->x > END_MAP_1_1_POSITION_OUT_X - (game->GetScreenWidth() / 2)) {
+					cx = (double)END_MAP_1_1_POSITION_OUT_X - (game->GetScreenWidth());
+				}// Mario in tail map
+				if (player->y < MARIO_LIMIT_FLY + (game->GetScreenHeight() / 1.2f))
+					cy = MARIO_LIMIT_FLY;
+
+				if ((player->y < game->GetScreenHeight() / 4 && player->GetFly())
+					|| (player->y <= game->GetScreenHeight() / 4 && player->GetFall())
+					|| (player->y <= -game->GetScreenHeight() / 4))
+					Game::GetInstance()->SetCamPosition((int)cx, (int)cy);
+				else if (player->y > UNDER_WORLD && player->GetState() != MARIO_STATE_DIE && player->getInTunnel()) {
+					Game::GetInstance()->SetCamPosition((int)cx, (int)CAM_UNDER_WORLD);
+				}
+				else Game::GetInstance()->SetCamPosition((int)cx, (int)20.0f);
 			}
-			else Game::GetInstance()->SetCamPosition((int)cx, (int)20.0f);
 		}
 
 	}
@@ -605,6 +650,11 @@ void PlayScene::Update(DWORD dt)
 
 void PlayScene::Render()
 {
+	if (map)
+	{
+		this->map->Render();
+	}
+
 	for (int i = 0; i < objects.size(); i++) {
 		if (!objects[i]->disable) {
 			objects[i]->Render();
@@ -622,6 +672,8 @@ void PlayScene::Unload()
 
 	objects.clear();
 	player = NULL;
+	delete map;
+	map = nullptr;
 
 	DebugOut(L"[INFO] Scene %s unloaded! \n", sceneFilePath);
 }

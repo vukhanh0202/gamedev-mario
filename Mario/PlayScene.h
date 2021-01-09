@@ -4,15 +4,14 @@
 #include "GameObject.h"
 #include "BackGround.h"
 #include "Special.h"
+#include "Map.h"
 
 class PlayScene : public Scene
 {
 protected:
 	Mario *player;					// A play scene has to have player, right? 
-
 	boolean mergeObject;			// merge object (present is only box) ? merge status : do normally
 
-	vector<LPGameObject> objects;
 
 	BackGroundMotion *bgMotion;		// Start screen have background move
 
@@ -21,6 +20,7 @@ protected:
 	DWORD timeChangeSpecial;
 
 	void _ParseSection_TEXTURES(string line);
+	void _ParseSection_MAP(string line);
 	void _ParseSection_SPRITES(string line);
 	void _ParseSection_ANIMATIONS(string line);
 	void _ParseSection_ANIMATION_SETS(string line);
@@ -28,6 +28,10 @@ protected:
 
 
 public:
+	vector<LPGameObject> objects;
+
+	Map* map;
+
 	PlayScene(int id, LPCWSTR filePath);
 
 	virtual void Load();
