@@ -133,5 +133,78 @@ void EndMap11::Update(DWORD dt, vector<LPGameObject> *coObjects)
 	
 }
 
+void FallDrainMap14::Update(DWORD dt, vector<LPGameObject> *coObjects)
+{
+	Game *game = Game::GetInstance();
+	LPScene scene = Game::GetInstance()->GetCurrentScene();
+	Mario *mario = ((PlayScene*)scene)->GetPlayer();
+
+	// Calculate dx, dy 
+	GameObject::Update(dt);
+
+	if (this->marioIn && !isEmpty) {
+		int heightMario = mario->GetHeightDrainFall();
+		if (mario->y < this->positionStartY) {
+			mario->SetPosition(this->positionStartX, mario->y + SPEED_SWAP_SCENE * dt);
+		}
+		else {
+			this->marioIn = false;
+			this->isEmpty = true;
+			mario->setFallDrain(true);
+			this->marioOut = true;
+			mario->SetPosition(this->positionEndX, this->positionEndY);
+		}
+	}
+	if (this->marioOut) {
+		mario->setFallDrain(true);
+		int heightMario = mario->GetHeightDrainFall();
+		
+		if (mario->y + heightMario < this->positionEndY) {
+			mario->setFallDrain(false);
+			this->marioOut = false;
+			this->isEmpty = true;
+			mario->setInTunnel(false);
+			mario->nx = 1;
+		}
+		else {
+			mario->SetPosition(this->positionEndX, mario->y - SPEED_SWAP_SCENE * dt);
+		}
+	}
+
+	vector<LPCollisionEvent> coEvents;
+	vector<LPCollisionEvent> coEventsResult;
+
+	coEvents.clear();
+
+	CalcPotentialCollisions(coObjects, coEvents);
+
+	// No collision occured, proceed normally
+	if (coEvents.size() != 0)
+	{
+		float min_tx, min_ty, nx = 0, ny = 0;
+		float rdx = 0;
+		float rdy = 0;
+		//// TODO: This is a very ugly designed function!!!!
+		FilterCollision(coEvents, coEventsResult, min_tx, min_ty, nx, ny, rdx, rdy);
+
+		for (UINT i = 0; i < coEventsResult.size(); i++)
+		{
+			LPCollisionEvent e = coEventsResult[i];
+			if (dynamic_cast<Mario *>(e->obj))
+			{
+				Mario *mario = dynamic_cast<Mario *>(e->obj);
+				if (e->ny > 0 && isEmpty == false)
+				{
+					mario->setFallDrain(true);
+					this->marioIn = true;
+					mario->setInTunnel(true);
+				}
+			}
+		}
+	}
+	// clean up collision events
+	for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];
+}
+
 
 

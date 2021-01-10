@@ -85,6 +85,8 @@ PlayScene::PlayScene(int id, LPCWSTR filePath) :
 #define OBJECT_TYPE_BRICK_GLASS				30
 #define OBJECT_TYPE_BRICK_BUTTON			31
 #define OBJECT_TYPE_SPECIAL					32
+#define OBJECT_TYPE_FALL_DRAIN_MAP_1_4					33
+#define OBJECT_TYPE_END_MAP_1_4					34
 
 
 #define HUD_HEIGHT	53
@@ -384,6 +386,7 @@ void PlayScene::_ParseSection_OBJECTS(string line)
 		case OBJECT_TYPE_BRICK_GLASS: obj = new BrickGlass(); break;
 		case OBJECT_TYPE_BRICK_BUTTON: obj = new BrickButton(x, y); break;
 		case OBJECT_TYPE_SPECIAL: obj = new Special(x, y); this->gifts.push_back((Special*)obj); break;
+		case OBJECT_TYPE_FALL_DRAIN_MAP_1_4: obj = new FallDrainMap14(x, y); break;
 
 		default:
 			DebugOut(L"[ERR] Invalid object type: %d\n", object_type);
@@ -582,6 +585,8 @@ void PlayScene::Update(DWORD dt)
 				|| objects[i]->GetTypeObject() == OBJECT_TYPE_GROUND
 				|| objects[i]->GetTypeObject() == OBJECT_TYPE_FIRE_MARIO
 				|| objects[i]->GetTypeObject() == OBJECT_TYPE_FALL_DRAIN_MAP_1_1
+				|| objects[i]->GetTypeObject() == OBJECT_TYPE_FALL_DRAIN_MAP_1_4
+				|| objects[i]->GetTypeObject() == OBJECT_TYPE_END_MAP_1_4
 				|| objects[i]->GetTypeObject() == OBJECT_TYPE_END_MAP_1_1) {
 				objects[i]->Update(dt, &coObjects);
 			}

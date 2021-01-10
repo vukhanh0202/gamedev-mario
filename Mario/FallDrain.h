@@ -4,6 +4,7 @@
 
 #define OBJECT_TYPE_FALL_DRAIN_MAP_1_1		26  
 #define OBJECT_TYPE_END_MAP_1_1				27 
+#define OBJECT_TYPE_FALL_DRAIN_MAP_1_4		33
 
 #define DRAIN_MAP_1_1_POSITION_IN_X			2170
 #define DRAIN_MAP_1_1_POSITION_IN_Y			280
@@ -11,6 +12,10 @@
 #define DRAIN_MAP_1_1_POSITION_OUT_Y		280 
 #define DRAIN_MAP_1_1_POSITION_END_X		2397
 #define DRAIN_MAP_1_1_POSITION_END_Y		160
+
+#define DRAIN_MAP_1_4_POSITION_START_X		1930
+#define DRAIN_MAP_1_4_POSITION_END_X		2185
+#define DRAIN_MAP_1_4_POSITION_END_Y		158
 
 #define END_MAP_1_1_POSITION_OUT_X			2896
 
@@ -76,6 +81,19 @@ public:
 	virtual void Update(DWORD dt, vector<LPGameObject> *coObjects);
 	int GetTypeObject() {
 		return OBJECT_TYPE_FALL_DRAIN_MAP_1_1;
+	}
+};
+
+class FallDrainMap14 : public FallDrain {
+public:
+	FallDrainMap14(double positionStartX, double positionStartY) : FallDrain(positionStartX, positionStartY) {
+		this->positionEndX = DRAIN_MAP_1_4_POSITION_END_X;
+		this->positionEndY = DRAIN_MAP_1_4_POSITION_END_Y;
+		this->positionStartX = DRAIN_MAP_1_4_POSITION_START_X;
+	}
+	virtual void Update(DWORD dt, vector<LPGameObject> *coObjects);
+	int GetTypeObject() {
+		return OBJECT_TYPE_FALL_DRAIN_MAP_1_4;
 	}
 };
 
