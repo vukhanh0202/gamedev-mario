@@ -605,14 +605,19 @@ void PlayScene::Update(DWORD dt)
 			float ScreenHeight = game->GetScreenHeight();
 			float MapWidth = map->GetMapWidth();
 			float MapHeight = map->GetMapHeight();
-
-
+			if (player->GetState() != MARIO_STATE_DIE) {
+				cx = map->CurrentPosition + 0.5f;
+				map->CurrentPosition = cx;
+			}
+			else {
+				cx = map->CurrentPosition;
+			}
 			if (map != nullptr && (cx > MapWidth - ScreenWidth / 2))
 				cx = MapWidth - ScreenWidth;
-			else if (cx < ScreenWidth / 2)
-				cx = 0;
-			else
-				cx -= ScreenWidth / 2;
+			/*else if (cx < ScreenWidth / 2)
+				cx = 0;*/
+			/*else
+				cx -= ScreenWidth / 2;*/
 			if (!player->bonusInMap && map != nullptr && (cx + ScreenWidth > WIDTH_END_BEFORE_PINE_MAP_14)) {
 				cx = WIDTH_END_BEFORE_PINE_MAP_14 - ScreenWidth;
 			}

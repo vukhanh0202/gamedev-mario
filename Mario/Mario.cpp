@@ -454,7 +454,7 @@ void Mario::Update(DWORD dt, vector<LPGameObject> *coObjects)
 						}
 					}
 					else if (dynamic_cast<BrickGlass *>(e->obj)) {
-						if (nx != 0)
+						if (e->nx != 0)
 						{
 							Game *game = Game::GetInstance();
 							LPScene scene = Game::GetInstance()->GetCurrentScene();

@@ -19,6 +19,7 @@ private:
 	int TotalTiles; //total tiles of tileset
 
 public:
+	double CurrentPosition; //total tiles of tileset
 	Map(int _idTileSet, int _totalRowsTileSet, int _totalColumnsTileSet, int _totalRowsMap, int _totalColumnsMap, int _totalTiles);
 	~Map();
 	void Render();

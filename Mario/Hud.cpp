@@ -2,8 +2,8 @@
 #include "Mario.h"
 #include "Game.h"
 #include "PlayScene.h"
-
-
+#define WIDTH_END_BEFORE_PINE_MAP_14		2032
+#define WIDTH_START_AFTER_PINE_MAP_14		2048
 
 void Hud::Render()
 {
@@ -32,20 +32,20 @@ void Hud::Update(DWORD dt, vector<LPGameObject> *coObjects)
 	int width = game->GetScreenWidth();
 
 	if (map) {
-		if (mario->x < (game->GetScreenWidth() / 2)) {
+		/*if (mario->x < (game->GetScreenWidth() / 2)) {
 			x = position_default_x;
-		}
-		else if (mario->x > map->GetMapWidth() - (game->GetScreenWidth() / 2)) {
+		}*/
+		if (mario->x > map->GetMapWidth() - (game->GetScreenWidth() / 2)) {
 			x = map->GetMapWidth() - width + position_default_x;
 		}
 		else {
-			x = mario->x - (game->GetScreenWidth() / 2) + position_default_x;
+			x = camX + position_default_x;
 		}
-		if (camX == 2032 - width) {
-			x = 2032 - width + position_default_x;
+		if (camX == WIDTH_END_BEFORE_PINE_MAP_14 - width) {
+			x = WIDTH_END_BEFORE_PINE_MAP_14 - width + position_default_x;
 		}
-		else if (camX == 2048 ) {
-			x = 2048 + position_default_x;
+		else if (camX == WIDTH_START_AFTER_PINE_MAP_14) {
+			x = WIDTH_START_AFTER_PINE_MAP_14 + position_default_x;
 		}
 	}
 	else {
