@@ -3,6 +3,7 @@
 
 
 
+
 #define OBJECT_TYPE_HUD		7
 #define OBJECT_TYPE_HUD_BACKGROUND		8
 #define OBJECT_TYPE_HUD_SPEED		9

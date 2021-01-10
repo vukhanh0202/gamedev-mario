@@ -199,6 +199,7 @@ class Mario : public GameObject
 public:
 	Special *reward;
 	boolean isCollisionKoopa;
+	boolean bonusInMap;
 	/*Mario() : GameObject()
 	{
 		level = MARIO_LEVEL_BIG;

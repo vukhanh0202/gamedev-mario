@@ -25,19 +25,27 @@ void Hud::Update(DWORD dt, vector<LPGameObject> *coObjects)
 	Game *game = Game::GetInstance();
 	LPScene scene = Game::GetInstance()->GetCurrentScene();
 	Mario *mario = ((PlayScene*)scene)->GetPlayer();
+	Map *map = ((PlayScene*)scene)->map;
 	double camX, camY;
 	Game::GetInstance()->GetCamPosition(camX, camY);
 	y =  camY + position_default_y - HUD_BOXX_HEIGHT;
-	if (((PlayScene*)scene)->map) {
+	int width = game->GetScreenWidth();
+
+	if (map) {
 		if (mario->x < (game->GetScreenWidth() / 2)) {
 			x = position_default_x;
 		}
-		else if (mario->x > ((PlayScene*)scene)->map->GetMapWidth() - (game->GetScreenWidth() / 2)) {
-			int width = game->GetScreenWidth();
-			x = ((PlayScene*)scene)->map->GetMapWidth() - width + position_default_x;
+		else if (mario->x > map->GetMapWidth() - (game->GetScreenWidth() / 2)) {
+			x = map->GetMapWidth() - width + position_default_x;
 		}
 		else {
 			x = mario->x - (game->GetScreenWidth() / 2) + position_default_x;
+		}
+		if (camX == 2032 - width) {
+			x = 2032 - width + position_default_x;
+		}
+		else if (camX == 2048 ) {
+			x = 2048 + position_default_x;
 		}
 	}
 	else {

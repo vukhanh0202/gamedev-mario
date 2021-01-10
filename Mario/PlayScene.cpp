@@ -608,8 +608,13 @@ void PlayScene::Update(DWORD dt)
 				cx = 0;
 			else
 				cx -= ScreenWidth / 2;
+			if (!player->bonusInMap && map != nullptr && (cx + ScreenWidth > WIDTH_END_BEFORE_PINE_MAP_14)) {
+				cx = WIDTH_END_BEFORE_PINE_MAP_14 - ScreenWidth;
+			}
+			else if (player->bonusInMap && map != nullptr && (cx < WIDTH_START_AFTER_PINE_MAP_14)) {
+				cx = WIDTH_START_AFTER_PINE_MAP_14;
+			}
 
-			//cy = -9;
 			cy = 20;
 			// Keep mario not overcome screen
 			if (player->x > MapWidth -20 && player->reward == NULL) {

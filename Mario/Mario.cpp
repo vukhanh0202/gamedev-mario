@@ -50,6 +50,7 @@ Mario::Mario(float x, float y) : GameObject()
 	score = 0;
 	isCollision = false;
 	reward = NULL;
+	bonusInMap = false;
 }
 
 void Mario::Update(DWORD dt, vector<LPGameObject> *coObjects)

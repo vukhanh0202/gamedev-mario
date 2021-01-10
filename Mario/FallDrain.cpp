@@ -167,6 +167,7 @@ void FallDrainMap14::Update(DWORD dt, vector<LPGameObject> *coObjects)
 			mario->nx = 1;
 		}
 		else {
+			mario->bonusInMap = true;
 			mario->SetPosition(this->positionEndX, mario->y - SPEED_SWAP_SCENE * dt);
 		}
 	}
