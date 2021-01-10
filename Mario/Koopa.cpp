@@ -189,8 +189,6 @@ void Koopa::Update(DWORD dt, vector<LPGameObject> *coObjects)
 					brokenBrick3->SetAnimationSet(ani_set);
 					((PlayScene*)scene)->pushObject(brokenBrick3);
 
-
-
 					brickGlass->disable=true;
 					vx = -vx;
 				}

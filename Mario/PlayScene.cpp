@@ -105,6 +105,9 @@ PlayScene::PlayScene(int id, LPCWSTR filePath) :
 #define HEIGHT_INVALIED		1000
 #define CAM_UNDER_WORLD		255
 
+#define WIDTH_END_BEFORE_PINE_MAP_14		2032
+#define WIDTH_START_AFTER_PINE_MAP_14		2048
+
 #define MAX_SCENE_LINE 1024
 
 void PlayScene::_ParseSection_TEXTURES(string line)
@@ -601,8 +604,12 @@ void PlayScene::Update(DWORD dt)
 			else
 				cx -= ScreenWidth / 2;
 
-
-			cy = -9;
+			//cy = -9;
+			cy = 20;
+			// Keep mario not overcome screen
+			if (player->x > MapWidth -20 && player->reward == NULL) {
+				player->x = MapWidth -20;
+			}
 			Game::GetInstance()->SetCamPosition(round(cx), round(cy));
 		}
 		else {
