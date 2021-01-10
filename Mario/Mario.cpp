@@ -15,6 +15,7 @@
 #include "Bonus.h"
 #include "Portal.h"
 #include "BrickGlass.h"
+#include "BrokenBrick.h"
 
 using namespace std;
 
@@ -436,6 +437,53 @@ void Mario::Update(DWORD dt, vector<LPGameObject> *coObjects)
 					else if (dynamic_cast<Pihanra *>(e->obj)) {
 						Pihanra *pihanra = dynamic_cast<Pihanra *>(e->obj);
 						pihanra->disable = true;
+					}
+					else if (dynamic_cast<BrickQuestion *>(e->obj)) {
+						if (nx != 0)
+						{
+							BrickQuestion *brickQuestion = dynamic_cast<BrickQuestion *>(e->obj);
+							brickQuestion->SetState(BRICK_STATE_EMPTY);
+						}
+					}
+					else if (dynamic_cast<BrickGlass *>(e->obj)) {
+						if (nx != 0)
+						{
+							Game *game = Game::GetInstance();
+							LPScene scene = Game::GetInstance()->GetCurrentScene();
+
+							BrickGlass *brickGlass = dynamic_cast<BrickGlass *>(e->obj);
+							double brickX, brickY;
+							brickGlass->GetPosition(brickX, brickY);
+
+							// Brick 1
+							GameObject *brokenBrick0 = new BrokenBrick();
+							brokenBrick0->SetPosition(brickX, brickY);
+							brokenBrick0->SetSpeed(0.2f, -0.3f);
+							LPAnimation_Set ani_set = AnimationSets::GetInstance()->Get(26001);
+							brokenBrick0->SetAnimationSet(ani_set);
+							((PlayScene*)scene)->pushObject(brokenBrick0);
+							// Brick 2
+							GameObject *brokenBrick1 = new BrokenBrick();
+							brokenBrick1->SetPosition(brickX, brickY);
+							brokenBrick1->SetSpeed(-0.2f, -0.15f);
+							brokenBrick1->SetAnimationSet(ani_set);
+							((PlayScene*)scene)->pushObject(brokenBrick1);
+							// Brick 3
+							GameObject *brokenBrick2 = new BrokenBrick();
+							brokenBrick2->SetPosition(brickX, brickY);
+							brokenBrick2->SetSpeed(-0.1f, -0.3f);
+							brokenBrick2->SetAnimationSet(ani_set);
+							((PlayScene*)scene)->pushObject(brokenBrick2);
+							// Brick 4
+							GameObject *brokenBrick3 = new BrokenBrick();
+							brokenBrick3->SetPosition(brickX, brickY);
+							brokenBrick3->SetSpeed(0.1f, -0.15f);
+							brokenBrick3->SetAnimationSet(ani_set);
+							((PlayScene*)scene)->pushObject(brokenBrick3);
+
+							brickGlass->disable = true;
+							vx = -vx;
+						}
 					}
 				}
 				else

@@ -617,8 +617,8 @@ void PlayScene::Update(DWORD dt)
 
 			cy = 20;
 			// Keep mario not overcome screen
-			if (player->x > MapWidth -20 && player->reward == NULL) {
-				player->x = MapWidth -20;
+			if (player->x > MapWidth - 20 && player->reward == NULL) {
+				player->x = MapWidth - 20;
 			}
 			Game::GetInstance()->SetCamPosition(round(cx), round(cy));
 		}
@@ -781,6 +781,7 @@ void PlaySceneKeyHandler::OnKeyDown(int KeyCode)
 					}
 					else if (mario->GetLevel() == MARIO_LEVEL_SUPER_BIG && !mario->getAttack()) {
 						mario->SetAttack(true);
+						mario->SetSpeed(mario->vx + MARIO_WALKING_SPEED * mario->nx, mario->vy);
 						mario->setLastAttack(GetTickCount64());
 					}
 					break;
@@ -894,6 +895,7 @@ void PlaySceneKeyHandler::KeyState(BYTE *states)
 		if (game->IsKeyDown(DIK_Q)) {
 			if (mario->GetLevel() == MARIO_LEVEL_SUPER_BIG) {
 				mario->SetAttack(true);
+				mario->SetSpeed(mario->vx + MARIO_WALKING_SPEED * mario->nx, mario->vy);
 				mario->setLastAttack(GetTickCount64());
 			}
 		}
