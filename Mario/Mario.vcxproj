@@ -133,6 +133,7 @@
     <ClCompile Include="Bonus.cpp" />
     <ClCompile Include="Box.cpp" />
     <ClCompile Include="Brick.cpp" />
+    <ClCompile Include="BrickFloating.cpp" />
     <ClCompile Include="BrickGlass.cpp" />
     <ClCompile Include="BrokenBrick.cpp" />
     <ClCompile Include="Button.cpp" />
@@ -168,6 +169,7 @@
     <ClInclude Include="Bonus.h" />
     <ClInclude Include="Box.h" />
     <ClInclude Include="Brick.h" />
+    <ClInclude Include="BrickFloating.h" />
     <ClInclude Include="BrickGlass.h" />
     <ClInclude Include="BrokenBrick.h" />
     <ClInclude Include="Button.h" />

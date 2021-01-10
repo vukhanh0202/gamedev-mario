@@ -20,6 +20,7 @@
 150	textures\end-map.png	0	183	239
 160	map\world14_bank.png	255	255	255
 170	textures\blackBackground.png	0	0	0
+180	textures\misc-button.png	166	185	255
 #ID	TRTileSet	TCTileSet	TRMap	TCMap	TotalTiles	Matrix_Path
 [MAP]
 160	5	11	13	160	53	map\map1-4.txt
@@ -457,6 +458,9 @@ Nấm
 #Transparent
 2700001	10	10	26	26	170
 
+#Gạch trôi
+2800001	352	166	400	182	180
+
 # ani_id	sprite1_id	time1	sprite2_id	time2	...
 [ANIMATIONS]
 
@@ -830,6 +834,9 @@ Nấm
 #Transparent
 270001	2700001	100
 
+#Gạch trôi
+280001	2800001	100
+
 #
 # id	ani1	ani2	ani3
 #
@@ -1012,6 +1019,9 @@ Nấm
 
 #Transparent
 27001	270001
+
+#Gạch trôi
+28001	280001
 [OBJECTS]
 # type	x	y	ani_set_id	extra_settings per object type
 # type: 0 = Ground , 1 = Brick, 2 = Goomba, 3 = Koopa,4= Mario Fire, 5 = Box 
@@ -1020,7 +1030,7 @@ Nấm
 #	23 = BrickQuestionCoin, 24 = Brick question Bonus
 # type: -1 = Background, -2 = Mario
 # MARIO
--2	1980.0	0	1
+-2	1184.0	0	1
 
 # Bụi cây bắt đầu	
 0	0	130	27001
@@ -1210,7 +1220,20 @@ Nấm
 0	2544	192	27001
 #Koopa
 3	1960	100	151
-
+#Gạch trôi (x-16 , y+10)
+35	368	96	28001
+35	544	128	28001
+35	576	80	28001
+35	608	176	28001
+35	736	112	28001
+35	1072	160	28001
+35	1184	96	28001
+35	1360	128	28001
+35	1392	112	28001
+35	1536	80	28001
+35	1718	160	28001
+35	1750	112	28001
+35	1766	192	28001
 # HUD need init after init MARIO
 #background-black-hud
 7	0	202	191

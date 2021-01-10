@@ -28,6 +28,7 @@
 #include "FallDrain.h"
 #include "Mario.h"
 #include "BrickGlass.h"
+#include "BrickFloating.h"
 
 using namespace std;
 
@@ -85,8 +86,9 @@ PlayScene::PlayScene(int id, LPCWSTR filePath) :
 #define OBJECT_TYPE_BRICK_GLASS				30
 #define OBJECT_TYPE_BRICK_BUTTON			31
 #define OBJECT_TYPE_SPECIAL					32
-#define OBJECT_TYPE_FALL_DRAIN_MAP_1_4					33
-#define OBJECT_TYPE_END_MAP_1_4					34
+#define OBJECT_TYPE_FALL_DRAIN_MAP_1_4		33
+#define OBJECT_TYPE_END_MAP_1_4				34
+#define OBJECT_TYPE_BRICK_FLOATING			35
 
 
 #define HUD_HEIGHT	53
@@ -387,6 +389,9 @@ void PlayScene::_ParseSection_OBJECTS(string line)
 		case OBJECT_TYPE_BRICK_BUTTON: obj = new BrickButton(x, y); break;
 		case OBJECT_TYPE_SPECIAL: obj = new Special(x, y); this->gifts.push_back((Special*)obj); break;
 		case OBJECT_TYPE_FALL_DRAIN_MAP_1_4: obj = new FallDrainMap14(x, y); break;
+		//case OBJECT_TYPE_END_MAP_1_4: obj = new FallDrainMap14(x, y); break;
+		case OBJECT_TYPE_BRICK_FLOATING: obj = new BrickFloating(); break;
+
 
 		default:
 			DebugOut(L"[ERR] Invalid object type: %d\n", object_type);

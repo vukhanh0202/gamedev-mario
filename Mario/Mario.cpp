@@ -16,6 +16,7 @@
 #include "Portal.h"
 #include "BrickGlass.h"
 #include "BrokenBrick.h"
+#include "BrickFloating.h"
 
 using namespace std;
 
@@ -363,6 +364,13 @@ void Mario::Update(DWORD dt, vector<LPGameObject> *coObjects)
 					Special *special = dynamic_cast<Special *>(e->obj);
 					this->reward = special;
 					special->SetState(SPECIAL_STATE_REWARD);
+				}
+				else if (dynamic_cast<BrickFloating *>(e->obj))
+				{
+					BrickFloating *brickFloating = dynamic_cast<BrickFloating *>(e->obj);
+					if (ny != 0) {
+						brickFloating->SetState(BRICK_FLOATING_STATE_FALL);
+					}
 				}
 				else {
 					if (ny != 0) {
