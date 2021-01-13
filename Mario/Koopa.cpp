@@ -189,7 +189,7 @@ void Koopa::Update(DWORD dt, vector<LPGameObject> *coObjects)
 					brokenBrick3->SetAnimationSet(ani_set);
 					((PlayScene*)scene)->pushObject(brokenBrick3);
 
-					brickGlass->disable=true;
+					brickGlass->disable = true;
 					vx = -vx;
 				}
 			}
@@ -293,4 +293,25 @@ void Koopa::CalcPotentialCollisions(vector<LPGameObject>* coObjects, vector<LPCo
 
 	std::sort(coEvents.begin(), coEvents.end(), CollisionEvent::compare);
 
+}
+
+void KoopaVertical::Update(DWORD dt, vector<LPGameObject> *coObjects)
+{
+
+	// Calculate dx, dy 
+	GameObject::Update(dt);
+	y += dy;
+	Game *game = Game::GetInstance();
+	if ((y < game->GetScreenHeight() / 4 || y >game->GetScreenHeight() * 0.65f)) {
+		if (state != KOOPA_STATE_DIE_FALL) {
+			vy = -vy;
+		}
+	}
+}
+void KoopaVertical::SetState(int state)
+{
+	GameObject::SetState(state);
+	if (state == KOOPA_STATE_DIE_FALL) {
+		vy = KOOPA_DIE_DEFLECT_SPEED / 3;
+	}
 }

@@ -1030,7 +1030,7 @@ Nấm
 #	23 = BrickQuestionCoin, 24 = Brick question Bonus
 # type: -1 = Background, -2 = Mario
 # MARIO
--2	106.0	0	1
+-2	1776.0	0	1
 
 # Bụi cây bắt đầu	
 0	0	130	27001
@@ -1228,7 +1228,8 @@ Nấm
 #Koopa
 3	1960	100	151
 3	1025	90	151
-3	2064	170	151
+3	2064	150	151
+36	1857	100	15001
 #Gạch trôi (x-16 , y+10)
 35	368	96	28001
 35	544	128	28001

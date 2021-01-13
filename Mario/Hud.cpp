@@ -35,12 +35,12 @@ void Hud::Update(DWORD dt, vector<LPGameObject> *coObjects)
 		/*if (mario->x < (game->GetScreenWidth() / 2)) {
 			x = position_default_x;
 		}*/
-		if (mario->x > map->GetMapWidth() - (game->GetScreenWidth() / 2)) {
+		/*if (mario->x > map->GetMapWidth() - (game->GetScreenWidth() / 2)) {
 			x = map->GetMapWidth() - width + position_default_x;
 		}
-		else {
+		else *///{
 			x = camX + position_default_x;
-		}
+		//}
 		if (camX == WIDTH_END_BEFORE_PINE_MAP_14 - width) {
 			x = WIDTH_END_BEFORE_PINE_MAP_14 - width + position_default_x;
 		}

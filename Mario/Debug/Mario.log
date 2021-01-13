@@ -13,22 +13,22 @@ d:\uit\semester-1-2021\game\mario\mario\mario\paragoomba.h(17): warning C4005: '
 d:\uit\semester-1-2021\game\mario\mario\mario\playscene.cpp(41): warning C4244: '=': conversion from 'ULONGLONG' to 'DWORD', possible loss of data
 d:\uit\semester-1-2021\game\mario\mario\mario\playscene.cpp(64): warning C4005: 'OBJECT_TYPE_HUD_SPEED': macro redefinition
   d:\uit\semester-1-2021\game\mario\mario\mario\hud.h(9): note: see previous definition of 'OBJECT_TYPE_HUD_SPEED'
-d:\uit\semester-1-2021\game\mario\mario\mario\playscene.cpp(166): warning C4018: '<': signed/unsigned mismatch
-d:\uit\semester-1-2021\game\mario\mario\mario\playscene.cpp(188): warning C4018: '<': signed/unsigned mismatch
-d:\uit\semester-1-2021\game\mario\mario\mario\playscene.cpp(241): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-d:\uit\semester-1-2021\game\mario\mario\mario\playscene.cpp(246): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-d:\uit\semester-1-2021\game\mario\mario\mario\playscene.cpp(254): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-d:\uit\semester-1-2021\game\mario\mario\mario\playscene.cpp(259): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-d:\uit\semester-1-2021\game\mario\mario\mario\playscene.cpp(333): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-d:\uit\semester-1-2021\game\mario\mario\mario\playscene.cpp(371): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-d:\uit\semester-1-2021\game\mario\mario\mario\playscene.cpp(541): warning C4244: '=': conversion from 'ULONGLONG' to 'DWORD', possible loss of data
-d:\uit\semester-1-2021\game\mario\mario\mario\playscene.cpp(604): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
-d:\uit\semester-1-2021\game\mario\mario\mario\playscene.cpp(605): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
-d:\uit\semester-1-2021\game\mario\mario\mario\playscene.cpp(606): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
-d:\uit\semester-1-2021\game\mario\mario\mario\playscene.cpp(607): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
-d:\uit\semester-1-2021\game\mario\mario\mario\playscene.cpp(685): warning C4018: '<': signed/unsigned mismatch
-d:\uit\semester-1-2021\game\mario\mario\mario\playscene.cpp(697): warning C4018: '<': signed/unsigned mismatch
-d:\uit\semester-1-2021\game\mario\mario\mario\playscene.cpp(795): warning C4244: 'argument': conversion from 'ULONGLONG' to 'DWORD', possible loss of data
-d:\uit\semester-1-2021\game\mario\mario\mario\playscene.cpp(860): warning C4805: '==': unsafe mix of type 'boolean' and type 'bool' in operation
-d:\uit\semester-1-2021\game\mario\mario\mario\playscene.cpp(909): warning C4244: 'argument': conversion from 'ULONGLONG' to 'DWORD', possible loss of data
+d:\uit\semester-1-2021\game\mario\mario\mario\playscene.cpp(167): warning C4018: '<': signed/unsigned mismatch
+d:\uit\semester-1-2021\game\mario\mario\mario\playscene.cpp(189): warning C4018: '<': signed/unsigned mismatch
+d:\uit\semester-1-2021\game\mario\mario\mario\playscene.cpp(242): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+d:\uit\semester-1-2021\game\mario\mario\mario\playscene.cpp(247): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+d:\uit\semester-1-2021\game\mario\mario\mario\playscene.cpp(255): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+d:\uit\semester-1-2021\game\mario\mario\mario\playscene.cpp(260): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+d:\uit\semester-1-2021\game\mario\mario\mario\playscene.cpp(334): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+d:\uit\semester-1-2021\game\mario\mario\mario\playscene.cpp(372): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+d:\uit\semester-1-2021\game\mario\mario\mario\playscene.cpp(543): warning C4244: '=': conversion from 'ULONGLONG' to 'DWORD', possible loss of data
+d:\uit\semester-1-2021\game\mario\mario\mario\playscene.cpp(612): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+d:\uit\semester-1-2021\game\mario\mario\mario\playscene.cpp(613): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+d:\uit\semester-1-2021\game\mario\mario\mario\playscene.cpp(614): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+d:\uit\semester-1-2021\game\mario\mario\mario\playscene.cpp(615): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+d:\uit\semester-1-2021\game\mario\mario\mario\playscene.cpp(690): warning C4018: '<': signed/unsigned mismatch
+d:\uit\semester-1-2021\game\mario\mario\mario\playscene.cpp(702): warning C4018: '<': signed/unsigned mismatch
+d:\uit\semester-1-2021\game\mario\mario\mario\playscene.cpp(800): warning C4244: 'argument': conversion from 'ULONGLONG' to 'DWORD', possible loss of data
+d:\uit\semester-1-2021\game\mario\mario\mario\playscene.cpp(865): warning C4805: '==': unsafe mix of type 'boolean' and type 'bool' in operation
+d:\uit\semester-1-2021\game\mario\mario\mario\playscene.cpp(914): warning C4244: 'argument': conversion from 'ULONGLONG' to 'DWORD', possible loss of data
   Mario.vcxproj -> D:\UIT\Semester-1-2021\Game\Mario\Mario\Debug\Mario.exe

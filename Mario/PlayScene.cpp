@@ -89,6 +89,7 @@ PlayScene::PlayScene(int id, LPCWSTR filePath) :
 #define OBJECT_TYPE_FALL_DRAIN_MAP_1_4		33
 #define OBJECT_TYPE_END_MAP_1_4				34
 #define OBJECT_TYPE_BRICK_FLOATING			35
+#define OBJECT_TYPE_KOOPA_VERTICAL			36
 
 
 #define HUD_HEIGHT	53
@@ -391,6 +392,7 @@ void PlayScene::_ParseSection_OBJECTS(string line)
 		case OBJECT_TYPE_FALL_DRAIN_MAP_1_4: obj = new FallDrainMap14(x, y); break;
 		//case OBJECT_TYPE_END_MAP_1_4: obj = new FallDrainMap14(x, y); break;
 		case OBJECT_TYPE_BRICK_FLOATING: obj = new BrickFloating(); break;
+		case OBJECT_TYPE_KOOPA_VERTICAL: obj = new KoopaVertical(); break;
 
 
 		default:
@@ -576,11 +578,17 @@ void PlayScene::Update(DWORD dt)
 					delete obj;
 				}
 			}
+			else if (map != NULL) {
+				if (objects[i]->x <= map->CurrentPosition + game->GetScreenWidth()) {
+					objects[i]->Update(dt, &coObjects);
+				}
+			}
 			else if (objects[i]->x >= player->x - game->GetScreenWidth() / 1.5 &&
 				objects[i]->x <= player->x + game->GetScreenWidth() / 1.5 &&
 				objects[i]->y >= player->y - game->GetScreenHeight() &&
-				objects[i]->y <= player->y + game->GetScreenHeight())
+				objects[i]->y <= player->y + game->GetScreenHeight() && map == NULL)
 			{
+				
 				objects[i]->Update(dt, &coObjects);
 			}
 			else if (objects[i]->GetTypeObject() == OBJECT_TYPE_HUD_SPEED
@@ -612,22 +620,19 @@ void PlayScene::Update(DWORD dt)
 			else {
 				cx = map->CurrentPosition;
 			}
-			if (map != nullptr && (cx > MapWidth - ScreenWidth / 2))
+			if (map != nullptr && (cx > MapWidth - ScreenWidth))
 				cx = MapWidth - ScreenWidth;
-			/*else if (cx < ScreenWidth / 2)
-				cx = 0;*/
-			/*else
-				cx -= ScreenWidth / 2;*/
-			if (!player->bonusInMap && map != nullptr && (cx + ScreenWidth > WIDTH_END_BEFORE_PINE_MAP_14)) {
+			if (!player->bonusInMap && map != nullptr && (cx + ScreenWidth >= WIDTH_END_BEFORE_PINE_MAP_14)) {
 				cx = WIDTH_END_BEFORE_PINE_MAP_14 - ScreenWidth;
+				map->CurrentPosition = cx;
 			}
-			else if (player->bonusInMap && map != nullptr && (cx < WIDTH_START_AFTER_PINE_MAP_14)) {
+			else if (player->bonusInMap && map != nullptr && (cx <= WIDTH_START_AFTER_PINE_MAP_14)) {
 				cx = WIDTH_START_AFTER_PINE_MAP_14;
+				map->CurrentPosition = cx;
 			}
-
 			cy = 20;
 			// Keep mario not overcome screen
-			if (player->x > MapWidth - 20 && player->reward == NULL) {
+			if (player->x > MapWidth - 20/* && player->reward == NULL*/) {
 				player->x = MapWidth - 20;
 			}
 			Game::GetInstance()->SetCamPosition(round(cx), round(cy));

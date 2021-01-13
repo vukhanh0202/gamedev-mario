@@ -86,7 +86,7 @@ void Mario::Update(DWORD dt, vector<LPGameObject> *coObjects)
 	if (((PlayScene*)scene)->map) {
 		double camX, camY;
 		game->GetCamPosition(camX, camY);
-		if (x < camX -10 && state != MARIO_STATE_DIE) {
+		if (x < camX - 10 && state != MARIO_STATE_DIE) {
 			SetState(MARIO_STATE_DIE);
 		}
 	}
@@ -370,6 +370,7 @@ void Mario::Update(DWORD dt, vector<LPGameObject> *coObjects)
 					BrickFloating *brickFloating = dynamic_cast<BrickFloating *>(e->obj);
 					if (ny != 0) {
 						brickFloating->SetState(BRICK_FLOATING_STATE_FALL);
+						vy = -MARIO_JUMP_DEFLECT_SPEED / 2;
 					}
 				}
 				else {
@@ -519,6 +520,37 @@ void Mario::Update(DWORD dt, vector<LPGameObject> *coObjects)
 									if (level > MARIO_LEVEL_SMALL)
 									{
 										//level = MARIO_LEVEL_SMALL;
+										level--;
+										unableReadyFly();
+										StartUntouchable();
+									}
+									else
+										SetState(MARIO_STATE_DIE);
+								}
+							}
+						}
+					}
+					else if (dynamic_cast<KoopaVertical *>(e->obj)) // if e->obj is Koopa 
+					{
+						KoopaVertical *koopaVertical = dynamic_cast<KoopaVertical *>(e->obj);
+						if (koopaVertical->state != KOOPA_STATE_DIE_FALL)
+						{
+							// jump on top >> kill Koopa
+							if (e->ny < 0)
+							{
+								if (koopaVertical->GetState() != KOOPA_STATE_DIE_FALL)
+								{
+									koopaVertical->SetState(KOOPA_STATE_DIE_FALL);
+									vy = -MARIO_JUMP_DEFLECT_SPEED;
+								}
+							}
+							else if (e->nx != 0) // collision right to left
+							{
+								// koopa live
+								if (untouchable == 0)
+								{
+									if (level > MARIO_LEVEL_SMALL)
+									{
 										level--;
 										unableReadyFly();
 										StartUntouchable();
