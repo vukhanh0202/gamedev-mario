@@ -42,6 +42,7 @@ class ParaKoopa : public GameObject
 {
 	DWORD timeJump;
 public:
+	DWORD timeDie;
 	ParaKoopa();
 	virtual void SetState(int state);
 	virtual void GetBoundingBox(float &left, float &top, float &right, float &bottom);

@@ -453,6 +453,8 @@ Nấm
 #Gạch vỡ
 2600001	484	120	492	128	20
 
+#Course clean
+9999999	4	348	252	421	200
 # ani_id	sprite1_id	time1	sprite2_id	time2	...
 [ANIMATIONS]
 
@@ -826,6 +828,8 @@ Nấm
 #Gạch vỡ
 260001	2600001	100
 
+#Course clean
+999999	9999999	100
 #
 # id	ani1	ani2	ani3
 #
@@ -1005,6 +1009,9 @@ Nấm
 
 #Gạch vỡ 
 26001	260001
+
+#course clean
+99999	999999
 [OBJECTS]
 # type	x	y	ani_set_id	extra_settings per object type
 # type: 0 = Ground , 1 = Brick, 2 = Goomba, 3 = Koopa,4= Mario Fire, 5 = Box 
@@ -1024,6 +1031,9 @@ Nấm
 -1	2560	-300	24001
 -1	2648	-130	20001
 -1	2648	-280	20001
+
+#-1	2623	20	99999
+#-1	2799	69	25001
 
 32	2768	110	25001
 38	2768	110	25002
@@ -2196,7 +2206,7 @@ Nấm
 16	2282	275	11001
 #END Ground hầm
 # MARIO
--2	2430.0	0	1
+-2	100.0	0	1
 
 #Drain map 1-1
 #Ống end

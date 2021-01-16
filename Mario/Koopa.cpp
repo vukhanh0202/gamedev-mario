@@ -33,7 +33,8 @@ void Koopa::GetBoundingBox(float &left, float &top, float &right, float &bottom)
 
 void Koopa::Update(DWORD dt, vector<LPGameObject> *coObjects)
 {
-
+	
+	
 	// Calculate dx, dy 
 	GameObject::Update(dt);
 
@@ -42,7 +43,11 @@ void Koopa::Update(DWORD dt, vector<LPGameObject> *coObjects)
 
 	coEvents.clear();
 
-
+	if (this->state == KOOPA_STATE_DIE && GetTickCount64() - timeDie > TIME_REVIVE) {
+		y -= 10;
+		SetState(KOOPA_STATE_WALKING);
+	}
+	
 	if (state != KOOPA_STATE_DIE_DISAPPER)
 		CalcPotentialCollisions(coObjects, coEvents);
 
@@ -237,6 +242,7 @@ void Koopa::SetState(int state)
 	switch (state)
 	{
 	case KOOPA_STATE_DIE:
+		timeDie = GetTickCount64();
 		if (vx != 0 && flag)
 			y += KOOPA_BBOX_HEIGHT - KOOPA_BBOX_HEIGHT_DIE;
 		vx = 0;

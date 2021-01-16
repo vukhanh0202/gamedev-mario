@@ -62,28 +62,89 @@ void Special::Update(DWORD dt, vector<LPGameObject> *coObjects)
 		{
 		case 3: // scene 1
 			if (mario->x > END_MAP_1_1_POSITION_OUT_X && Game::GetInstance()->rewards.size() == 1) {
-				Game::GetInstance()->rounds.push_back(1);
-				mario->reward = NULL;
-				Portal *p = new Portal(SCENE_MAP_SWITCH);
-				Game::GetInstance()->permitLoad = true;
-				Game::GetInstance()->SetValueStore(mario->GetLevel(), mario->getPoint(), mario->getScore());
-				Game::GetInstance()->SwitchScene(p->GetSceneId());
+				//
+				GameObject *bg = new BackGround();
+				bg->SetPosition(PRIZE_X_1, PRIZE_Y_2);
+				LPAnimation_Set ani_setBg = AnimationSets::GetInstance()->Get(PRIZE_ANI_SET_ID);
+				bg->SetAnimationSet(ani_setBg);
+				((PlayScene*)scene)->pushObject(bg);
+				//
+				GameObject *gift = new BackGround();
+				gift->SetPosition(PRIZE_X_1_SUB, PRIZE_Y_1_SUB);
+				gift->SetState(SPECIAL_STATE_REWARD_COMPLETED);
+				LPAnimation_Set ani_set = ani_set = AnimationSets::GetInstance()->Get(SPECIAL_ANI_SET_ID_STAR);
+				switch (Game::GetInstance()->rewards.at(Game::GetInstance()->rewards.size() - 1))
+				{
+				case OBJECT_TYPE_SPECIAL_STAR:
+					ani_set = AnimationSets::GetInstance()->Get(SPECIAL_ANI_SET_ID_STAR);
+					break;
+				case OBJECT_TYPE_SPECIAL_FLOWER:
+					ani_set = AnimationSets::GetInstance()->Get(SPECIAL_ANI_SET_ID_FLOWER);
+					break;
+				case OBJECT_TYPE_SPECIAL_MUSHROOM:
+					ani_set = AnimationSets::GetInstance()->Get(SPECIAL_ANI_SET_ID_MUSHROOM);
+					break;
+				default:
+					break;
+				}
+				gift->SetAnimationSet(ani_set);
+				((PlayScene*)scene)->pushObject(gift);
+				//
+				while (GetTickCount64() - last > TIME_EXIST) {
+					Game::GetInstance()->rounds.push_back(1);
+					mario->reward = NULL;
+					Portal *p = new Portal(SCENE_MAP_SWITCH);
+					Game::GetInstance()->permitLoad = true;
+					Game::GetInstance()->SetValueStore(mario->GetLevel(), mario->getPoint(), mario->getScore());
+					Game::GetInstance()->SwitchScene(p->GetSceneId());
+					break;
+				}
 			}
 			break;
 		case 4: // scene 2
 			if (mario->x > ((PlayScene*)scene)->map->GetMapWidth() && Game::GetInstance()->rewards.size() == 2) {
-				Game::GetInstance()->rounds.push_back(4);
-				mario->reward = NULL;
-				Portal *p = new Portal(SCENE_MAP_SWITCH);
-				Game::GetInstance()->permitLoad = true;
-				Game::GetInstance()->SetValueStore(mario->GetLevel(), mario->getPoint(), mario->getScore());
-				Game::GetInstance()->SwitchScene(p->GetSceneId());
+				//
+				GameObject *bg = new BackGround();
+				bg->SetPosition(PRIZE_X_2, PRIZE_Y_2);
+				LPAnimation_Set ani_setBg = AnimationSets::GetInstance()->Get(PRIZE_ANI_SET_ID);
+				bg->SetAnimationSet(ani_setBg);
+				((PlayScene*)scene)->pushObject(bg);
+				//
+				GameObject *gift = new BackGround();
+				gift->SetPosition(PRIZE_X_2_SUB, PRIZE_Y_2_SUB);
+				gift->SetState(SPECIAL_STATE_REWARD_COMPLETED);
+				LPAnimation_Set ani_set = ani_set = AnimationSets::GetInstance()->Get(SPECIAL_ANI_SET_ID_STAR);
+				switch (Game::GetInstance()->rewards.at(Game::GetInstance()->rewards.size() - 1))
+				{
+				case OBJECT_TYPE_SPECIAL_STAR:
+					ani_set = AnimationSets::GetInstance()->Get(SPECIAL_ANI_SET_ID_STAR);
+					break;
+				case OBJECT_TYPE_SPECIAL_FLOWER:
+					ani_set = AnimationSets::GetInstance()->Get(SPECIAL_ANI_SET_ID_FLOWER);
+					break;
+				case OBJECT_TYPE_SPECIAL_MUSHROOM:
+					ani_set = AnimationSets::GetInstance()->Get(SPECIAL_ANI_SET_ID_MUSHROOM);
+					break;
+				default:
+					break;
+				}
+				gift->SetAnimationSet(ani_set);
+				((PlayScene*)scene)->pushObject(gift);
+				//
+				while (GetTickCount64() - last > TIME_EXIST) {
+					Game::GetInstance()->rounds.push_back(4);
+					mario->reward = NULL;
+					Portal *p = new Portal(SCENE_MAP_SWITCH);
+					Game::GetInstance()->permitLoad = true;
+					Game::GetInstance()->SetValueStore(mario->GetLevel(), mario->getPoint(), mario->getScore());
+					Game::GetInstance()->SwitchScene(p->GetSceneId());
+					break;
+				}
 			}
 			break;
 		default:
 			break;
 		}
-
 	}
 
 	if (state == SPECIAL_STATE_REWARD_COMPLETED) {

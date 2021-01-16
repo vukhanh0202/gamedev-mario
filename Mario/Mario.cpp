@@ -373,6 +373,7 @@ void Mario::Update(DWORD dt, vector<LPGameObject> *coObjects)
 					this->reward = special;
 					game->GetInstance()->rewards.push_back(special->type);
 					special->SetState(SPECIAL_STATE_REWARD);
+					special->last = GetTickCount64();
 				}
 				else if (dynamic_cast<BrickFloating *>(e->obj))
 				{

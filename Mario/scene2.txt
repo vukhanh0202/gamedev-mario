@@ -465,7 +465,8 @@ Nấm
 #Gạch trôi
 2800001	352	166	400	182	180
 
-
+#Course clean
+9999999	4	348	252	421	200
 # ani_id	sprite1_id	time1	sprite2_id	time2	...
 [ANIMATIONS]
 
@@ -845,6 +846,8 @@ Nấm
 #Gạch trôi
 280001	2800001	100
 
+#Course clean
+999999	9999999	100
 #
 # id	ani1	ani2	ani3
 #
@@ -1030,6 +1033,9 @@ Nấm
 
 #Gạch trôi
 28001	280001
+
+#course clean
+99999	999999
 [OBJECTS]
 # type	x	y	ani_set_id	extra_settings per object type
 # type: 0 = Ground , 1 = Brick, 2 = Goomba, 3 = Koopa,4= Mario Fire, 5 = Box 

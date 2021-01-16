@@ -25,6 +25,18 @@
 #define REWARD_3_X	242
 #define REWARD_Y	193
 
+#define PRIZE_X_1				2623
+#define PRIZE_Y_1				20
+#define PRIZE_X_1_SUB			2799
+#define PRIZE_Y_1_SUB			69
+#define PRIZE_X_2				2300
+#define PRIZE_Y_2				20
+#define PRIZE_X_2_SUB			2476
+#define PRIZE_Y_2_SUB			69
+#define PRIZE_ANI_SET_ID		99999
+
+#define TIME_EXIST				5000				
+
 
 class Special : public GameObject
 {
@@ -32,6 +44,7 @@ class Special : public GameObject
 public:
 	int type;
 	boolean status;
+	DWORD last;
 	double position_default_x;
 	double position_default_y;
 	Special(double position_default_x, double position_default_y) {

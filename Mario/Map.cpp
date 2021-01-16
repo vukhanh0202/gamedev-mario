@@ -13,7 +13,7 @@ Map::Map(int _idTileSet, int _totalRowsTileSet, int _totalColumnsTileSet, int _t
 	this->TotalRowsOfMap = _totalRowsMap;
 	this->TotalColumnsOfMap = _totalColumnsMap;
 	this->TotalTiles = _totalTiles;
-	this->CurrentPosition = 0.0f;
+	this->CurrentPosition =	0.0f;
 }
 
 Map::~Map()

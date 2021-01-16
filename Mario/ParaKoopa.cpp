@@ -44,7 +44,10 @@ void ParaKoopa::Update(DWORD dt, vector<LPGameObject> *coObjects)
 	vector<LPCollisionEvent> coEventsResult;
 
 	coEvents.clear();
-
+	if (this->state == PARA_KOOPA_STATE_DIE && GetTickCount64() - timeDie > TIME_REVIVE) {
+		y -= 10;
+		SetState(PARA_KOOPA_STATE_WALKING);
+	}
 
 	if (state != PARA_KOOPA_STATE_DIE_DISAPPER)
 		CalcPotentialCollisions(coObjects, coEvents);
@@ -255,6 +258,7 @@ void ParaKoopa::SetState(int state)
 	switch (state)
 	{
 	case PARA_KOOPA_STATE_DIE:
+		timeDie = GetTickCount64();
 		if (vx != 0 && flag)
 			y += PARA_KOOPA_BBOX_HEIGHT - PARA_KOOPA_BBOX_HEIGHT_DIE;
 		vx = 0;

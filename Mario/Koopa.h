@@ -36,12 +36,15 @@
 #define OBJECT_TYPE_KOOPA	3
 #define OBJECT_TYPE_KOOPA_VERTICAL			36
 
+#define TIME_REVIVE			5000
+
 
 
 class Koopa : public GameObject
 {
 	
 public:
+	DWORD timeDie;
 	Koopa();
 	virtual void SetState(int state);
 	virtual void GetBoundingBox(float &left, float &top, float &right, float &bottom);
