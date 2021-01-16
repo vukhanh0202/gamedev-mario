@@ -1,5 +1,5 @@
 #include "Coin.h"
-
+#include "Koopa.h"
 
 
 void Coin::Render()
@@ -24,6 +24,43 @@ void Coin::Update(DWORD dt, vector<LPGameObject> *coObjects)
 
 		x += dx;
 		y += dy;
+		vector<LPCollisionEvent> coEvents;
+		vector<LPCollisionEvent> coEventsResult;
+
+		coEvents.clear();
+
+		CalcPotentialCollisions(coObjects, coEvents);
+
+		// No collision occured, proceed normally
+		if (coEvents.size() != 0)
+		{
+			float min_tx, min_ty, nx = 0, ny = 0;
+			float rdx = 0;
+			float rdy = 0;
+			//// TODO: This is a very ugly designed function!!!!
+			FilterCollision(coEvents, coEventsResult, min_tx, min_ty, nx, ny, rdx, rdy);
+
+			// block every object first!
+			x += min_tx * dx + nx * 0.4f;
+			y += min_ty * dy + ny * 0.4f;
+
+			for (UINT i = 0; i < coEventsResult.size(); i++)
+			{
+				LPCollisionEvent e = coEventsResult[i];
+
+				if (dynamic_cast<Koopa *>(e->obj)) // if e->obj is Koopa 
+				{
+					Koopa *koopa = dynamic_cast<Koopa *>(e->obj);
+					if (e->ny > 0) {
+						if (koopa->state != KOOPA_STATE_DIE) {
+							koopa->SetState(KOOPA_STATE_DIE);
+						}
+					}
+
+				}
+
+			}
+		}
 		if (this->y > this->position_default_y) {
 			this->disable = true;
 		}

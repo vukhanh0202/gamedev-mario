@@ -58,7 +58,7 @@ Mario::Mario(float x, float y) : GameObject()
 void Mario::Update(DWORD dt, vector<LPGameObject> *coObjects)
 {
 	//if (state == MARIO_STATE_DIE) return;
-	if (level != MARIO_LEVEL_SWITCH_MAP) {
+	//if (level != MARIO_LEVEL_SWITCH_MAP) {
 		// Time count 
 		countTime += dt;
 		time = TIME_PLAY - countTime / 1000;
@@ -77,7 +77,9 @@ void Mario::Update(DWORD dt, vector<LPGameObject> *coObjects)
 			hudScoreList.at(i)->SetState(tempScore % 10);
 			tempScore /= 10;
 		}
-	}
+		// set point
+		this->setPoint(point);
+	//}
 
 	// Calculate dx, dy 
 	Game *game = Game::GetInstance();
@@ -154,7 +156,12 @@ void Mario::Update(DWORD dt, vector<LPGameObject> *coObjects)
 		else if (level != MARIO_LEVEL_SWITCH_MAP) {
 			vy += MARIO_GRAVITY * dt;
 		}
-
+		if (level != MARIO_LEVEL_SUPER_BIG) {
+			for (size_t i = 0; i < hudSpeedList.size(); i++)
+			{
+				hudSpeedList[i]->disable = true;
+			}
+		}
 
 		vector<LPCollisionEvent> coEvents;
 		vector<LPCollisionEvent> coEventsResult;
@@ -283,7 +290,9 @@ void Mario::Update(DWORD dt, vector<LPGameObject> *coObjects)
 
 			// block every object first!
 			x += min_tx * dx + nx * 0.4f;
-			//y += min_ty * dy + ny * 0.4f;
+			if (((PlayScene*)scene)->map != NULL) {
+				y += min_ty * dy + ny * 0.4f;
+			}
 
 
 			if (nx != 0) vx = 0;
@@ -313,9 +322,8 @@ void Mario::Update(DWORD dt, vector<LPGameObject> *coObjects)
 					coin->disable = true;
 					point++;
 					score += SCORE_PLUS / 2;
-					if (point >= 100) point = 0;
-					hudPointList.at(0)->SetState(point % 10);
-					hudPointList.at(1)->SetState(point / 10);
+					this->setPoint(point);
+
 				}
 				else if (dynamic_cast<Bonus *>(e->obj))
 				{
@@ -363,14 +371,14 @@ void Mario::Update(DWORD dt, vector<LPGameObject> *coObjects)
 				{
 					Special *special = dynamic_cast<Special *>(e->obj);
 					this->reward = special;
+					game->GetInstance()->rewards.push_back(special->type);
 					special->SetState(SPECIAL_STATE_REWARD);
 				}
 				else if (dynamic_cast<BrickFloating *>(e->obj))
 				{
 					BrickFloating *brickFloating = dynamic_cast<BrickFloating *>(e->obj);
-					if (ny != 0) {
+					if (e->ny < 0) {
 						brickFloating->SetState(BRICK_FLOATING_STATE_FALL);
-						vy = -MARIO_JUMP_DEFLECT_SPEED / 2;
 					}
 				}
 				else {
@@ -380,7 +388,7 @@ void Mario::Update(DWORD dt, vector<LPGameObject> *coObjects)
 						{
 							BrickQuestion *brickQuestionCoin = dynamic_cast<BrickQuestion *>(e->obj);
 							brickQuestionCoin->SetState(BRICK_STATE_EMPTY);
-							brickQuestionCoin->SetSpeed(0, -BRICK_DEFLECT_SPEED);
+							brickQuestionCoin->SetSpeed(0, -BRICK_DEFLECT_SPEED * 2);
 						}
 					}
 				}
@@ -1257,7 +1265,6 @@ void Mario::Render()
 		if (untouchable) alpha = 128;
 		animation_set->at(ani)->Render(x, y, alpha);
 	}
-
 }
 
 void Mario::SetState(int state)
@@ -1332,6 +1339,7 @@ void Mario::SetState(int state)
 		break;
 	case MARIO_STATE_DIE:
 		vy = -MARIO_DIE_DEFLECT_SPEED;
+		start_x = x;
 		vx = 0;
 		break;
 	case MARIO_STATE_HIT:
@@ -1472,7 +1480,13 @@ void Mario::DownLevel()
 		SetLevel(l);
 	}
 }
-
+void Mario::setPoint(int point)
+{
+	this->point = point;
+	if (point >= 100) point = 0;
+	hudPointList.at(0)->SetState(point % 10);
+	hudPointList.at(1)->SetState(point / 10);
+}
 int Mario::GetHeightDrainFall()
 {
 	if (level == MARIO_SMALL_BBOX_HEIGHT) {

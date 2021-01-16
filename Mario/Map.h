@@ -23,10 +23,8 @@ public:
 	Map(int _idTileSet, int _totalRowsTileSet, int _totalColumnsTileSet, int _totalRowsMap, int _totalColumnsMap, int _totalTiles);
 	~Map();
 	void Render();
-	void Update(DWORD dt, vector<LPGameObject> &coObjects);
 	void ExtractTileFromTileSet();
 	void LoadMap(LPCWSTR file_path);
-	void PushObject();
 
 	int GetMapHeight();
 	int GetMapWidth();

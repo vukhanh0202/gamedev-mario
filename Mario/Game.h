@@ -38,14 +38,26 @@ class Game
 
 	int screen_width;
 	int screen_height;
-
 	unordered_map<int, LPScene> scenes;
 	int current_scene;
 
 	void _ParseSection_SETTINGS(string line);
 	void _ParseSection_SCENES(string line);
 public:
+	int level;
+	int point;
+	int score;
+	boolean permitLoad;
+	vector<int> rewards;
+	vector<int> rounds;
+	vector<BackGround*> imageDone;
 
+	Game() { level = MARIO_LEVEL_SUPER_BIG, point = 0; score = 0; permitLoad = false; }
+	void SetValueStore(int level, int point, int score) {
+		this->level = level;
+		this->point = point;
+		this->score = score;
+	}
 	LPDIRECT3DDEVICE9 GetDirect3DDevice() { return this->d3ddv; }
 	LPDIRECT3DSURFACE9 GetBackBuffer() { return backBuffer; }
 	LPD3DXSPRITE GetSpriteHandler() { return this->spriteHandler; }

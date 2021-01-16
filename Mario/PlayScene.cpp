@@ -85,14 +85,20 @@ PlayScene::PlayScene(int id, LPCWSTR filePath) :
 #define OBJECT_TYPE_HUD_SCORE				29
 #define OBJECT_TYPE_BRICK_GLASS				30
 #define OBJECT_TYPE_BRICK_BUTTON			31
-#define OBJECT_TYPE_SPECIAL					32
+#define OBJECT_TYPE_SPECIAL_STAR			32
 #define OBJECT_TYPE_FALL_DRAIN_MAP_1_4		33
 #define OBJECT_TYPE_END_MAP_1_4				34
 #define OBJECT_TYPE_BRICK_FLOATING			35
 #define OBJECT_TYPE_KOOPA_VERTICAL			36
+#define OBJECT_TYPE_BRICK_QUESTION_COIN_PERMANENT		37
+#define OBJECT_TYPE_SPECIAL_FLOWER			38
+#define OBJECT_TYPE_SPECIAL_MUSHROOM		39
+#define OBJECT_TYPE_PUSH_GIFT				40
+#define OBJECT_TYPE_DONE_MAP				41
 
 
-#define HUD_HEIGHT	53
+
+#define HUD_HEIGHT	50
 
 
 
@@ -100,10 +106,13 @@ PlayScene::PlayScene(int id, LPCWSTR filePath) :
 
 #define SCENE_MAP_SWITCH	2
 #define SCENE_1				3
+#define SCENE_2				4
 
 #define SPACE_ENOUGH_SWITCH_MAP		10
-#define SCENE_1_COORDINATES_X		55
-#define SCENE_1_COORDINATES_Y		0
+#define SCENE_1_COORDINATES_X		82
+#define SCENE_1_COORDINATES_Y		7
+#define SCENE_2_COORDINATES_X		191
+#define SCENE_2_COORDINATES_Y		43
 
 
 #define START_SCREEN		5
@@ -112,6 +121,8 @@ PlayScene::PlayScene(int id, LPCWSTR filePath) :
 
 #define WIDTH_END_BEFORE_PINE_MAP_14		2032
 #define WIDTH_START_AFTER_PINE_MAP_14		2048
+
+#define DONE_MAP_ANI_SET_ID		70001
 
 #define MAX_SCENE_LINE 1024
 
@@ -333,6 +344,9 @@ void PlayScene::_ParseSection_OBJECTS(string line)
 			else {
 				obj = new Mario(x, y);
 				player = (Mario*)obj;
+				player->level = Game::GetInstance()->level;
+				player->point = Game::GetInstance()->point;
+				player->score = Game::GetInstance()->score;
 			}
 
 			DebugOut(L"[INFO] Player object created!\n");
@@ -373,6 +387,22 @@ void PlayScene::_ParseSection_OBJECTS(string line)
 			player = (Mario*)obj;
 			player->SetLevel(MARIO_LEVEL_SWITCH_MAP);
 			player->SetSpeed(0, 0);
+			player->point = Game::GetInstance()->point;
+			player->score = Game::GetInstance()->score;
+			if (Game::GetInstance()->rounds.size() > 0) {
+				int round = Game::GetInstance()->rounds.at(Game::GetInstance()->rounds.size() - 1);
+				switch (round)
+				{
+				case 1:
+					player->SetPosition(SCENE_1_COORDINATES_X, SCENE_1_COORDINATES_Y);
+					break;
+				case 4:
+					player->SetPosition(SCENE_2_COORDINATES_X, SCENE_2_COORDINATES_Y);
+					break;
+				default:
+					break;
+				}
+			}
 			break;
 		case OBJECT_TYPE_COIN: obj = new Coin(); break;
 		case OBJECT_TYPE_HUD_POINT: obj = new Point(x, y); player->addPoint((Point*)obj); break;
@@ -388,12 +418,54 @@ void PlayScene::_ParseSection_OBJECTS(string line)
 		case OBJECT_TYPE_HUD_SCORE: obj = new Point(x, y); player->addScore((Point*)obj); break;
 		case OBJECT_TYPE_BRICK_GLASS: obj = new BrickGlass(); break;
 		case OBJECT_TYPE_BRICK_BUTTON: obj = new BrickButton(x, y); break;
-		case OBJECT_TYPE_SPECIAL: obj = new Special(x, y); this->gifts.push_back((Special*)obj); break;
+		case OBJECT_TYPE_SPECIAL_STAR: obj = new Special(x, y); ((Special*)obj)->type = OBJECT_TYPE_SPECIAL_STAR; this->gifts.push_back((Special*)obj); break;
 		case OBJECT_TYPE_FALL_DRAIN_MAP_1_4: obj = new FallDrainMap14(x, y); break;
-		//case OBJECT_TYPE_END_MAP_1_4: obj = new FallDrainMap14(x, y); break;
+			//case OBJECT_TYPE_END_MAP_1_4: obj = new FallDrainMap14(x, y); break;
 		case OBJECT_TYPE_BRICK_FLOATING: obj = new BrickFloating(); break;
 		case OBJECT_TYPE_KOOPA_VERTICAL: obj = new KoopaVertical(); break;
-
+		case OBJECT_TYPE_BRICK_QUESTION_COIN_PERMANENT: obj = new BrickQuestionCoinPermanent(x, y); break;
+		case OBJECT_TYPE_SPECIAL_FLOWER: obj = new Special(x, y); ((Special*)obj)->type = OBJECT_TYPE_SPECIAL_FLOWER; this->gifts.push_back((Special*)obj); break;
+		case OBJECT_TYPE_SPECIAL_MUSHROOM: obj = new Special(x, y); ((Special*)obj)->type = OBJECT_TYPE_SPECIAL_MUSHROOM; this->gifts.push_back((Special*)obj); break;
+		case OBJECT_TYPE_PUSH_GIFT: obj = NULL;
+			//if (Game::GetInstance()->permitLoad == true) {
+				for (int i = 0; i < Game::GetInstance()->rewards.size(); i++) {
+					int xCoor = 0, yCoor = 0;
+					switch (i)
+					{
+					case 0:
+						xCoor = REWARD_1_X;
+						yCoor = REWARD_Y;
+						break;
+					case 1:
+						xCoor = REWARD_2_X;
+						yCoor = REWARD_Y;
+					default:
+						break;
+					}
+					Special *gift = new Special(xCoor, yCoor);
+					gift->SetPosition(xCoor, yCoor);
+					gift->SetState(SPECIAL_STATE_REWARD_COMPLETED);
+					LPAnimation_Set ani_set = ani_set = AnimationSets::GetInstance()->Get(SPECIAL_ANI_SET_ID_STAR);
+					switch (Game::GetInstance()->rewards.at(i))
+					{
+					case OBJECT_TYPE_SPECIAL_STAR:
+						ani_set = AnimationSets::GetInstance()->Get(SPECIAL_ANI_SET_ID_STAR);
+						break;
+					case OBJECT_TYPE_SPECIAL_FLOWER:
+						ani_set = AnimationSets::GetInstance()->Get(SPECIAL_ANI_SET_ID_FLOWER);
+						break;
+					case OBJECT_TYPE_SPECIAL_MUSHROOM:
+						ani_set = AnimationSets::GetInstance()->Get(SPECIAL_ANI_SET_ID_MUSHROOM);
+						break;
+					default:
+						break;
+					}
+					gift->SetAnimationSet(ani_set);
+					objects.push_back(gift);
+				}
+				Game::GetInstance()->permitLoad = false;
+			//}
+			break;
 
 		default:
 			DebugOut(L"[ERR] Invalid object type: %d\n", object_type);
@@ -401,13 +473,17 @@ void PlayScene::_ParseSection_OBJECTS(string line)
 		}
 
 		// General object setup
-		obj->SetPosition(x, y);
+		if (obj != NULL) {
+			if (object_type != OBJECT_TYPE_SWITCH_MAP) {
+				obj->SetPosition(x, y);
+			}
 
 
-		LPAnimation_Set ani_set = animation_sets->Get(ani_set_id);
+			LPAnimation_Set ani_set = animation_sets->Get(ani_set_id);
 
-		obj->SetAnimationSet(ani_set);
-		objects.push_back(obj);
+			obj->SetAnimationSet(ani_set);
+			objects.push_back(obj);
+		}
 	}
 }
 void PlayScene::_ParseSection_MAP(string line)
@@ -501,10 +577,7 @@ void PlayScene::Update(DWORD dt)
 				coObjects.push_back(objects[i]);
 			}
 		}
-		for (size_t i = 0; i < objects.size(); i++)
-		{
-			objects[i]->Update(dt, &coObjects);
-		}
+
 		if (player != NULL) {
 			Game *game = Game::GetInstance();
 			if (player->x < 5) {
@@ -519,6 +592,56 @@ void PlayScene::Update(DWORD dt)
 			else if (player->y > game->GetScreenHeight() - MARIO_SWITCH_MAP_HEIGHT - HUD_HEIGHT) {
 				player->y = game->GetScreenHeight() - MARIO_SWITCH_MAP_HEIGHT - HUD_HEIGHT;
 			}
+			GameObject *brick = new Brick();
+			int round = game->rewards.size() + 1;
+			switch (round)
+			{
+			case 1:
+				brick->SetPosition(SCENE_1_COORDINATES_X + 23, SCENE_1_COORDINATES_Y);
+				break;
+			case 2:
+				brick->SetPosition(SCENE_2_COORDINATES_X - 15, SCENE_2_COORDINATES_Y);
+				break;
+			default:
+				break;
+			}
+			LPAnimation_Set ani_set = AnimationSets::GetInstance()->Get(BRICK_TRANSPARENT_ANI_SET_ID);
+
+			brick->SetAnimationSet(ani_set);
+			objects.push_back(brick);
+			if (game->rounds.size() > 0) {
+				for (size_t i = game->rounds.size() - 1; i <= 0; i--)
+				{
+					
+					int round = game->rewards.size();
+					if (round == 1) {
+						GameObject *bg = new BackGround();
+						bg->SetPosition(SCENE_1_COORDINATES_X, SCENE_1_COORDINATES_Y);
+						LPAnimation_Set ani_setBg = AnimationSets::GetInstance()->Get(DONE_MAP_ANI_SET_ID);
+						bg->SetAnimationSet(ani_setBg);
+						objects.insert(objects.cend() - 30, bg);
+					}
+					else if (round == 2) {
+						GameObject *bg = new BackGround();
+						bg->SetPosition(SCENE_1_COORDINATES_X, SCENE_1_COORDINATES_Y);
+						LPAnimation_Set ani_setBg = AnimationSets::GetInstance()->Get(DONE_MAP_ANI_SET_ID);
+						bg->SetAnimationSet(ani_setBg);
+						objects.insert(objects.cend() - 30, bg);
+						//
+						GameObject *bg1 = new BackGround();
+						bg1->SetPosition(SCENE_2_COORDINATES_X, SCENE_2_COORDINATES_Y);
+						LPAnimation_Set ani_setBg1 = AnimationSets::GetInstance()->Get(DONE_MAP_ANI_SET_ID);
+						bg1->SetAnimationSet(ani_setBg1);
+						objects.insert(objects.cend() - 30, bg1);
+					}
+					game->rounds.pop_back();
+				}
+			}
+
+		}
+		for (size_t i = 0; i < objects.size(); i++)
+		{
+			objects[i]->Update(dt, &coObjects);
 		}
 		Game::GetInstance()->SetCamPosition((int)0, (int)0);
 	}
@@ -588,7 +711,7 @@ void PlayScene::Update(DWORD dt)
 				objects[i]->y >= player->y - game->GetScreenHeight() &&
 				objects[i]->y <= player->y + game->GetScreenHeight() && map == NULL)
 			{
-				
+
 				objects[i]->Update(dt, &coObjects);
 			}
 			else if (objects[i]->GetTypeObject() == OBJECT_TYPE_HUD_SPEED
@@ -600,22 +723,29 @@ void PlayScene::Update(DWORD dt)
 				|| objects[i]->GetTypeObject() == OBJECT_TYPE_FALL_DRAIN_MAP_1_1
 				|| objects[i]->GetTypeObject() == OBJECT_TYPE_FALL_DRAIN_MAP_1_4
 				|| objects[i]->GetTypeObject() == OBJECT_TYPE_END_MAP_1_4
+				|| objects[i]->GetTypeObject() == OBJECT_TYPE_SPECIAL_STAR
 				|| objects[i]->GetTypeObject() == OBJECT_TYPE_END_MAP_1_1) {
 				objects[i]->Update(dt, &coObjects);
 			}
 		}
 
 		if (map) {
-			double cx, cy;
-			player->GetPosition(cx, cy);
+			double cx = map->CurrentPosition, cy;
 
 			float ScreenWidth = game->GetScreenWidth();
 			float ScreenHeight = game->GetScreenHeight();
 			float MapWidth = map->GetMapWidth();
 			float MapHeight = map->GetMapHeight();
 			if (player->GetState() != MARIO_STATE_DIE) {
-				cx = map->CurrentPosition + 0.5f;
-				map->CurrentPosition = cx;
+				if (cx <= WIDTH_END_BEFORE_PINE_MAP_14) {
+					cx = map->CurrentPosition + 0.5f;
+					map->CurrentPosition = cx;
+				}
+				else if (cx != MapWidth - ScreenWidth) {
+					player->GetPosition(cx, cy);
+					cx -= ScreenWidth / 2;
+					map->CurrentPosition = cx;
+				}
 			}
 			else {
 				cx = map->CurrentPosition;
@@ -630,9 +760,10 @@ void PlayScene::Update(DWORD dt)
 				cx = WIDTH_START_AFTER_PINE_MAP_14;
 				map->CurrentPosition = cx;
 			}
+
 			cy = 20;
 			// Keep mario not overcome screen
-			if (player->x > MapWidth - 20/* && player->reward == NULL*/) {
+			if (player->x > MapWidth - 20 && player->reward == NULL) {
 				player->x = MapWidth - 20;
 			}
 			Game::GetInstance()->SetCamPosition(round(cx), round(cy));
@@ -676,7 +807,9 @@ void PlayScene::Update(DWORD dt)
 				else Game::GetInstance()->SetCamPosition((int)cx, (int)20.0f);
 			}
 		}
-
+		if (player != NULL && player->level == MARIO_LEVEL_SWITCH_MAP) {
+			Game::GetInstance()->SetCamPosition(0, 0);
+		}
 	}
 }
 
@@ -686,7 +819,6 @@ void PlayScene::Render()
 	{
 		this->map->Render();
 	}
-
 	for (int i = 0; i < objects.size(); i++) {
 		if (!objects[i]->disable) {
 			objects[i]->Render();
@@ -699,14 +831,14 @@ void PlayScene::Render()
 */
 void PlayScene::Unload()
 {
-	for (int i = 0; i < objects.size(); i++)
-		delete objects[i];
+	for (int i = 0; i < objects.size(); i++) {
 
+		delete objects[i];
+	}
 	objects.clear();
 	player = NULL;
 	delete map;
 	map = nullptr;
-
 	DebugOut(L"[INFO] Scene %s unloaded! \n", sceneFilePath);
 }
 
@@ -761,8 +893,12 @@ void PlaySceneKeyHandler::OnKeyDown(int KeyCode)
 				case DIK_A:
 					double x, y;
 					mario->GetPosition(x, y);
-					if (abs(x - SCENE_1_COORDINATES_X) < SPACE_ENOUGH_SWITCH_MAP && abs(y - SCENE_1_COORDINATES_Y) < SPACE_ENOUGH_SWITCH_MAP) {
+					if (Game::GetInstance()->rewards.size() < 1 && abs(x - SCENE_1_COORDINATES_X) < SPACE_ENOUGH_SWITCH_MAP && abs(y - SCENE_1_COORDINATES_Y) < SPACE_ENOUGH_SWITCH_MAP) {
 						Portal *p = new Portal(SCENE_1);
+						Game::GetInstance()->SwitchScene(p->GetSceneId());
+					}
+					else if (Game::GetInstance()->rewards.size() < 2 && abs(x - SCENE_2_COORDINATES_X) < SPACE_ENOUGH_SWITCH_MAP && abs(y - SCENE_2_COORDINATES_Y) < SPACE_ENOUGH_SWITCH_MAP) {
+						Portal *p = new Portal(SCENE_2);
 						Game::GetInstance()->SwitchScene(p->GetSceneId());
 					}
 					break;
@@ -796,7 +932,7 @@ void PlaySceneKeyHandler::OnKeyDown(int KeyCode)
 					}
 					else if (mario->GetLevel() == MARIO_LEVEL_SUPER_BIG && !mario->getAttack()) {
 						mario->SetAttack(true);
-						mario->SetSpeed(mario->vx + MARIO_WALKING_SPEED * mario->nx, mario->vy);
+						mario->SetSpeed(mario->vx + MARIO_WALKING_SPEED * 2 * mario->nx, mario->vy);
 						mario->setLastAttack(GetTickCount64());
 					}
 					break;

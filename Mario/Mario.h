@@ -133,8 +133,8 @@
 #define MARIO_FIRE_BBOX_HEIGHT			27
 #define MARIO_FIRE_BBOX_HEIGHT_SITTING	18
 
-#define MARIO_SWITCH_MAP_WIDTH			16
-#define MARIO_SWITCH_MAP_HEIGHT			19
+#define MARIO_SWITCH_MAP_WIDTH			14
+#define MARIO_SWITCH_MAP_HEIGHT			17
 
 #define MARIO_UNTOUCHABLE_TIME 5000
 
@@ -154,14 +154,11 @@
 
 class Mario : public GameObject
 {
-	int level;
 	int untouchable;
 	int ny; // Determine sit or not
 	int power; // Determine Mario ready for fly (power = 5 mario can fly)
-	int point; // point when mario earn gold
 	int time; // point when mario earn gold
 	int countTime;
-	int score;
 
 	boolean hold; // Hold koopa
 	boolean hit;
@@ -197,6 +194,9 @@ class Mario : public GameObject
 	vector<Point*> hudScoreList;
 
 public:
+	int score;
+	int level;
+	int point; // point when mario earn gold
 	Special *reward;
 	boolean isCollisionKoopa;
 	boolean bonusInMap;
@@ -239,6 +239,8 @@ public:
 	void setInTunnel(boolean inTunnel) { this->inTunnel = inTunnel; }
 	int getScore() { return this->score; }
 	void setScore(int score) { this->score = score; }
+	int getPoint() { return this->point; }
+	void setPoint(int point);
 	void setLastAttack(DWORD lastAttack) { this->lastAttack = lastAttack; }
 
 	boolean getNoAction() { return this->noAction; }

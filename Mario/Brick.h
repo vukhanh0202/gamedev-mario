@@ -18,8 +18,11 @@
 #define OBJECT_TYPE_BRICK	1
 #define OBJECT_TYPE_BRICK_QUESTION_COIN	23
 #define OBJECT_TYPE_BRICK_QUESTION_BONUS 24
+#define OBJECT_TYPE_BRICK_QUESTION_COIN_PERMANENT 37
 
 #define BRICK_DEFLECT_SPEED 0.1f
+
+#define BRICK_TRANSPARENT_ANI_SET_ID  50001
 
 class Brick : public GameObject
 {
@@ -74,5 +77,18 @@ public:
 	virtual void Update(DWORD dt, vector<LPGameObject> *coObjects);
 	int GetTypeObject() {
 		return OBJECT_TYPE_BRICK_QUESTION_BONUS;
+	}
+};
+
+class BrickQuestionCoinPermanent : public BrickQuestion
+{
+public:
+	GameObject *koopa;
+	BrickQuestionCoinPermanent(double positionDefaultX, double positionDefaultY) : BrickQuestion(positionDefaultX, positionDefaultY) {
+		koopa = NULL;
+	}
+	virtual void Update(DWORD dt, vector<LPGameObject> *coObjects);
+	int GetTypeObject() {
+		return OBJECT_TYPE_BRICK_QUESTION_COIN;
 	}
 };

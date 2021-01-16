@@ -197,6 +197,10 @@ void Koopa::Update(DWORD dt, vector<LPGameObject> *coObjects)
 			{
 				vx = -vx;
 			}
+			if (dynamic_cast<BrickQuestionCoinPermanent *>(e->obj)) {
+				BrickQuestionCoinPermanent *item = dynamic_cast<BrickQuestionCoinPermanent *>(e->obj);
+				item->koopa = (Koopa*)this;
+			}
 		}
 	}
 	// clean up collision events
