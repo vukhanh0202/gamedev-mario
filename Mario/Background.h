@@ -11,6 +11,7 @@
 #define OBJECT_TYPE_BACKGROUND_MOTION_LOGO_ARROW	14
 
 #define BACKGROUND_SPEED		0.1f 
+#define TIME_EXIST_EFFECT		150
 using namespace std;
 
 class BackGround : public GameObject
@@ -21,6 +22,13 @@ public:
 	int GetTypeObject() {
 		return OBJECT_TYPE_BACKGROUND;
 	}
+};
+
+class EffectAttack :public BackGround
+{
+public:
+	DWORD timeAppear;
+	virtual void Update(DWORD dt, vector<LPGameObject> *coObjects);
 };
 
 class BackGroundMotion : public GameObject

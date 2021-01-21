@@ -17,6 +17,8 @@
 #include "BrickGlass.h"
 #include "BrokenBrick.h"
 #include "BrickFloating.h"
+#include "BrotherBoom.h"
+#include "Boomerang.h"
 
 using namespace std;
 
@@ -53,33 +55,34 @@ Mario::Mario(float x, float y) : GameObject()
 	isCollision = false;
 	reward = NULL;
 	bonusInMap = false;
+	slide = false;
+	signalSlide = 1;
 }
 
 void Mario::Update(DWORD dt, vector<LPGameObject> *coObjects)
 {
-	//if (state == MARIO_STATE_DIE) return;
-	//if (level != MARIO_LEVEL_SWITCH_MAP) {
-		// Time count 
-		countTime += dt;
-		time = TIME_PLAY - countTime / 1000;
-		int tempTime = time;
-		for (int i = 0; i < 3; i++) {
-			hudTimeList.at(i)->SetState(tempTime % 10);
-			tempTime /= 10;
-		}
-		if (time <= 0 && state != MARIO_STATE_DIE) {
-			SetState(MARIO_STATE_DIE);
-		}
+	// Time count 
+	countTime += dt;
+	time = TIME_PLAY - countTime / 1000;
+	int tempTime = time;
+	for (int i = 0; i < 3; i++) {
+		hudTimeList.at(i)->SetState(tempTime % 10);
+		tempTime /= 10;
+	}
+	if (time <= 0 && state != MARIO_STATE_DIE) {
+		SetState(MARIO_STATE_DIE);
+	}
 
-		// Count score
-		int tempScore = score;
-		for (int i = 0; i < 7; i++) {
-			hudScoreList.at(i)->SetState(tempScore % 10);
-			tempScore /= 10;
-		}
-		// set point
-		this->setPoint(point);
-	//}
+	// Count score
+	int tempScore = score;
+	for (int i = 0; i < 7; i++) {
+		hudScoreList.at(i)->SetState(tempScore % 10);
+		tempScore /= 10;
+	}
+	// set point
+	this->setPoint(point);
+
+	if (vx == 0) slide = false;
 
 	// Calculate dx, dy 
 	Game *game = Game::GetInstance();
@@ -94,6 +97,12 @@ void Mario::Update(DWORD dt, vector<LPGameObject> *coObjects)
 	}
 	if (!fallDrain && !noAction) {
 
+		if (GetTickCount64() - hitBegin <= TIME_HIT) {
+			hit = true;
+		}
+		else {
+			hit = false;
+		}
 		if (y > UNDER_WORLD && !inTunnel && state != MARIO_STATE_DIE) {
 			SetState(MARIO_STATE_DIE);
 		}
@@ -115,6 +124,7 @@ void Mario::Update(DWORD dt, vector<LPGameObject> *coObjects)
 				if (power >= MARIO_POWER_READY_FLY) readyFly = true;
 			}
 			else {
+				if (vx == 0 || fast == false) power = 0;
 				if (power <= 0) readyFly = false;
 				else power--;
 			}
@@ -353,7 +363,8 @@ void Mario::Update(DWORD dt, vector<LPGameObject> *coObjects)
 							{
 								GameObject *coin = new Coin(objects[i]->x, objects[i]->y);
 								coin->SetPosition(objects[i]->x, objects[i]->y);
-
+								((Coin*)coin)->timeAppear = GetTickCount64();
+								coin->SetState(COIN_STATE_TIMEOUT);
 								LPAnimation_Set ani_set = AnimationSets::GetInstance()->Get(COIN_ANIMATION_SET_ID);
 
 								coin->SetAnimationSet(ani_set);
@@ -409,6 +420,8 @@ void Mario::Update(DWORD dt, vector<LPGameObject> *coObjects)
 							}
 							goomba->state = GOOMBA_STATE_DIE_DISAPPER;
 						}
+						Effect();
+
 					}
 					else if (dynamic_cast<Koopa *>(e->obj)) // if e->obj is Koopa 
 					{
@@ -422,6 +435,7 @@ void Mario::Update(DWORD dt, vector<LPGameObject> *coObjects)
 							}
 							koopa->state = KOOPA_STATE_DIE_DISAPPER;
 						}
+						Effect();
 					}
 					else if (dynamic_cast<ParaGoomba *>(e->obj)) // if e->obj is ParaGoomba 
 					{
@@ -434,6 +448,7 @@ void Mario::Update(DWORD dt, vector<LPGameObject> *coObjects)
 							paraGoomba->nx = -1;
 						}
 						paraGoomba->state = PARA_GOOMBA_STATE_DIE_DISAPPER;
+						Effect();
 					}
 					else if (dynamic_cast<ParaKoopa *>(e->obj)) // if e->obj is ParaKoopa 
 					{
@@ -447,20 +462,24 @@ void Mario::Update(DWORD dt, vector<LPGameObject> *coObjects)
 							}
 							paraKoopa->state = PARA_KOOPA_STATE_DIE_DISAPPER;
 						}
+						Effect();
 					}
 					else if (dynamic_cast<VenusFire *>(e->obj)) {
 						VenusFire *venusFire = dynamic_cast<VenusFire *>(e->obj);
 						venusFire->disable = true;
+						Effect();
 					}
 					else if (dynamic_cast<Pihanra *>(e->obj)) {
 						Pihanra *pihanra = dynamic_cast<Pihanra *>(e->obj);
 						pihanra->disable = true;
+						Effect();
 					}
 					else if (dynamic_cast<BrickQuestion *>(e->obj)) {
 						if (nx != 0)
 						{
 							BrickQuestion *brickQuestion = dynamic_cast<BrickQuestion *>(e->obj);
 							brickQuestion->SetState(BRICK_STATE_EMPTY);
+							Effect();
 						}
 					}
 					else if (dynamic_cast<BrickGlass *>(e->obj)) {
@@ -501,8 +520,26 @@ void Mario::Update(DWORD dt, vector<LPGameObject> *coObjects)
 
 							brickGlass->disable = true;
 							vx = -vx;
+							Effect();
 						}
 					}
+					else if (dynamic_cast<BrotherBoom *>(e->obj)) // if e->obj is Goomba 
+					{
+						BrotherBoom *brotherBoom = dynamic_cast<BrotherBoom *>(e->obj);
+
+						if (brotherBoom->state == BROTHER_BOOM_STATE_WALKING) {
+							if (this->nx > 0) {
+								brotherBoom->nx = 1;
+							}
+							else {
+								brotherBoom->nx = -1;
+							}
+							brotherBoom->SetState(BROTHER_BOOM_STATE_DIE);
+						}
+						Effect();
+					}
+
+
 				}
 				else
 				{
@@ -542,14 +579,14 @@ void Mario::Update(DWORD dt, vector<LPGameObject> *coObjects)
 					else if (dynamic_cast<KoopaVertical *>(e->obj)) // if e->obj is Koopa 
 					{
 						KoopaVertical *koopaVertical = dynamic_cast<KoopaVertical *>(e->obj);
-						if (koopaVertical->state != KOOPA_STATE_DIE_FALL)
+						if (koopaVertical->state != PARA_KOOPA_STATE_DIE_FALL)
 						{
 							// jump on top >> kill Koopa
 							if (e->ny < 0)
 							{
-								if (koopaVertical->GetState() != KOOPA_STATE_DIE_FALL)
+								if (koopaVertical->GetState() != PARA_KOOPA_STATE_DIE_FALL)
 								{
-									koopaVertical->SetState(KOOPA_STATE_DIE_FALL);
+									koopaVertical->SetState(PARA_KOOPA_STATE_DIE_FALL);
 									vy = -MARIO_JUMP_DEFLECT_SPEED;
 								}
 							}
@@ -591,7 +628,7 @@ void Mario::Update(DWORD dt, vector<LPGameObject> *coObjects)
 								if (koopa->GetState() == KOOPA_STATE_DIE)
 								{
 									// Hold koopa
-									if (this->hold == hold)
+									if (this->hold == true)
 									{
 										koopa->SetState(KOOPA_STATE_HOLDING);
 										this->koopaHold = koopa;
@@ -601,6 +638,7 @@ void Mario::Update(DWORD dt, vector<LPGameObject> *coObjects)
 										// Hit Koopa
 										//this->SetState(MARIO_STATE_HIT);
 										koopa->SetState(KOOPA_STATE_THROWING_LEFT);
+										hitBegin = GetTickCount64();
 									}
 								}
 								else
@@ -633,6 +671,7 @@ void Mario::Update(DWORD dt, vector<LPGameObject> *coObjects)
 									{
 										//this->SetState(MARIO_STATE_HIT);
 										koopa->SetState(KOOPA_STATE_THROWING_RIGHT);
+										hitBegin = GetTickCount64();
 									}
 
 								}
@@ -745,7 +784,7 @@ void Mario::Update(DWORD dt, vector<LPGameObject> *coObjects)
 								if (paraKoopa->GetState() == PARA_KOOPA_STATE_DIE)
 								{
 									// Hold koopa
-									if (this->hold == hold)
+									if (this->hold == true)
 									{
 										paraKoopa->SetState(PARA_KOOPA_STATE_HOLDING);
 										this->koopaHold = paraKoopa;
@@ -755,6 +794,7 @@ void Mario::Update(DWORD dt, vector<LPGameObject> *coObjects)
 										// Hit Koopa
 										//this->SetState(MARIO_STATE_HIT);
 										paraKoopa->SetState(PARA_KOOPA_STATE_THROWING_LEFT);
+										hitBegin = GetTickCount64();
 									}
 								}
 								else
@@ -787,6 +827,7 @@ void Mario::Update(DWORD dt, vector<LPGameObject> *coObjects)
 									{
 										//this->SetState(MARIO_STATE_HIT);
 										paraKoopa->SetState(PARA_KOOPA_STATE_THROWING_RIGHT);
+										hitBegin = GetTickCount64();
 									}
 
 								}
@@ -848,6 +889,94 @@ void Mario::Update(DWORD dt, vector<LPGameObject> *coObjects)
 							}
 							else
 								SetState(MARIO_STATE_DIE);
+						}
+					}
+					else if (dynamic_cast<BrickGlass *>(e->obj)) {
+						if (e->ny > 0 && level == MARIO_LEVEL_SUPER_BIG)
+						{
+							Game *game = Game::GetInstance();
+							LPScene scene = Game::GetInstance()->GetCurrentScene();
+
+							BrickGlass *brickGlass = dynamic_cast<BrickGlass *>(e->obj);
+							double brickX, brickY;
+							brickGlass->GetPosition(brickX, brickY);
+
+							// Brick 1
+							GameObject *brokenBrick0 = new BrokenBrick();
+							brokenBrick0->SetPosition(brickX, brickY);
+							brokenBrick0->SetSpeed(0.2f, -0.3f);
+							LPAnimation_Set ani_set = AnimationSets::GetInstance()->Get(26001);
+							brokenBrick0->SetAnimationSet(ani_set);
+							((PlayScene*)scene)->pushObject(brokenBrick0);
+							// Brick 2
+							GameObject *brokenBrick1 = new BrokenBrick();
+							brokenBrick1->SetPosition(brickX, brickY);
+							brokenBrick1->SetSpeed(-0.2f, -0.15f);
+							brokenBrick1->SetAnimationSet(ani_set);
+							((PlayScene*)scene)->pushObject(brokenBrick1);
+							// Brick 3
+							GameObject *brokenBrick2 = new BrokenBrick();
+							brokenBrick2->SetPosition(brickX, brickY);
+							brokenBrick2->SetSpeed(-0.1f, -0.3f);
+							brokenBrick2->SetAnimationSet(ani_set);
+							((PlayScene*)scene)->pushObject(brokenBrick2);
+							// Brick 4
+							GameObject *brokenBrick3 = new BrokenBrick();
+							brokenBrick3->SetPosition(brickX, brickY);
+							brokenBrick3->SetSpeed(0.1f, -0.15f);
+							brokenBrick3->SetAnimationSet(ani_set);
+							((PlayScene*)scene)->pushObject(brokenBrick3);
+
+							brickGlass->disable = true;
+							vx = -vx;
+						}
+					}
+					else if (dynamic_cast<BrotherBoom *>(e->obj)) // if e->obj is Goomba 
+					{
+						BrotherBoom *brotherBoom = dynamic_cast<BrotherBoom *>(e->obj);
+						// jump on top >> kill Goomba and deflect a bit 
+						if (e->ny < 0)
+						{
+							if (brotherBoom->GetState() != BROTHER_BOOM_STATE_DIE)
+							{
+								brotherBoom->SetState(BROTHER_BOOM_STATE_DIE);
+								vy = -MARIO_JUMP_DEFLECT_SPEED;
+							}
+						}
+						else if (e->nx != 0 || e->ny > 0)
+						{
+							if (untouchable == 0)
+							{
+								if (brotherBoom->GetState() != GOOMBA_STATE_DIE)
+								{
+									if (level > MARIO_LEVEL_SMALL)
+									{
+										level--;
+										unableReadyFly();
+										StartUntouchable();
+									}
+									else
+										SetState(MARIO_STATE_DIE);
+								}
+							}
+						}
+					}
+					else if (dynamic_cast<Boomerang *>(e->obj)) // if e->obj is fireEnemy
+					{
+						// koopa live
+						if (untouchable == 0)
+						{
+							if (level > MARIO_LEVEL_SMALL)
+							{
+								level--;
+								unableReadyFly();
+								StartUntouchable();
+								y -= 10;
+							}
+							else
+								SetState(MARIO_STATE_DIE);
+							Boomerang *boomerang = dynamic_cast<Boomerang *>(e->obj);
+							boomerang->disable = true;
 						}
 					}
 				}
@@ -945,6 +1074,17 @@ void Mario::Render()
 							ani = MARIO_ANI_BIG_HOLD_LEFT;
 						}
 					}
+					else if (slide == true)
+					{
+						if (nx > 0)
+						{
+							ani = MARIO_ANI_BIG_SLIDE_LEFT_RIGHT;
+						}
+						else
+						{
+							ani = MARIO_ANI_BIG_SLIDE_RIGHT_LEFT;
+						}
+					}
 					else if (hit == true)
 					{
 						if (nx > 0)
@@ -993,7 +1133,6 @@ void Mario::Render()
 							ani = MARIO_ANI_BIG_WALKING_LEFT;
 						}
 					}
-
 				}
 				else if (level == MARIO_LEVEL_SMALL)
 				{
@@ -1017,6 +1156,17 @@ void Mario::Render()
 						else
 						{
 							ani = MARIO_ANI_SMALL_HOLD_LEFT;
+						}
+					}
+					else if (slide == true)
+					{
+						if (nx > 0)
+						{
+							ani = MARIO_ANI_SMALL_SLIDE_LEFT_RIGHT;
+						}
+						else
+						{
+							ani = MARIO_ANI_SMALL_SLIDE_RIGHT_LEFT;
 						}
 					}
 					else if (hit == true)
@@ -1086,6 +1236,17 @@ void Mario::Render()
 						else
 						{
 							ani = MARIO_ANI_SUPER_BIG_HOLD_LEFT;
+						}
+					}
+					else if (slide == true)
+					{
+						if (nx > 0)
+						{
+							ani = MARIO_ANI_SUPER_BIG_SLIDE_LEFT_RIGHT;
+						}
+						else
+						{
+							ani = MARIO_ANI_SUPER_BIG_SLIDE_RIGHT_LEFT;
 						}
 					}
 					else if (hit == true)
@@ -1201,6 +1362,17 @@ void Mario::Render()
 							ani = MARIO_ANI_FIRE_HOLD_LEFT;
 						}
 					}
+					else if (slide == true)
+					{
+						if (nx > 0)
+						{
+							ani = MARIO_ANI_FIRE_SLIDE_LEFT_RIGHT;
+						}
+						else
+						{
+							ani = MARIO_ANI_FIRE_SLIDE_RIGHT_LEFT;
+						}
+					}
 					else if (hit == true)
 					{
 						if (nx > 0)
@@ -1275,8 +1447,29 @@ void Mario::SetState(int state)
 	switch (state)
 	{
 	case MARIO_STATE_WALKING_RIGHT:
-		if (fast == true) vx = MARIO_WALKING_SPEED_FAST;
-		else vx = MARIO_WALKING_SPEED;
+		if (signalSlide == -1) {
+			signalSlide = 1;
+			slide = true;
+		}
+		if (fast == true) {
+			if (slide == true) {
+				if (vx < 0) {
+					vx = 0;
+				}
+				if (vx < MARIO_WALKING_SPEED_FAST) {
+					vx += MARIO_WALKING_SPEED_SLIDE;
+				}
+				else {
+					slide = false;
+					vx = MARIO_WALKING_SPEED_FAST;
+					shot = false;
+				}
+			}
+			else {
+				vx = MARIO_WALKING_SPEED_FAST;
+			}
+		}
+		else { vx = MARIO_WALKING_SPEED; slide = false; shot = false; }
 		nx = 1;
 		if (ny == 1)
 		{
@@ -1288,8 +1481,29 @@ void Mario::SetState(int state)
 		hit = false; // cancel state hit
 		break;
 	case MARIO_STATE_WALKING_LEFT:
-		if (fast == true) vx = -MARIO_WALKING_SPEED_FAST;
-		else vx = -MARIO_WALKING_SPEED;
+		if (signalSlide == 1) {
+			signalSlide = -1;
+			slide = true;
+		}
+		if (fast == true) {
+			if (slide == true) {
+				if (vx > 0) {
+					vx = 0;
+				}
+				if (vx > -MARIO_WALKING_SPEED_FAST) {
+					vx -= MARIO_WALKING_SPEED_SLIDE;
+				}
+				else {
+					slide = false;
+					vx = -MARIO_WALKING_SPEED_FAST;
+					shot = false;
+				}
+			}
+			else {
+				vx = -MARIO_WALKING_SPEED_FAST;
+			}
+		}
+		else { vx = -MARIO_WALKING_SPEED; slide = false; shot = false; }
 		nx = -1;
 		if (ny == 1)
 		{
@@ -1571,6 +1785,11 @@ void Mario::FilterCollision(
 				nx = 0;
 				ny = 0;
 			}
+			if (dynamic_cast<Boomerang*>(c->obj))
+			{
+				nx = 0;
+				ny = 0;
+			}
 		}
 
 	}
@@ -1579,6 +1798,25 @@ void Mario::FilterCollision(
 	if (min_iy >= 0) coEventsResult.push_back(coEvents[min_iy]);
 }
 
+void Mario::Effect() {
+	Game *game = Game::GetInstance();
+	LPScene scene = Game::GetInstance()->GetCurrentScene();
 
+	GameObject *effect = new EffectAttack();
+	int xEffect = 0;
+	if (nx < 0) {
+		xEffect = x - 10;
+	}
+	else {
+		xEffect = x + MARIO_SUPER_BIG_BBOX_WIDTH;
+	}
+	effect->SetPosition(xEffect, y + MARIO_SUPER_BIG_BBOX_HEIGHT / 3);
+	((EffectAttack*)effect)->timeAppear = GetTickCount64();
+	LPAnimation_Set ani_set = AnimationSets::GetInstance()->Get(EFFECT_ATTACK_ANI_SET_ID);
+
+	effect->SetAnimationSet(ani_set);
+
+	((PlayScene*)scene)->pushObject(effect);
+}
 
 

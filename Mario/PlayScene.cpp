@@ -29,6 +29,8 @@
 #include "Mario.h"
 #include "BrickGlass.h"
 #include "BrickFloating.h"
+#include "BrotherBoom.h"
+#include "Boomerang.h"
 
 using namespace std;
 
@@ -95,6 +97,8 @@ PlayScene::PlayScene(int id, LPCWSTR filePath) :
 #define OBJECT_TYPE_SPECIAL_MUSHROOM		39
 #define OBJECT_TYPE_PUSH_GIFT				40
 #define OBJECT_TYPE_DONE_MAP				41
+#define OBJECT_TYPE_BOOMERANG_BROTHER		42
+#define OBJECT_TYPE_BOOMERANG				43
 
 
 
@@ -426,44 +430,45 @@ void PlayScene::_ParseSection_OBJECTS(string line)
 		case OBJECT_TYPE_BRICK_QUESTION_COIN_PERMANENT: obj = new BrickQuestionCoinPermanent(x, y); break;
 		case OBJECT_TYPE_SPECIAL_FLOWER: obj = new Special(x, y); ((Special*)obj)->type = OBJECT_TYPE_SPECIAL_FLOWER; this->gifts.push_back((Special*)obj); break;
 		case OBJECT_TYPE_SPECIAL_MUSHROOM: obj = new Special(x, y); ((Special*)obj)->type = OBJECT_TYPE_SPECIAL_MUSHROOM; this->gifts.push_back((Special*)obj); break;
+		case OBJECT_TYPE_BOOMERANG_BROTHER: obj = new BrotherBoom(); break;
 		case OBJECT_TYPE_PUSH_GIFT: obj = NULL;
 			//if (Game::GetInstance()->permitLoad == true) {
-				for (int i = 0; i < Game::GetInstance()->rewards.size(); i++) {
-					int xCoor = 0, yCoor = 0;
-					switch (i)
-					{
-					case 0:
-						xCoor = REWARD_1_X;
-						yCoor = REWARD_Y;
-						break;
-					case 1:
-						xCoor = REWARD_2_X;
-						yCoor = REWARD_Y;
-					default:
-						break;
-					}
-					Special *gift = new Special(xCoor, yCoor);
-					gift->SetPosition(xCoor, yCoor);
-					gift->SetState(SPECIAL_STATE_REWARD_COMPLETED);
-					LPAnimation_Set ani_set = ani_set = AnimationSets::GetInstance()->Get(SPECIAL_ANI_SET_ID_STAR);
-					switch (Game::GetInstance()->rewards.at(i))
-					{
-					case OBJECT_TYPE_SPECIAL_STAR:
-						ani_set = AnimationSets::GetInstance()->Get(SPECIAL_ANI_SET_ID_STAR);
-						break;
-					case OBJECT_TYPE_SPECIAL_FLOWER:
-						ani_set = AnimationSets::GetInstance()->Get(SPECIAL_ANI_SET_ID_FLOWER);
-						break;
-					case OBJECT_TYPE_SPECIAL_MUSHROOM:
-						ani_set = AnimationSets::GetInstance()->Get(SPECIAL_ANI_SET_ID_MUSHROOM);
-						break;
-					default:
-						break;
-					}
-					gift->SetAnimationSet(ani_set);
-					objects.push_back(gift);
+			for (int i = 0; i < Game::GetInstance()->rewards.size(); i++) {
+				int xCoor = 0, yCoor = 0;
+				switch (i)
+				{
+				case 0:
+					xCoor = REWARD_1_X;
+					yCoor = REWARD_Y;
+					break;
+				case 1:
+					xCoor = REWARD_2_X;
+					yCoor = REWARD_Y;
+				default:
+					break;
 				}
-				Game::GetInstance()->permitLoad = false;
+				Special *gift = new Special(xCoor, yCoor);
+				gift->SetPosition(xCoor, yCoor);
+				gift->SetState(SPECIAL_STATE_REWARD_COMPLETED);
+				LPAnimation_Set ani_set = ani_set = AnimationSets::GetInstance()->Get(SPECIAL_ANI_SET_ID_STAR);
+				switch (Game::GetInstance()->rewards.at(i))
+				{
+				case OBJECT_TYPE_SPECIAL_STAR:
+					ani_set = AnimationSets::GetInstance()->Get(SPECIAL_ANI_SET_ID_STAR);
+					break;
+				case OBJECT_TYPE_SPECIAL_FLOWER:
+					ani_set = AnimationSets::GetInstance()->Get(SPECIAL_ANI_SET_ID_FLOWER);
+					break;
+				case OBJECT_TYPE_SPECIAL_MUSHROOM:
+					ani_set = AnimationSets::GetInstance()->Get(SPECIAL_ANI_SET_ID_MUSHROOM);
+					break;
+				default:
+					break;
+				}
+				gift->SetAnimationSet(ani_set);
+				objects.push_back(gift);
+			}
+			Game::GetInstance()->permitLoad = false;
 			//}
 			break;
 
@@ -612,7 +617,7 @@ void PlayScene::Update(DWORD dt)
 			if (game->rounds.size() > 0) {
 				for (size_t i = game->rounds.size() - 1; i <= 0; i--)
 				{
-					
+
 					int round = game->rewards.size();
 					if (round == 1) {
 						GameObject *bg = new BackGround();
@@ -697,6 +702,10 @@ void PlayScene::Update(DWORD dt)
 					delete obj;
 				}
 				else if (dynamic_cast<Bonus *>(objects[i])) {
+					objects.erase(objects.begin() + i);
+					delete obj;
+				}
+				else if (dynamic_cast<Boomerang *>(objects[i])) {
 					objects.erase(objects.begin() + i);
 					delete obj;
 				}
@@ -794,6 +803,7 @@ void PlayScene::Update(DWORD dt)
 				else if (player->x > END_MAP_1_1_POSITION_OUT_X - (game->GetScreenWidth() / 2)) {
 					cx = (double)END_MAP_1_1_POSITION_OUT_X - (game->GetScreenWidth());
 				}// Mario in tail map
+
 				if (player->y < MARIO_LIMIT_FLY + (game->GetScreenHeight() / 1.2f))
 					cy = MARIO_LIMIT_FLY;
 

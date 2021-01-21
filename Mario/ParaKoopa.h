@@ -23,6 +23,9 @@
 #define PARA_KOOPA_STATE_DIE_DISAPPER		600
 #define PARA_KOOPA_STATE_WALKING_WING		700
 
+#define PARA_KOOPA_STATE_DIE_FALL			800
+
+
 
 
 #define PARA_KOOPA_ANI_WALKING_LEFT_WING		0
@@ -35,7 +38,8 @@
 
 #define PARA_KOOPA_GRAVITY			0.0015f
 
-#define OBJECT_TYPE_PARA_KOOPA	21
+#define OBJECT_TYPE_PARA_KOOPA				21
+#define OBJECT_TYPE_KOOPA_VERTICAL			36
 
 
 class ParaKoopa : public GameObject
@@ -51,6 +55,17 @@ public:
 	void CalcPotentialCollisions(vector<LPGameObject> *coObjects, vector<LPCollisionEvent> &coEvents);
 	int GetTypeObject() {
 		return OBJECT_TYPE_PARA_KOOPA;
+	}
+};
+
+class KoopaVertical : public ParaKoopa
+{
+public:
+	KoopaVertical() : ParaKoopa() { vx = 0; vy = PARA_KOOPA_WALKING_SPEED; }
+	virtual void SetState(int state);
+	virtual void Update(DWORD dt, vector<LPGameObject> *coObjects);
+	int GetTypeObject() {
+		return OBJECT_TYPE_KOOPA_VERTICAL;
 	}
 };
 

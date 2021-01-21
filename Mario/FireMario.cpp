@@ -7,6 +7,7 @@
 #include "ParaGoomba.h"
 #include "ParaKoopa.h"
 #include "Pihanra.h"
+#include "BrotherBoom.h"
 
 void FireMario::Render()
 {
@@ -126,6 +127,21 @@ void FireMario::Update(DWORD dt, vector<LPGameObject> *coObjects)
 						paraKoopa->nx = -1;
 					}
 					paraKoopa->state = PARA_KOOPA_STATE_DIE_DISAPPER;
+				}
+				this->disable = true;
+			}
+			else if (dynamic_cast<BrotherBoom *>(e->obj)) // if e->obj is Goomba 
+			{
+				BrotherBoom *brotherBoom = dynamic_cast<BrotherBoom *>(e->obj);
+
+				if (brotherBoom->state == BROTHER_BOOM_STATE_WALKING) {
+					if (this->nx > 0) {
+						brotherBoom->nx = 1;
+					}
+					else {
+						brotherBoom->nx = -1;
+					}
+					brotherBoom->SetState(BROTHER_BOOM_STATE_DIE);
 				}
 				this->disable = true;
 			}

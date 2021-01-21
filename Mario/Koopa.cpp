@@ -305,23 +305,3 @@ void Koopa::CalcPotentialCollisions(vector<LPGameObject>* coObjects, vector<LPCo
 
 }
 
-void KoopaVertical::Update(DWORD dt, vector<LPGameObject> *coObjects)
-{
-
-	// Calculate dx, dy 
-	GameObject::Update(dt);
-	y += dy;
-	Game *game = Game::GetInstance();
-	if ((y < game->GetScreenHeight() / 4 || y >game->GetScreenHeight() * 0.65f)) {
-		if (state != KOOPA_STATE_DIE_FALL) {
-			vy = -vy;
-		}
-	}
-}
-void KoopaVertical::SetState(int state)
-{
-	GameObject::SetState(state);
-	if (state == KOOPA_STATE_DIE_FALL) {
-		vy = KOOPA_DIE_DEFLECT_SPEED / 3;
-	}
-}

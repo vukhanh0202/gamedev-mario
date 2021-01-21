@@ -139,46 +139,6 @@ void BrickQuestionCoinPermanent::Update(DWORD dt, vector<LPGameObject> *coObject
 	}
 	y += dy;
 
-	//vector<LPCollisionEvent> coEvents;
-	//vector<LPCollisionEvent> coEventsResult;
-
-	//coEvents.clear();
-
-	//CalcPotentialCollisions(coObjects, coEvents);
-
-	//// No collision occured, proceed normally
-	//if (coEvents.size() != 0)
-	//{
-	//	float min_tx, min_ty, nx = 0, ny = 0;
-	//	float rdx = 0;
-	//	float rdy = 0;
-	//	//// TODO: This is a very ugly designed function!!!!
-	//	FilterCollision(coEvents, coEventsResult, min_tx, min_ty, nx, ny, rdx, rdy);
-
-	//	// block every object first!
-	//	x += min_tx * dx + nx * 0.4f;
-	//	y += min_ty * dy + ny * 0.4f;
-
-	//	for (UINT i = 0; i < coEventsResult.size(); i++)
-	//	{
-	//		LPCollisionEvent e = coEventsResult[i];
-
-	//		//if (dynamic_cast<Koopa *>(e->obj)) // if e->obj is Koopa 
-	//		//{
-	//		//	status = 1;
-	//		//	Koopa *koopa = dynamic_cast<Koopa *>(e->obj);
-	//		//	if (state == BRICK_STATE_EMPTY && status == 1) {
-	//		//		if (koopa->state != KOOPA_STATE_DIE) {
-	//		//			koopa->SetState(KOOPA_STATE_DIE);
-	//		//		}
-	//		//	}
-	//		//}
-
-	//	}
-	//}
-	//// clean up collision events
-	//for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];
-
 	if (y > positionDefaultY) y = positionDefaultY;
 
 	if (this->isEmpty == false && state == BRICK_STATE_EMPTY) {

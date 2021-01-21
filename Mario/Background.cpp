@@ -24,6 +24,13 @@ void BackGroundMotion::Render()
 	animation_set->at(0)->Render(x, y);
 }
 
+void EffectAttack::Update(DWORD dt, vector<LPGameObject> *coObjects)
+{
+	if (GetTickCount64() - this->timeAppear >= TIME_EXIST_EFFECT) {
+		this->disable = true;
+	}
+}
+
 void BackGroundMotion::GetBoundingBox(float &l, float &t, float &r, float &b)
 {
 	l = 0;

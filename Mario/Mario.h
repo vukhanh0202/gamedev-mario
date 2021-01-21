@@ -11,6 +11,7 @@
 
 #define MARIO_WALKING_SPEED		0.1f 
 #define MARIO_WALKING_SPEED_FAST		0.15f 
+#define MARIO_WALKING_SPEED_SLIDE		0.009f // more small -> more slide long
 
 #define MARIO_JUMP_SPEED_Y		0.5f
 #define MARIO_JUMP_DEFLECT_SPEED 0.2f
@@ -27,6 +28,7 @@
 #define MARIO_STATE_DIE				600
 #define MARIO_STATE_WALKING_DOWN	700
 #define MARIO_STATE_WALKING_UP		800
+#define MARIO_STATE_SLIDE			900
 
 //#define MARIO_STATE_HOLD			700
 //#define MARIO_STATE_UNHOLD			800
@@ -106,6 +108,15 @@
 #define MARIO_ANI_SUPER_BIG_FALL_DRAIN			61
 #define MARIO_ANI_FIRE_FALL_DRAIN				62
 
+#define MARIO_ANI_SUPER_BIG_SLIDE_RIGHT_LEFT	63
+#define MARIO_ANI_SUPER_BIG_SLIDE_LEFT_RIGHT	64
+#define MARIO_ANI_FIRE_SLIDE_RIGHT_LEFT			65
+#define MARIO_ANI_FIRE_SLIDE_LEFT_RIGHT			66
+#define MARIO_ANI_BIG_SLIDE_RIGHT_LEFT			67
+#define MARIO_ANI_BIG_SLIDE_LEFT_RIGHT			68
+#define MARIO_ANI_SMALL_SLIDE_RIGHT_LEFT		69
+#define MARIO_ANI_SMALL_SLIDE_LEFT_RIGHT		70
+
 #define	MARIO_LEVEL_SWITCH_MAP		0
 #define	MARIO_LEVEL_SMALL			1
 #define	MARIO_LEVEL_BIG				2
@@ -150,6 +161,8 @@
 #define SCORE_PLUS		100
 #define TIME_PER_ONE_ATTACK		400
 
+#define EFFECT_ATTACK_ANI_SET_ID	88888
+#define TIME_HIT	150
 
 
 class Mario : public GameObject
@@ -162,13 +175,15 @@ class Mario : public GameObject
 
 	boolean hold; // Hold koopa
 	boolean hit;
-	boolean fast; // fast speed
 	boolean shot; // shot bullet(fire)
 	boolean readyFly; //Determine mario can fly or not
 	boolean fly;  // Determine mario fly or not
 	boolean fall; // Determine mario fall. While falling, mario can not fly
 	boolean restrain; // Restrain mario fall
 	boolean attack; // Mario swing attack
+	boolean slide;
+	boolean fast; // fast speed
+	int signalSlide;
 
 	boolean fallDrain;
 	boolean noAction;
@@ -192,6 +207,7 @@ class Mario : public GameObject
 	vector<Point*> hudPointList;
 	vector<Point*> hudTimeList;
 	vector<Point*> hudScoreList;
+	DWORD hitBegin;
 
 public:
 	int score;
@@ -206,6 +222,7 @@ public:
 		untouchable = 0;
 	}*/
 	void setIsCollision(boolean flag) { isCollision = flag; }
+	void Effect();
 	void setLastJumpTime(DWORD lastJumpTime) { this->lastJumpTime = lastJumpTime; }
 	Mario(float x = 0.0f, float y = 0.0f);
 

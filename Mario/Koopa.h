@@ -15,7 +15,6 @@
 #define KOOPA_STATE_THROWING_RIGHT	400
 #define KOOPA_STATE_HOLDING			500
 #define KOOPA_STATE_DIE_DISAPPER	600
-#define KOOPA_STATE_DIE_FALL		700
 
 #define KOOPA_ANI_WALKING_LEFT		0
 #define KOOPA_ANI_WALKING_RIGHT		1
@@ -34,7 +33,6 @@
 #define KOOPA_GRAVITY			0.0015f
 
 #define OBJECT_TYPE_KOOPA	3
-#define OBJECT_TYPE_KOOPA_VERTICAL			36
 
 #define TIME_REVIVE			5000
 
@@ -56,14 +54,5 @@ public:
 	}
 };
 
-class KoopaVertical : public Koopa
-{
-public:
-	KoopaVertical() : Koopa() { vx = 0; vy = KOOPA_WALKING_SPEED; }
-	virtual void SetState(int state);
-	virtual void Update(DWORD dt, vector<LPGameObject> *coObjects);
-	int GetTypeObject() {
-		return OBJECT_TYPE_KOOPA_VERTICAL;
-	}
-};
+
 

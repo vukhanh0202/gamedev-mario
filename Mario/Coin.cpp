@@ -1,5 +1,7 @@
 #include "Coin.h"
 #include "Koopa.h"
+#include "Game.h"
+#include "Brick.h"
 
 
 void Coin::Render()
@@ -62,6 +64,22 @@ void Coin::Update(DWORD dt, vector<LPGameObject> *coObjects)
 			}
 		}
 		if (this->y > this->position_default_y) {
+			this->disable = true;
+		}
+	}
+	else if (state == COIN_STATE_TIMEOUT) {
+		if (GetTickCount64() - timeAppear >= TIME_COIN_TIME_OUT) {
+			Game *game = Game::GetInstance();
+			LPScene scene = Game::GetInstance()->GetCurrentScene();
+
+			GameObject *glass = new BrickGlass();
+			glass->SetPosition(x, y);
+
+			LPAnimation_Set ani_set = AnimationSets::GetInstance()->Get(BRICK_GLASS_ANI_SET_ID);
+
+			glass->SetAnimationSet(ani_set);
+
+			((PlayScene*)scene)->pushObject(glass);
 			this->disable = true;
 		}
 	}
